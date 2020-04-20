@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<hibernate-configuration>
+    <session-factory>
+        <property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
+        <property name="hibernate.connection.url">jdbc:mysql://localhost/test?serverTimezone=UTC</property>
+        <property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
+        <property name="hibernate.connection.username">test</property>
+        <property name="hibernate.connection.password">test-321</property>
+
+        <mapping resource="hbm/TestCase.hbm.xml" />
+        <mapping resource="hbm/TestInput.hbm.xml" />
+        <mapping resource="hbm/TestInputArgument.hbm.xml" />
+        <mapping resource="hbm/State.hbm.xml" />
+        <mapping resource="hbm/Message.hbm.xml" />
+        <mapping resource="hbm/TestState.hbm.xml" />
+        <mapping resource="hbm/TestMessage.hbm.xml" />
+        <mapping resource="hbm/MessageArgument.hbm.xml" />
+        <mapping resource="hbm/Fault.hbm.xml" />
+        <mapping resource="hbm/MutantTestCase.hbm.xml" />
+    </session-factory>
+</hibernate-configuration>

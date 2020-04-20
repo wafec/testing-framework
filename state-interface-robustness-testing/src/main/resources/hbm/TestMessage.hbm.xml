@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<hibernate-mapping>
+    <class name="robtest.stateinterfw.hbm.TestMessage" table="TEST_MESSAGE">
+        <id name="id" type="int" column="id">
+            <generator class="native" />
+        </id>
+        <property name="order" type="int" column="position" />
+        <many-to-one name="message" class="robtest.stateinterfw.hbm.Message"
+                     column="message_id" cascade="save-update" />
+    </class>
+</hibernate-mapping>

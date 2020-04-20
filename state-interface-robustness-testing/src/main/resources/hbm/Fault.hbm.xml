@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<hibernate-mapping>
+    <class name="robtest.stateinterfw.hbm.Fault" table="FAULT">
+        <id name="id" type="int" column="id">
+            <generator class="native" />
+        </id>
+        <property name="name" type="string">
+            <column name="name" length="255" />
+        </property>
+        <property name="targetDataType" type="string">
+            <column name="target_data_type" length="255" />
+        </property>
+        <property name="category" type="string">
+            <column name="category" length="255" />
+        </property>
+    </class>
+</hibernate-mapping>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<hibernate-mapping>
+    <class name="robtest.stateinterfw.hbm.TestInputArgument" table="TEST_INPUT_ARGUMENT">
+        <id name="id" type="int" column="id">
+            <generator class="native" />
+        </id>
+        <property name="name" type="string">
+            <column name="name" length="1024" />
+        </property>
+        <property name="dataType" type="string">
+            <column name="data_type" length="100" />
+        </property>
+        <property name="dataValue" type="clob">
+            <column name="data_value" length="15000" />
+        </property>
+    </class>
+</hibernate-mapping>
