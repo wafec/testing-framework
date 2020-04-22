@@ -1,21 +1,25 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 
 <hibernate-mapping>
-    <class name="robtest.stateinterfw.hbm.TestInput" table="TEST_INPUT">
+    <class name="robtest.stateinterfw.data.TestInput" table="TEST_INPUT">
         <id name="id" column="id" type="int">
             <generator class="native" />
         </id>
-        <property name="action" type="string">
-            <column name="action" length="255" not-null="true" />
-        </property>
+        <property name="action" type="text" column="action" />
         <property name="locked" type="boolean" column="locked" />
         <set name="testStates" inverse="true" lazy="true" order-by="order">
-            <key column="test_state_id" />
-            <one-to-many class="robtest.stateinterfw.hbm.TestState" />
+            <key column="test_input_id" />
+            <one-to-many class="robtest.stateinterfw.data.TestState" />
         </set>
         <set name="testMessages" inverse="true" lazy="true" order-by="order">
             <key column="test_input_id" />
-            <one-to-many class="robtest.stateinterfw.hbm.TestMessage" />
+            <one-to-many class="robtest.stateinterfw.data.TestMessage" />
         </set>
+        <set name="testInputArguments" inverse="true" lazy="true">
+            <key column="test_input_id" />
+            <one-to-many class="robtest.stateinterfw.data.TestInputArgument" />
+        </set>
+        <many-to-one class="robtest.stateinterfw.data.TestCase" name="testCase"
+                     column="test_case_id" cascade="save-update" />
     </class>
 </hibernate-mapping>

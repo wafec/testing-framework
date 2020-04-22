@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 
 <hibernate-mapping>
-    <class name="robtest.stateinterfw.hbm.TestMessage" table="TEST_MESSAGE">
+    <class name="robtest.stateinterfw.data.TestMessage" table="TEST_MESSAGE">
         <id name="id" type="int" column="id">
             <generator class="native" />
         </id>
         <property name="order" type="int" column="position" />
-        <many-to-one name="message" class="robtest.stateinterfw.hbm.Message"
+        <many-to-one name="message" class="robtest.stateinterfw.data.Message"
                      column="message_id" cascade="save-update" />
+        <many-to-one name="testInput" class="robtest.stateinterfw.data.TestInput"
+                     column="test_input_id" cascade="save-update" />
     </class>
 </hibernate-mapping>

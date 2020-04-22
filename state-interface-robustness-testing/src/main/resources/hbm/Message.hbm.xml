@@ -1,24 +1,18 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 
 <hibernate-mapping>
-    <class name="robtest.stateinterfw.hbm.Message" table="MESSAGE">
+    <class name="robtest.stateinterfw.data.Message" table="MESSAGE">
         <id name="id" type="int" column="id">
             <generator class="native" />
         </id>
-        <property name="source" type="string">
-            <column name="source" length="255" />
-        </property>
-        <property name="destination" type="string">
-            <column name="destination" length="255" />
-        </property>
-        <property name="name" type="string">
-            <column name="name" length="512" />
-        </property>
+        <property name="source" type="text" column="source" />
+        <property name="destination" type="text" column="destination" />
+        <property name="name" type="text" column="name" />
         <property name="sequenceId" type="long" column="sequence_id" />
         <property name="entryDate" type="date" column="entry_date" />
         <set name="messageArguments" inverse="true" lazy="true">
             <key column="message_id" />
-            <one-to-many class="robtest.stateinterfw.hbm.MessageArgument" />
+            <one-to-many class="robtest.stateinterfw.data.MessageArgument" />
         </set>
     </class>
 </hibernate-mapping>

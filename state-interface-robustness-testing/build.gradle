@@ -25,6 +25,8 @@ dependencies {
     implementation 'com.google.guava:guava:28.1-jre'
     implementation 'org.hibernate:hibernate-core:5.4.14.Final'
     implementation 'mysql:mysql-connector-java:8.0.19'
+    implementation 'com.google.inject:guice:4.2.3'
+    implementation 'net.sf.dozer:dozer:5.5.1'
 
     // Use JUnit test framework
     testImplementation 'junit:junit:4.12'

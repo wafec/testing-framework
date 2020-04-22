@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<hibernate-mapping>
+    <class name="robtest.stateinterfw.data.Environment" table="ENVIRONMENT">
+        <id name="id" type="int" column="id">
+            <generator class="native" />
+        </id>
+        <property name="name" type="text" column="name" />
+        <joined-subclass name="robtest.stateinterfw.virtualbox.VirtualBoxEnvironment" table="ENVIRONMENT_VIRTUAL_BOX">
+            <key column="environment_id" />
+            <property name="snapshot" type="text" column="snapshot" />
+            <property name="priority" type="int" column="priority" />
+            <property name="type" type="text" column="environment_type" />
+        </joined-subclass>
+    </class>
+</hibernate-mapping>

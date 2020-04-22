@@ -1,19 +1,15 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 
 <hibernate-mapping>
-    <class name="robtest.stateinterfw.hbm.MessageArgument" table="MESSAGE_ARGUMENT">
+    <class name="robtest.stateinterfw.data.MessageArgument" table="MESSAGE_ARGUMENT">
         <id name="id" type="int" column="id">
             <generator class="native" />
         </id>
         <property name="order" type="int" column="order" />
-        <property name="name" type="string">
-            <column name="name" length="1024" />
-        </property>
-        <property name="dataType" type="string">
-            <column name="data_type" length="255" />
-        </property>
-        <property name="dataValue" type="clob">
-            <column name="data_value" length="15000" />
-        </property>
+        <property name="name" type="text" column="name" />
+        <property name="dataType" type="text" column="data_type" />
+        <property name="dataValue" type="text" column="data_value" />
+        <many-to-one class="robtest.stateinterfw.data.Message" name="message" column="message_id"
+                     cascade="save-update" />
     </class>
 </hibernate-mapping>

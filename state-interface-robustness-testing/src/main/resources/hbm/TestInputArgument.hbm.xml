@@ -1,18 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 
 <hibernate-mapping>
-    <class name="robtest.stateinterfw.hbm.TestInputArgument" table="TEST_INPUT_ARGUMENT">
+    <class name="robtest.stateinterfw.data.TestInputArgument" table="TEST_INPUT_ARGUMENT">
         <id name="id" type="int" column="id">
             <generator class="native" />
         </id>
-        <property name="name" type="string">
-            <column name="name" length="1024" />
-        </property>
-        <property name="dataType" type="string">
-            <column name="data_type" length="100" />
-        </property>
-        <property name="dataValue" type="clob">
-            <column name="data_value" length="15000" />
-        </property>
+        <property name="name" type="text" column="name" />
+        <property name="dataType" type="text" column="data_type" />
+        <property name="dataValue" type="text" column="data_value" />
+        <many-to-one class="robtest.stateinterfw.data.TestInput" name="testInput" cascade="save-update"
+                     column="test_input_id" />
     </class>
 </hibernate-mapping>

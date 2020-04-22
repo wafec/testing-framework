@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<hibernate-mapping>
+    <class name="robtest.stateinterfw.data.TestExecutionContext" table="TEST_EXECUTION_CONTEXT">
+        <id name="id" type="int" column="id">
+            <generator class="native" />
+        </id>
+        <many-to-one class="robtest.stateinterfw.data.TestCase" column="test_case_id" cascade="save-update" name="testCase" />
+        <many-to-one class="robtest.stateinterfw.data.MutantTestCase" column="mutant_test_case_id" cascade="save-update" name="mutantTestCase" />
+        <many-to-one class="robtest.stateinterfw.data.TestInput" column="test_input_id" cascade="save-update" name="testInput" />
+    </class>
+</hibernate-mapping>

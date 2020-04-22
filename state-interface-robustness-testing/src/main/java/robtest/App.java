@@ -3,29 +3,23 @@
  */
 package robtest;
 
-import org.hibernate.HibernateException;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
-import org.hibernate.cfg.Configuration;
-import robtest.stateinterfw.hbm.*;
-
-import java.util.Date;
+import com.google.inject.Guice;
+import com.google.inject.Injector;
+import robtest.stateinterfw.IStarter;
+import robtest.stateinterfw.guice.DatabaseModule;
+import robtest.stateinterfw.guice.EnvironmentModule;
+import robtest.stateinterfw.guice.FrameworkModule;
+import robtest.stateinterfw.guice.MapperModule;
 
 public class App {
-    public String getGreeting() {
-        return "Hello world.";
-    }
-
     public static void main(String[] args) {
-        System.out.println(new App().getGreeting());
-        ISqlManager sqlManager = new SqlManager();
-        sqlManager.createSession(session -> {
-            TestCase testCase = new TestCase();
-            MutantTestCase mutantTestCase = new MutantTestCase(testCase);
-            session.save(testCase);
-            session.save(mutantTestCase);
-            return true;
-        });
+        Injector injector = Guice.createInjector(
+                new MapperModule(),
+                new DatabaseModule(),
+                new FrameworkModule(),
+                new EnvironmentModule()
+        );
+        IStarter starter = injector.getInstance(IStarter.class);
+        starter.start();
     }
 }

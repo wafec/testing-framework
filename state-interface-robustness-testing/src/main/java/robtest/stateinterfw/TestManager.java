@@ -1,5 +1,9 @@
 package robtest.stateinterfw;
 
+import com.google.inject.Inject;
+import robtest.stateinterfw.data.IEntity;
+import robtest.stateinterfw.data.IRepository;
+
 public class TestManager implements ITestManager {
     private IEnvironmentManager _environmentManager;
     private IMessagingDriver _messagingDriver;
@@ -7,24 +11,34 @@ public class TestManager implements ITestManager {
     private ITestDriver _testDriver;
     private IFaultManager _faultManager;
 
+    private IRepository _repository;
+    private ITestExecutionContextFactory _testExecutionContextFactory;
+
+    @Inject
     public TestManager(IEnvironmentManager environmentManager,
                        IMessagingDriver messagingDriver,
                        IStateMonitoringDriver stateMonitoringDriver,
                        ITestDriver testDriver,
-                       IFaultManager faultManager) {
+                       IFaultManager faultManager,
+                       IRepository repository,
+                       ITestExecutionContextFactory testExecutionContextFactory) {
         this._environmentManager = environmentManager;
         this._messagingDriver = messagingDriver;
         this._stateMonitoringDriver = stateMonitoringDriver;
         this._testDriver = testDriver;
         this._faultManager = faultManager;
+        this._repository = repository;
+        this._testExecutionContextFactory = testExecutionContextFactory;
     }
 
     private void handleGoldenRun(ITestCase testCase) {
         try {
-            _environmentManager.initialize(testCase);
-            _messagingDriver.bind(testCase);
-            _stateMonitoringDriver.monitor(testCase);
-            _testDriver.initialize(testCase);
+            ITestExecutionContext testExecutionContext = _testExecutionContextFactory.create(testCase);
+            _repository.save((IEntity) testExecutionContext);
+            _environmentManager.initialize(testExecutionContext);
+            _messagingDriver.bind(testExecutionContext);
+            _stateMonitoringDriver.monitor(testExecutionContext);
+            _testDriver.initialize(testExecutionContext);
             while (_testDriver.hasNext()) {
                 _testDriver.executeNext();
             }
@@ -48,10 +62,12 @@ public class TestManager implements ITestManager {
         for (int i = 0; i < testSuite.size(); i++) {
             IMutantTestCase mutantTestCase = (IMutantTestCase) testSuite.get(i);
             try {
-                _environmentManager.initialize(mutantTestCase);
-                _messagingDriver.bind(mutantTestCase);
-                _stateMonitoringDriver.monitor(mutantTestCase);
-                _testDriver.initialize(mutantTestCase);
+                ITestExecutionContext testExecutionContext = _testExecutionContextFactory.create(mutantTestCase);
+                _repository.save((IEntity) testExecutionContext);
+                _environmentManager.initialize(testExecutionContext);
+                _messagingDriver.bind(testExecutionContext);
+                _stateMonitoringDriver.monitor(testExecutionContext);
+                _testDriver.initialize(testExecutionContext);
                 while(_testDriver.hasNext()) {
                     _testDriver.executeNext();
                 }

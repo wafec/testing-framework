@@ -1,13 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 
 <hibernate-mapping>
-    <class name="robtest.stateinterfw.hbm.State" table="STATE">
+    <class name="robtest.stateinterfw.data.State" table="STATE">
         <id name="id" type="int" column="int">
             <generator class="native" />
         </id>
-        <property name="name" type="string">
-            <column name="name" length="255" />
-        </property>
+        <property name="name" type="text" column="name" />
         <property name="timeout" type="int" column="timeout" />
         <property name="required" type="boolean" column="required" />
     </class>
