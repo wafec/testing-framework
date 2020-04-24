@@ -59,4 +59,11 @@ public class MutantTestCase implements IMutantTestCase {
         ITestCase testClone = originalTestCase.pureClone();
         return new MutantTestCase((TestCase)testClone);
     }
+
+    @Override
+    public String getUniqueIdentifier() {
+        if (originalTestCase == null)
+            throw new NullPointerException();
+        return originalTestCase.getUniqueIdentifier();
+    }
 }

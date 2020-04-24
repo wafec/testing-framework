@@ -6,8 +6,8 @@ import robtest.stateinterfw.data.IRepository;
 
 public class TestManager implements ITestManager {
     private IEnvironmentManager _environmentManager;
-    private IMessagingDriver _messagingDriver;
-    private IStateMonitoringDriver _stateMonitoringDriver;
+    private IMessageManager _messageManager;
+    private ITargetStateMonitor _targetStateMonitor;
     private ITestDriver _testDriver;
     private IFaultManager _faultManager;
 
@@ -16,28 +16,28 @@ public class TestManager implements ITestManager {
 
     @Inject
     public TestManager(IEnvironmentManager environmentManager,
-                       IMessagingDriver messagingDriver,
-                       IStateMonitoringDriver stateMonitoringDriver,
+                       IMessageManager messageManager,
+                       ITargetStateMonitor targetStateMonitor,
                        ITestDriver testDriver,
                        IFaultManager faultManager,
                        IRepository repository,
                        ITestExecutionContextFactory testExecutionContextFactory) {
         this._environmentManager = environmentManager;
-        this._messagingDriver = messagingDriver;
-        this._stateMonitoringDriver = stateMonitoringDriver;
+        this._messageManager = messageManager;
+        this._targetStateMonitor = targetStateMonitor;
         this._testDriver = testDriver;
         this._faultManager = faultManager;
         this._repository = repository;
         this._testExecutionContextFactory = testExecutionContextFactory;
     }
 
-    private void handleGoldenRun(ITestCase testCase) {
+    private void handleGoldenRun(ITestCase testCase, ITestSpecs testSpecs) {
         try {
-            ITestExecutionContext testExecutionContext = _testExecutionContextFactory.create(testCase);
+            ITestExecutionContext testExecutionContext = _testExecutionContextFactory.create(testCase, testSpecs);
             _repository.save((IEntity) testExecutionContext);
             _environmentManager.initialize(testExecutionContext);
-            _messagingDriver.bind(testExecutionContext);
-            _stateMonitoringDriver.monitor(testExecutionContext);
+            _messageManager.bind(testExecutionContext);
+            _targetStateMonitor.monitor(testExecutionContext);
             _testDriver.initialize(testExecutionContext);
             while (_testDriver.hasNext()) {
                 _testDriver.executeNext();
@@ -45,28 +45,28 @@ public class TestManager implements ITestManager {
         }
         finally {
             _testDriver.close();
-            _stateMonitoringDriver.close();
-            _messagingDriver.unbind();
+            _targetStateMonitor.close();
+            _messageManager.unbind();
             _environmentManager.clear();
         }
     }
 
     @Override
-    public void handle(ITestCase testCase) {
-        this.handleGoldenRun(testCase);
-        this.handleFaultInjection(testCase);
+    public void handle(ITestCase testCase, ITestSpecs testSpecs) {
+        this.handleGoldenRun(testCase, testSpecs);
+        this.handleFaultInjection(testCase, testSpecs);
     }
 
-    private void handleFaultInjection(ITestCase testCase) {
+    private void handleFaultInjection(ITestCase testCase, ITestSpecs testSpecs) {
         ITestSuite testSuite = _faultManager.generate(testCase);
         for (int i = 0; i < testSuite.size(); i++) {
             IMutantTestCase mutantTestCase = (IMutantTestCase) testSuite.get(i);
             try {
-                ITestExecutionContext testExecutionContext = _testExecutionContextFactory.create(mutantTestCase);
+                ITestExecutionContext testExecutionContext = _testExecutionContextFactory.create(mutantTestCase, testSpecs);
                 _repository.save((IEntity) testExecutionContext);
                 _environmentManager.initialize(testExecutionContext);
-                _messagingDriver.bind(testExecutionContext);
-                _stateMonitoringDriver.monitor(testExecutionContext);
+                _messageManager.bind(testExecutionContext);
+                _targetStateMonitor.monitor(testExecutionContext);
                 _testDriver.initialize(testExecutionContext);
                 while(_testDriver.hasNext()) {
                     _testDriver.executeNext();
@@ -74,15 +74,20 @@ public class TestManager implements ITestManager {
             }
             finally {
                 _testDriver.close();
-                _stateMonitoringDriver.close();
-                _messagingDriver.unbind();
+                _targetStateMonitor.close();
+                _messageManager.unbind();
                 _environmentManager.clear();
             }
         }
     }
 
     @Override
-    public void replicate(ITestCase testCase) {
-        handle(testCase.pureClone());
+    public void replicate(ITestCase testCase, ITestSpecs testSpecs) {
+        handle(testCase.pureClone(), testSpecs);
+    }
+
+    @Override
+    public void handleOngoing(ITestCase testCase) {
+
     }
 }

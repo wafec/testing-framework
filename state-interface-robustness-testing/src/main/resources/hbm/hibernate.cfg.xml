@@ -21,5 +21,8 @@
         <mapping resource="hbm/Environment.hbm.xml" />
         <mapping resource="hbm/MutantMessageArgument.hbm.xml" />
         <mapping resource="hbm/TestExecutionContext.hbm.xml" />
+        <mapping resource="hbm/MessageDevice.hbm.xml" />
+        <mapping resource="hbm/TestSpecs.hbm.xml" />
+        <mapping resource="hbm/TestStateOutput.hbm.xml" />
     </session-factory>
 </hibernate-configuration>

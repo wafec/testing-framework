@@ -2,6 +2,7 @@ package robtest.stateinterfw.virtualbox;
 
 import robtest.stateinterfw.IEnvironmentManager;
 import robtest.stateinterfw.ITestExecutionContext;
+import robtest.stateinterfw.ITestSpecs;
 import robtest.stateinterfw.data.IEntity;
 import robtest.stateinterfw.data.IRepository;
 
@@ -11,20 +12,37 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class VirtualBoxEnvironmentManager implements IEnvironmentManager {
-    private VirtualBoxEnvironment[] _devices;
+    private ITestExecutionContext _testExecutionContext;
     private IVirtualBoxManageClient _virtualBoxManageClient;
     private IRepository _repository;
 
-    public VirtualBoxEnvironmentManager(VirtualBoxEnvironment[] devices, IVirtualBoxManageClient virtualBoxManageClient,
+    public VirtualBoxEnvironmentManager(IVirtualBoxManageClient virtualBoxManageClient,
                                         IRepository repository) {
-        this._devices = devices;
+        this._testExecutionContext = null;
         this._virtualBoxManageClient = virtualBoxManageClient;
         this._repository = repository;
     }
 
+    private VirtualBoxEnvironment[] getDevices() {
+        VirtualBoxEnvironment[] result = new VirtualBoxEnvironment[0];
+        if (_testExecutionContext != null) {
+            if (_testExecutionContext.getSpecs() != null) {
+                if (_testExecutionContext.getSpecs().getEnvironmentCount() > 0) {
+                    ITestSpecs specs = _testExecutionContext.getSpecs();
+                    result = new VirtualBoxEnvironment[specs.getEnvironmentCount()];
+                    for (int i = 0; i < result.length; i++) {
+                        result[i] = (VirtualBoxEnvironment) specs.getEnvironment(i);
+                    }
+                }
+            }
+        }
+        return result;
+    }
+
     @Override
     public void initialize(ITestExecutionContext testExecutionContext) {
-        List<VirtualBoxEnvironment> devices = Arrays.stream(_devices)
+        this._testExecutionContext = testExecutionContext;
+        List<VirtualBoxEnvironment> devices = Arrays.stream(this.getDevices())
                 .sorted(Comparator.comparingInt(VirtualBoxEnvironment::getPriority)).collect(Collectors.toList());
         for (VirtualBoxEnvironment device : devices) {
             if (device.getState().equals("power_on")) {
@@ -47,7 +65,7 @@ public class VirtualBoxEnvironmentManager implements IEnvironmentManager {
 
     @Override
     public void clear() {
-        List<VirtualBoxEnvironment> devices = Arrays.stream(_devices)
+        List<VirtualBoxEnvironment> devices = Arrays.stream(this.getDevices())
                 .sorted(Comparator.comparingInt(VirtualBoxEnvironment::getPriority)).collect(Collectors.toList());
         for (VirtualBoxEnvironment device : devices) {
             if (device.getState().equals("power_on")) {

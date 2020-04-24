@@ -2,6 +2,7 @@
 CREATE TABLE ENVIRONMENT (
     id int not null auto_increment,
     name text not null,
+    environment_type varchar(255) not null,
     primary key (id)
 );
 /

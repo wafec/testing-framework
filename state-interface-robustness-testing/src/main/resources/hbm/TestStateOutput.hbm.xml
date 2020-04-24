@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<hibernate-mapping>
+    <class name="robtest.stateinterfw.data.TestStateOutput" table="TEST_STATE_OUTPUT">
+        <id name="id" type="int" column="id">
+            <generator class="native" />
+        </id>
+        <property name="time" type="date" column="output_time" />
+        <property name="text" type="longtext" column="output_text" />
+        <many-to-one name="testState" class="robtest.stateinterfw.data.TestState" column="test_state_id" cascade="save-update" />
+    </class>
+</hibernate-mapping>

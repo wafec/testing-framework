@@ -27,6 +27,8 @@ dependencies {
     implementation 'mysql:mysql-connector-java:8.0.19'
     implementation 'com.google.inject:guice:4.2.3'
     implementation 'net.sf.dozer:dozer:5.5.1'
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.10.3'
+    implementation 'commons-cli:commons-cli:1.4'
 
     // Use JUnit test framework
     testImplementation 'junit:junit:4.12'

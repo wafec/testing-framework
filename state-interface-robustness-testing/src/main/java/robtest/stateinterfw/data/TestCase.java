@@ -9,6 +9,7 @@ import java.util.Set;
 public class TestCase implements ITestCase {
     private int id;
     private Set<TestInput> testInputs;
+    private String uniqueIdentifier;
 
     public TestCase() {
 
@@ -40,6 +41,15 @@ public class TestCase implements ITestCase {
     @Override
     public ITestCase pureClone() {
         throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public String getUniqueIdentifier() {
+        return uniqueIdentifier;
+    }
+
+    public void setUniqueIdentifier(String uniqueIdentifier) {
+        this.uniqueIdentifier = uniqueIdentifier;
     }
 
     public void setId(int id) {

@@ -1,7 +1,7 @@
 package robtest.stateinterfw.virtualbox;
 
 public interface IVirtualBoxManageClient {
-    void powerOff(VirtualBoxEnvironment virtualBoxEnvironment);
-    void snapshot(VirtualBoxEnvironment virtualBoxEnvironment);
-    void powerOn(VirtualBoxEnvironment virtualBoxEnvironment);
+    void powerOff(IVirtualBoxEnvironment virtualBoxEnvironment);
+    void snapshot(IVirtualBoxEnvironment virtualBoxEnvironment);
+    void powerOn(IVirtualBoxEnvironment virtualBoxEnvironment);
 }

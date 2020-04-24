@@ -30,17 +30,17 @@ public class VirtualBoxManageClient implements IVirtualBoxManageClient {
     }
 
     @Override
-    public void powerOff(VirtualBoxEnvironment virtualBoxEnvironment) {
+    public void powerOff(IVirtualBoxEnvironment virtualBoxEnvironment) {
         call("cmd", "/c", "VBoxManage", "controlvm", virtualBoxEnvironment.getName(), "poweroff");
     }
 
     @Override
-    public void snapshot(VirtualBoxEnvironment virtualBoxEnvironment) {
+    public void snapshot(IVirtualBoxEnvironment virtualBoxEnvironment) {
         call("cmd", "/c", "VBoxManage", "snapshot", virtualBoxEnvironment.getName(), "restore", virtualBoxEnvironment.getSnapshot());
     }
 
     @Override
-    public void powerOn(VirtualBoxEnvironment virtualBoxEnvironment) {
+    public void powerOn(IVirtualBoxEnvironment virtualBoxEnvironment) {
         call("cmd", "/c", "VBoxManage", "startvm", virtualBoxEnvironment.getName(), "--type", "headless");
     }
 }

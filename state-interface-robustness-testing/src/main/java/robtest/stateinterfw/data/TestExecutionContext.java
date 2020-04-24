@@ -3,20 +3,27 @@ package robtest.stateinterfw.data;
 import robtest.stateinterfw.ITestCase;
 import robtest.stateinterfw.ITestExecutionContext;
 import robtest.stateinterfw.ITestInput;
+import robtest.stateinterfw.ITestSpecs;
 
 public class TestExecutionContext implements ITestExecutionContext, IEntity {
     private int id;
     private TestCase testCase;
     private TestInput testInput;
     private MutantTestCase mutantTestCase;
+    private TestSpecs testSpecs;
 
     public TestExecutionContext() {
 
     }
 
     public TestExecutionContext(TestCase testCase, TestInput testInput) {
+        this(testCase, testInput, null);
+    }
+
+    public TestExecutionContext(TestCase testCase, TestInput testInput, TestSpecs testSpecs) {
         this.testCase = testCase;
         this.testInput = testInput;
+        this.testSpecs = testSpecs;
     }
 
     @Override
@@ -46,6 +53,19 @@ public class TestExecutionContext implements ITestExecutionContext, IEntity {
     @Override
     public ITestInput getCurrent() {
         return testInput;
+    }
+
+    @Override
+    public ITestSpecs getSpecs() {
+        return testSpecs;
+    }
+
+    public void setTestSpecs(TestSpecs testSpecs) {
+        this.testSpecs = testSpecs;
+    }
+
+    public TestSpecs getTestSpecs() {
+        return this.testSpecs;
     }
 
     public void setTestInput(TestInput testInput) {

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<hibernate-mapping>
+    <class name="robtest.stateinterfw.data.MessageDevice" table="MESSAGE_DEVICE">
+        <id name="id" type="int" column="id">
+            <generator class="native" />
+        </id>
+        <discriminator column="device_type" />
+        <subclass name="robtest.stateinterfw.rabbit.RabbitMessageDevice" discriminator-value="rabbitmq">
+            <join table="MESSAGE_DEVICE_RABBIT">
+                <key colum="message_device_id" />
+                <property name="url" type="text" column="url" />
+                <property name="user" type="text" column="username" />
+                <property name="password" type="text" column="passwd" />
+            </join>
+        </subclass>
+    </class>
+</hibernate-mapping>

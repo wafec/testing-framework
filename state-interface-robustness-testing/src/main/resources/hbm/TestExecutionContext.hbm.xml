@@ -8,5 +8,6 @@
         <many-to-one class="robtest.stateinterfw.data.TestCase" column="test_case_id" cascade="save-update" name="testCase" />
         <many-to-one class="robtest.stateinterfw.data.MutantTestCase" column="mutant_test_case_id" cascade="save-update" name="mutantTestCase" />
         <many-to-one class="robtest.stateinterfw.data.TestInput" column="test_input_id" cascade="save-update" name="testInput" />
+        <many-to-one class="robtest.stateinterfw.data.TestSpecs" column="test_specs_id" cascade="save-update" name="testSpecs" />
     </class>
 </hibernate-mapping>

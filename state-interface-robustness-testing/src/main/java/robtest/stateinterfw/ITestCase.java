@@ -5,4 +5,5 @@ public interface ITestCase {
     ITestInput get(int index);
     int size();
     ITestCase pureClone();
+    String getUniqueIdentifier();
 }

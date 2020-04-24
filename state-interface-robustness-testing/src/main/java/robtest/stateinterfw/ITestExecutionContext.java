@@ -4,4 +4,5 @@ public interface ITestExecutionContext {
     int getId();
     ITestCase get();
     ITestInput getCurrent();
+    ITestSpecs getSpecs();
 }

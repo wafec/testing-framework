@@ -9,5 +9,6 @@
             <key column="test_id" />
             <one-to-many class="robtest.stateinterfw.data.TestInput" />
         </set>
+        <property name="uniqueIdentifier" type="text" column="uid" />
     </class>
 </hibernate-mapping>

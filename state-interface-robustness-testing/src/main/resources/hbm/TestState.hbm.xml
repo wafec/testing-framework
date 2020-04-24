@@ -10,5 +10,9 @@
                      column="state_id" />
         <many-to-one name="testInput" class="robtest.stateinterfw.data.TestInput" cascade="save-update"
                      column="test_input_id" />
+        <set name="outputs" inverse="true" lazy="true" cascade="save-update">
+            <key column="test_state_id" />
+            <one-to-many class="robtest.stateinterfw.data.TestStateOutput" />
+        </set>
     </class>
 </hibernate-mapping>
