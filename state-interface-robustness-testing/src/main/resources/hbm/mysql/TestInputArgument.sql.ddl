@@ -8,4 +8,3 @@ CREATE TABLE TEST_INPUT_ARGUMENT (
     primary key (id),
     foreign key (test_input_id) references TEST_INPUT (id)
 );
-/

@@ -5,7 +5,6 @@ CREATE TABLE ENVIRONMENT (
     environment_type varchar(255) not null,
     primary key (id)
 );
-/
 
 
 CREATE TABLE ENVIRONMENT_VIRTUAL_BOX (
@@ -13,7 +12,6 @@ CREATE TABLE ENVIRONMENT_VIRTUAL_BOX (
     snapshot text,
     priority int default 1,
     environment_type text,
-    primary_key(environment_id),
+    primary key (environment_id),
     constraint fk_environment foreign key (environment_id) references ENVIRONMENT(id)
 );
-/

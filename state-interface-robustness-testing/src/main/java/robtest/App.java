@@ -5,19 +5,28 @@ package robtest;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
-import robtest.stateinterfw.IStarter;
-import robtest.stateinterfw.guice.*;
+import robtest.guice.RobTestModule;
+import robtest.stateinterfw.examples.openStack.guice.OpenStackModule;
+import robtest.stateinterfw.guice.StateInterModule;
+import robtest.stateinterfw.rabbit.guice.RabbitModule;
+import robtest.stateinterfw.virtualbox.guice.VirtualBoxModule;
+
+import java.util.Arrays;
 
 public class App {
     public static void main(String[] args) {
-        Injector injector = Guice.createInjector(
-                new MapperModule(),
-                new DatabaseModule(),
-                new FrameworkModule(),
-                new EnvironmentModule(),
-                new FaultModule()
+        Injector injector = getGuiceInjector();
+        ICommandLine commandLine = injector.getInstance(ICommandLine.class);
+        commandLine.run(Arrays.copyOfRange(args, 1, args.length));
+    }
+
+    static Injector getGuiceInjector() {
+        return Guice.createInjector(
+                new RobTestModule(),
+                new StateInterModule(),
+                new RabbitModule(),
+                new VirtualBoxModule(),
+                new OpenStackModule()
         );
-        IStarter starter = injector.getInstance(IStarter.class);
-        starter.start();
     }
 }

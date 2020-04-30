@@ -8,4 +8,3 @@ CREATE TABLE TEST_STATE (
     foreign key (state_id) references STATE(id),
     foreign key (test_input_id) references TEST_INPUT(id)
 );
-/

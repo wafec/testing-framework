@@ -1,10 +1,10 @@
 package robtest.stateinterfw;
 
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 
-public class MutatorCatalog implements IMutatorCatalog {
+public abstract class MutatorCatalog implements IMutatorCatalog {
     private Map<String, IMutator> mutators;
+    private static Random random = new Random();
 
     public MutatorCatalog() {
         this.mutators = new TreeMap<>();
@@ -22,5 +22,10 @@ public class MutatorCatalog implements IMutatorCatalog {
     @Override
     public void add(IMutator mutator) {
         mutators.put(mutator.getKey(), mutator);
+    }
+
+    @Override
+    public List<String> getAllKeys() {
+        return new ArrayList<>(mutators.keySet());
     }
 }

@@ -6,4 +6,3 @@ CREATE TABLE STATE (
     required bit,
     primary key (id)
 );
-/

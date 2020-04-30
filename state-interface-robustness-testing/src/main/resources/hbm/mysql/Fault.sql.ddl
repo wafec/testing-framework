@@ -6,4 +6,3 @@ CREATE TABLE FAULT (
     category varchar(255),
     primary key (id)
 );
-/

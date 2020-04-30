@@ -11,4 +11,3 @@ CREATE TABLE TEST_EXECUTION_CONTEXT (
     foreign key (mutant_test_case_id) references MUTANT_TEST_CASE(id),
     foreign key (test_specs_id) references TEST_SPECS(id)
 );
-/

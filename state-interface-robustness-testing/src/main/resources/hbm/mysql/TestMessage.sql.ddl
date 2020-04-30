@@ -8,4 +8,3 @@ CREATE TABLE TEST_MESSAGE (
     foreign key (message_id) references MESSAGE (id),
     foreign key (test_input_id) references TEST_INPUT (id)
 );
-/

@@ -4,7 +4,6 @@ CREATE TABLE MESSAGE_DEVICE (
     device_type text not null,
     primary key (id)
 );
-/
 
 CREATE TABLE MESSAGE_DEVICE_RABBIT (
     message_device_id int not null,
@@ -14,4 +13,3 @@ CREATE TABLE MESSAGE_DEVICE_RABBIT (
     primary key (message_device_id),
     foreign key (message_device_id) references MESSAGE_DEVICE (id)
 );
-/

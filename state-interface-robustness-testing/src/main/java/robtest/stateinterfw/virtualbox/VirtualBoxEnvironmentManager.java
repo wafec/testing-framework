@@ -11,7 +11,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class VirtualBoxEnvironmentManager implements IEnvironmentManager {
+public class VirtualBoxEnvironmentManager implements IVirtualBoxEnvironmentManager {
     private ITestExecutionContext _testExecutionContext;
     private IVirtualBoxManageClient _virtualBoxManageClient;
     private IRepository _repository;

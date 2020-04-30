@@ -10,4 +10,3 @@ CREATE TABLE MUTANT_MESSAGE_ARGUMENT (
     foreign key (message_argument_id) references MESSAGE_ARGUMENT(id),
     foreign key (test_case_id) references TEST_CASE(id)
 );
-/

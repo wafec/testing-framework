@@ -8,4 +8,3 @@ CREATE TABLE MESSAGE (
     entry_date date,
     primary key (id)
 );
-/

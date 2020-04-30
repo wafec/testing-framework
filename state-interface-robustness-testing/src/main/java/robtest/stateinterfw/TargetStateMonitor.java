@@ -1,6 +1,8 @@
 package robtest.stateinterfw;
 
-public class TargetStateMonitor implements ITargetStateMonitor {
+public abstract class TargetStateMonitor implements ITargetStateMonitor {
+    protected abstract ITestExecutionContext getTestExecutionContext();
+
     @Override
     public void notify(IState state) {
 
@@ -8,16 +10,6 @@ public class TargetStateMonitor implements ITargetStateMonitor {
 
     @Override
     public void notify(ITestStateOutput testStateOutput) {
-
-    }
-
-    @Override
-    public void monitor(ITestExecutionContext testExecutionContext) {
-
-    }
-
-    @Override
-    public void close() {
 
     }
 }

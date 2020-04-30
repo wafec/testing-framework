@@ -1,19 +1,13 @@
 package robtest.stateinterfw.rabbit;
 
-import robtest.stateinterfw.IMessage;
-import robtest.stateinterfw.IMessageManager;
 import robtest.stateinterfw.ITestExecutionContext;
+import robtest.stateinterfw.MessageManager;
 
-public class RabbitMessageManager implements IMessageManager {
+public class RabbitMessageManager extends MessageManager implements IRabbitMessageManager {
     private ITestExecutionContext _testExecutionContext;
 
     public RabbitMessageManager() {
         this._testExecutionContext = null;
-    }
-
-    @Override
-    public void receive(IMessage message) {
-
     }
 
     @Override
@@ -24,5 +18,10 @@ public class RabbitMessageManager implements IMessageManager {
     @Override
     public void unbind() {
 
+    }
+
+    @Override
+    protected ITestExecutionContext getTestExecutionContext() {
+        return _testExecutionContext;
     }
 }

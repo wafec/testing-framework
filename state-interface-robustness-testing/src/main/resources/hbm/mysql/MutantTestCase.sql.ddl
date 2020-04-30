@@ -5,4 +5,3 @@ CREATE TABLE MUTANT_TEST_CASE (
     primary key (id),
     foreign key (test_case_id) references TEST_CASE(id)
 );
-/

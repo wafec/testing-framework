@@ -7,4 +7,3 @@ CREATE TABLE TEST_STATE_OUTPUT (
     primary key (id),
     foreign key (test_state_id) references TEST_STATE (id)
 );
-/
