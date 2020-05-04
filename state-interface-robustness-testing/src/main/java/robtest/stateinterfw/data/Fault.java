@@ -1,6 +1,5 @@
 package robtest.stateinterfw.data;
 
-import robtest.stateinterfw.FrameContext;
 import robtest.stateinterfw.IFault;
 import robtest.stateinterfw.IMutator;
 
@@ -9,6 +8,7 @@ public class Fault implements IFault {
     private String name;
     private String targetDataType;
     private String category;
+    private IMutator _mutator;
 
     public Fault() {
 
@@ -58,7 +58,7 @@ public class Fault implements IFault {
 
     @Override
     public String apply(String value) {
-        IMutator mutator = FrameContext.Mutator.current().findOne(getFaultKey());
+        IMutator mutator = _mutator;
         if (mutator != null) {
             return mutator.mutate(value);
         } else
@@ -68,5 +68,9 @@ public class Fault implements IFault {
     @Override
     public String getFaultKey() {
         return String.format("%s.%s.%s", getCategory(), getTargetDataType(), getName());
+    }
+
+    public void setMutator(IMutator mutator) {
+        _mutator = mutator;
     }
 }
