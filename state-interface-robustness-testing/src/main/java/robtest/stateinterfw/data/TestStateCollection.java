@@ -1,6 +1,7 @@
 package robtest.stateinterfw.data;
 
 import robtest.stateinterfw.IOrderedElement;
+import robtest.stateinterfw.ITestState;
 import robtest.stateinterfw.ITestStateCollection;
 
 import java.util.Iterator;
@@ -19,7 +20,7 @@ public class TestStateCollection implements ITestStateCollection {
     }
 
     @Override
-    public IOrderedElement get(int index) {
+    public ITestState get(int index) {
         if (index < 0 || index >= size()) {
             throw new IndexOutOfBoundsException();
         }

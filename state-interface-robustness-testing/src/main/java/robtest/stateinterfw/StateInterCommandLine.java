@@ -1,5 +1,6 @@
 package robtest.stateinterfw;
 
+import com.google.inject.Inject;
 import robtest.stateinterfw.examples.openStack.IOpenStackCommandLine;
 
 import java.util.Arrays;
@@ -7,6 +8,7 @@ import java.util.Arrays;
 public class StateInterCommandLine implements IStateInterCommandLine {
     private IOpenStackCommandLine _openStackCommandLine;
 
+    @Inject
     public StateInterCommandLine(IOpenStackCommandLine openStackCommandLine) {
         this._openStackCommandLine = openStackCommandLine;
     }

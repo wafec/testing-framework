@@ -16,8 +16,9 @@ import java.util.Arrays;
 public class App {
     public static void main(String[] args) {
         Injector injector = getGuiceInjector();
-        ICommandLine commandLine = injector.getInstance(ICommandLine.class);
-        commandLine.run(Arrays.copyOfRange(args, 1, args.length));
+        System.out.println("Hello Wallace");
+        /*ICommandLine commandLine = injector.getInstance(ICommandLine.class);
+        commandLine.run(Arrays.copyOfRange(args, 1, args.length));*/
     }
 
     static Injector getGuiceInjector() {

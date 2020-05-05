@@ -1,5 +1,6 @@
 package robtest;
 
+import com.google.inject.Inject;
 import robtest.stateinterfw.IStateInterCommandLine;
 
 import java.util.Arrays;
@@ -7,6 +8,7 @@ import java.util.Arrays;
 public class CommandLine implements ICommandLine {
     private IStateInterCommandLine _stateInterCommandLine;
 
+    @Inject
     public CommandLine(IStateInterCommandLine stateInterCommandLine) {
         this._stateInterCommandLine = stateInterCommandLine;
     }

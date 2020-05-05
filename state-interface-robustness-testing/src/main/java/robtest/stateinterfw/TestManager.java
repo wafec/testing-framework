@@ -4,7 +4,7 @@ import com.google.inject.Inject;
 import robtest.stateinterfw.data.IEntity;
 import robtest.stateinterfw.data.IRepository;
 
-public class TestManager implements ITestManager {
+public abstract class TestManager implements ITestManager {
     private IEnvironmentManager _environmentManager;
     private IMessageManager _messageManager;
     private ITargetStateMonitor _targetStateMonitor;
@@ -14,7 +14,6 @@ public class TestManager implements ITestManager {
     private IRepository _repository;
     private ITestExecutionContextFactory _testExecutionContextFactory;
 
-    @Inject
     public TestManager(IEnvironmentManager environmentManager,
                        IMessageManager messageManager,
                        ITargetStateMonitor targetStateMonitor,

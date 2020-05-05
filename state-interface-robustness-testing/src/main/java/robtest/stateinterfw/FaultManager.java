@@ -10,7 +10,6 @@ public class FaultManager implements IFaultManager {
     private IFaultMutatorFilter _faultMutatorFilter;
     private IRepository _repository;
 
-    @Inject
     public FaultManager(IFaultStrategy faultStrategy, IMutatorCatalog mutatorCatalog,
                         IMutantTestCaseFactory mutantTestCaseFactory,
                         IFaultMutatorFilter faultMutatorFilter,
@@ -31,5 +30,6 @@ public class FaultManager implements IFaultManager {
         IMessage message = testMessage.getMessage();
         IMessageArgument argument = message.getArgs().get(0);
         _mutatorCatalog.filterBy(_faultMutatorFilter, argument.getDataType());
+        return null;
     }
 }

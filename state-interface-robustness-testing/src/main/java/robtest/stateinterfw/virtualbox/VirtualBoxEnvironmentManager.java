@@ -1,5 +1,6 @@
 package robtest.stateinterfw.virtualbox;
 
+import com.google.inject.Inject;
 import robtest.stateinterfw.IEnvironmentManager;
 import robtest.stateinterfw.ITestExecutionContext;
 import robtest.stateinterfw.ITestSpecs;
@@ -16,6 +17,7 @@ public class VirtualBoxEnvironmentManager implements IVirtualBoxEnvironmentManag
     private IVirtualBoxManageClient _virtualBoxManageClient;
     private IRepository _repository;
 
+    @Inject
     public VirtualBoxEnvironmentManager(IVirtualBoxManageClient virtualBoxManageClient,
                                         IRepository repository) {
         this._testExecutionContext = null;
