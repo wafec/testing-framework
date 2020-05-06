@@ -1,4 +1,4 @@
-package robtest.stateinterfw.faults.wrappers.python.text;
+package robtest.stateinterfw.faults.languages.python.text;
 
 import robtest.stateinterfw.faults.operators.text.NullTextMutator;
 

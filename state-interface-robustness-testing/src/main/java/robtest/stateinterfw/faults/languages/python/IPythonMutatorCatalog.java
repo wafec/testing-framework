@@ -1,4 +1,4 @@
-package robtest.stateinterfw.faults.wrappers.python;
+package robtest.stateinterfw.faults.languages.python;
 
 import robtest.stateinterfw.faults.IDefaultMutatorCatalog;
 

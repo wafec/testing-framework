@@ -13,7 +13,7 @@ public class OpenStackTestManager extends TestManager implements IOpenStackTestM
     public OpenStackTestManager(IVirtualBoxEnvironmentManager environmentManager, IRabbitMessageManager messageManager,
                                 IOpenStackTargetStateMonitor targetStateMonitor,
                                 IOpenStackTestDriver testDriver,
-                                IFaultManager faultManager,
+                                IOpenStackFaultManager faultManager,
                                 IRepository repository,
                                 ITestExecutionContextFactory testExecutionContextFactory) {
         super(environmentManager, messageManager, targetStateMonitor,

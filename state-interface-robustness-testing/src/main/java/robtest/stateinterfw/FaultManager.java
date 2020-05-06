@@ -3,18 +3,16 @@ package robtest.stateinterfw;
 import com.google.inject.Inject;
 import robtest.stateinterfw.data.IRepository;
 
-public class FaultManager implements IFaultManager {
-    private IFaultStrategy _faultStrategy;
+public abstract class FaultManager implements IFaultManager {
     private IMutatorCatalog _mutatorCatalog;
     private IMutantTestCaseFactory _mutantTestCaseFactory;
     private IFaultMutatorFilter _faultMutatorFilter;
     private IRepository _repository;
 
-    public FaultManager(IFaultStrategy faultStrategy, IMutatorCatalog mutatorCatalog,
+    public FaultManager(IMutatorCatalog mutatorCatalog,
                         IMutantTestCaseFactory mutantTestCaseFactory,
                         IFaultMutatorFilter faultMutatorFilter,
                         IRepository repository) {
-        this._faultStrategy = faultStrategy;
         this._mutatorCatalog = mutatorCatalog;
         this._mutantTestCaseFactory = mutantTestCaseFactory;
         this._faultMutatorFilter = faultMutatorFilter;
@@ -22,8 +20,7 @@ public class FaultManager implements IFaultManager {
     }
 
     @Override
-    public ITestSuite generate(ITestCase testCase) {
-
+    public ITestSuite generate(ITestCase testCase, IFaultStrategy faultStrategy) {
         IMutantTestCase mutantTestCase;
         ITestInput testInput = testCase.get(0);
         ITestMessage testMessage = testInput.getMessages().get(0);

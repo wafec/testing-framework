@@ -1,4 +1,4 @@
-package robtest.stateinterfw.faults.wrappers.python.numeric;
+package robtest.stateinterfw.faults.languages.python.numeric;
 
 import robtest.stateinterfw.faults.operators.numeric.NullNumericMutator;
 

@@ -1,4 +1,4 @@
-package robtest.stateinterfw.faults.wrappers.python.booleans;
+package robtest.stateinterfw.faults.languages.python.booleans;
 
 import org.apache.commons.lang3.StringUtils;
 

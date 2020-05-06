@@ -1,16 +1,16 @@
 package robtest.stateinterfw.data;
 
 import com.google.inject.Inject;
-import org.dozer.Mapper;
+import robtest.stateinterfw.data.mapper.IDataMapper;
 
 import java.util.List;
 
-public class HbRepository implements IRepository {
+public class HibernateRepository implements IRepository {
     private ISqlManager _sqlManager;
-    private Mapper _mapper;
+    private IDataMapper _mapper;
 
     @Inject
-    public HbRepository(ISqlManager sqlManager, Mapper mapper) {
+    public HibernateRepository(ISqlManager sqlManager, IDataMapper mapper) {
         this._sqlManager = sqlManager;
         this._mapper = mapper;
     }

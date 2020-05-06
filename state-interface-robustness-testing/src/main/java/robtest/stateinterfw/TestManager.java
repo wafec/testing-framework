@@ -51,13 +51,13 @@ public abstract class TestManager implements ITestManager {
     }
 
     @Override
-    public void handle(ITestCase testCase, ITestSpecs testSpecs) {
+    public void handle(ITestCase testCase, ITestSpecs testSpecs, IFaultStrategy faultStrategy) {
         this.handleGoldenRun(testCase, testSpecs);
-        this.handleFaultInjection(testCase, testSpecs);
+        this.handleFaultInjection(testCase, testSpecs, faultStrategy);
     }
 
-    private void handleFaultInjection(ITestCase testCase, ITestSpecs testSpecs) {
-        ITestSuite testSuite = _faultManager.generate(testCase);
+    private void handleFaultInjection(ITestCase testCase, ITestSpecs testSpecs, IFaultStrategy faultStrategy) {
+        ITestSuite testSuite = _faultManager.generate(testCase, faultStrategy);
         for (int i = 0; i < testSuite.size(); i++) {
             IMutantTestCase mutantTestCase = (IMutantTestCase) testSuite.get(i);
             try {
@@ -81,8 +81,8 @@ public abstract class TestManager implements ITestManager {
     }
 
     @Override
-    public void replicate(ITestCase testCase, ITestSpecs testSpecs) {
-        handle(testCase.pureClone(), testSpecs);
+    public void replicate(ITestCase testCase, ITestSpecs testSpecs, IFaultStrategy faultStrategy) {
+        handle(testCase.pureClone(), testSpecs, faultStrategy);
     }
 
     @Override

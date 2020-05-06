@@ -1,4 +1,4 @@
-package robtest.stateinterfw.faults.wrappers.python.numeric;
+package robtest.stateinterfw.faults.languages.python.numeric;
 
 public interface IPyNumericConvert {
     String convert(String value);

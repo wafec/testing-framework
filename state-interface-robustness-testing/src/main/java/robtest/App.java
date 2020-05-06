@@ -6,6 +6,7 @@ package robtest;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import robtest.guice.RobTestModule;
+import robtest.stateinterfw.data.guice.DataModule;
 import robtest.stateinterfw.examples.openStack.guice.OpenStackModule;
 import robtest.stateinterfw.guice.StateInterModule;
 import robtest.stateinterfw.rabbit.guice.RabbitModule;
@@ -16,9 +17,8 @@ import java.util.Arrays;
 public class App {
     public static void main(String[] args) {
         Injector injector = getGuiceInjector();
-        System.out.println("Hello Wallace");
-        /*ICommandLine commandLine = injector.getInstance(ICommandLine.class);
-        commandLine.run(Arrays.copyOfRange(args, 1, args.length));*/
+        ICommandLine commandLine = injector.getInstance(ICommandLine.class);
+        commandLine.run(Arrays.copyOfRange(args, 0, args.length));
     }
 
     static Injector getGuiceInjector() {
@@ -27,7 +27,8 @@ public class App {
                 new StateInterModule(),
                 new RabbitModule(),
                 new VirtualBoxModule(),
-                new OpenStackModule()
+                new OpenStackModule(),
+                new DataModule()
         );
     }
 }
