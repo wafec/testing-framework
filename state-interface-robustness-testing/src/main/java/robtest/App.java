@@ -8,6 +8,7 @@ import com.google.inject.Injector;
 import robtest.guice.RobTestModule;
 import robtest.stateinterfw.data.guice.DataModule;
 import robtest.stateinterfw.examples.openStack.guice.OpenStackModule;
+import robtest.stateinterfw.faults.languages.python.guice.PythonModule;
 import robtest.stateinterfw.guice.StateInterModule;
 import robtest.stateinterfw.rabbit.guice.RabbitModule;
 import robtest.stateinterfw.virtualbox.guice.VirtualBoxModule;
@@ -28,7 +29,8 @@ public class App {
                 new RabbitModule(),
                 new VirtualBoxModule(),
                 new OpenStackModule(),
-                new DataModule()
+                new DataModule(),
+                new PythonModule()
         );
     }
 }

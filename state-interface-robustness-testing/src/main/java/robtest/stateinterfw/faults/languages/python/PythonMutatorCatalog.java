@@ -1,5 +1,6 @@
 package robtest.stateinterfw.faults.languages.python;
 
+import com.google.inject.Inject;
 import robtest.stateinterfw.faults.DefaultMutatorCatalog;
 import robtest.stateinterfw.faults.languages.python.booleans.IPyBooleanConvert;
 import robtest.stateinterfw.faults.languages.python.booleans.PyFalseBooleanMutator;
@@ -15,6 +16,7 @@ public class PythonMutatorCatalog extends DefaultMutatorCatalog implements IPyth
     private IPyTextConvert _textConverter;
     private IPyNumericConvert _numericConverter;
 
+    @Inject
     public PythonMutatorCatalog(IPyBooleanConvert booleanConverter,
                                 IPyTextConvert textConverter,
                                 IPyNumericConvert numericConverter) {
