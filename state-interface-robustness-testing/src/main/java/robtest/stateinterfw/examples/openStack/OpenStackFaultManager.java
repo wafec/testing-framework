@@ -9,7 +9,8 @@ public class OpenStackFaultManager extends FaultManager implements IOpenStackFau
     @Inject
     public OpenStackFaultManager(IOpenStackMutatorCatalog mutatorCatalog,
                                  IMutantTestCaseFactory mutantTestCaseFactory,
+                                 IOpenStackFaultMutatorFilter mutatorFilter,
                                  IRepository repository) {
-        super(mutatorCatalog, mutantTestCaseFactory, null, repository);
+        super(mutatorCatalog, mutantTestCaseFactory, mutatorFilter, repository);
     }
 }
