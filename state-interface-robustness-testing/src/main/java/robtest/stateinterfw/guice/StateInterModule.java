@@ -2,6 +2,8 @@ package robtest.stateinterfw.guice;
 
 import com.google.inject.AbstractModule;
 import robtest.stateinterfw.*;
+import robtest.stateinterfw.commandline.IStateInterCommandLine;
+import robtest.stateinterfw.commandline.StateInterCommandLine;
 import robtest.stateinterfw.data.MutantTestCaseFactory;
 import robtest.stateinterfw.data.TestExecutionContextFactory;
 

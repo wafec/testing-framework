@@ -2,7 +2,7 @@ package robtest.stateinterfw.files;
 
 import robtest.stateinterfw.ITestCase;
 
-public interface IFileTestCase {
+public interface IFileTestCase extends IFileObject {
     String getUniqueIdentifier();
     int getId();
     IFileTestInput get(int index);

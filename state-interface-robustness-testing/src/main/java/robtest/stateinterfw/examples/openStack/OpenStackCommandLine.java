@@ -2,17 +2,28 @@ package robtest.stateinterfw.examples.openStack;
 
 import com.google.inject.Inject;
 import org.apache.commons.cli.*;
+import robtest.stateinterfw.ITestCase;
+import robtest.stateinterfw.ITestSpecs;
+import robtest.stateinterfw.data.IRepository;
+import robtest.stateinterfw.data.TestCase;
+import robtest.stateinterfw.data.TestSpecs;
 
 public class OpenStackCommandLine implements IOpenStackCommandLine {
     private IOpenStackTestManager _openStackTestManager;
+    private IRepository _repository;
 
     @Inject
-    public OpenStackCommandLine(IOpenStackTestManager openStackTestManager) {
+    public OpenStackCommandLine(IOpenStackTestManager openStackTestManager,
+                                IRepository repository) {
         this._openStackTestManager = openStackTestManager;
+        this._repository = repository;
     }
 
-    private void startTestManager(long caseId, long specsId) {
-        
+    private void startTestManager(int caseId, int specsId) {
+        System.out.println(String.format("Case: %d, Specs: %d\n", caseId, specsId));
+        ITestCase testCase = _repository.get(caseId, TestCase.class);
+        ITestSpecs testSpecs = _repository.get(specsId, TestSpecs.class);
+        _openStackTestManager.handle(testCase, testSpecs, null);
     }
 
     @Override
@@ -34,7 +45,7 @@ public class OpenStackCommandLine implements IOpenStackCommandLine {
             CommandLine commandLine = commandLineParser.parse(options, args);
             String caseOptValue = commandLine.getOptionValue("case");
             String specsOptValue = commandLine.getOptionValue("specs");
-            startTestManager(Long.parseLong(caseOptValue), Long.parseLong(specsOptValue));
+            startTestManager(Integer.parseInt(caseOptValue), Integer.parseInt(specsOptValue));
         } catch (ParseException exc) {
             exc.printStackTrace();
         }

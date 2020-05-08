@@ -9,6 +9,7 @@ import robtest.guice.RobTestModule;
 import robtest.stateinterfw.data.guice.DataModule;
 import robtest.stateinterfw.examples.openStack.guice.OpenStackModule;
 import robtest.stateinterfw.faults.languages.python.guice.PythonModule;
+import robtest.stateinterfw.files.guice.FilesModule;
 import robtest.stateinterfw.guice.StateInterModule;
 import robtest.stateinterfw.rabbit.guice.RabbitModule;
 import robtest.stateinterfw.virtualbox.guice.VirtualBoxModule;
@@ -30,7 +31,8 @@ public class App {
                 new VirtualBoxModule(),
                 new OpenStackModule(),
                 new DataModule(),
-                new PythonModule()
+                new PythonModule(),
+                new FilesModule()
         );
     }
 }

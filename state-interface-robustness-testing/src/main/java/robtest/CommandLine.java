@@ -1,7 +1,7 @@
 package robtest;
 
 import com.google.inject.Inject;
-import robtest.stateinterfw.IStateInterCommandLine;
+import robtest.stateinterfw.commandline.IStateInterCommandLine;
 
 import java.util.Arrays;
 

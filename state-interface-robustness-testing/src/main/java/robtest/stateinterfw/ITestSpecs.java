@@ -1,7 +1,8 @@
 package robtest.stateinterfw;
 
-public interface ITestSpecs {
-    int getId();
+import robtest.stateinterfw.data.IEntity;
+
+public interface ITestSpecs extends IEntity {
     IEnvironment getEnvironment(int index);
     int getEnvironmentCount();
     IMessageDevice getMessageDevice(int index);
