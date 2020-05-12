@@ -2,7 +2,7 @@
 
 <hibernate-mapping>
     <class name="robtest.stateinterfw.data.MutantTestCase" table="MUTANT_TEST_CASE">
-        <id name="id" type="id" column="id">
+        <id name="id" type="int" column="id">
             <generator class="native" />
         </id>
         <many-to-one class="robtest.stateinterfw.data.TestCase" name="originalTestCase" column="test_case_id" cascade="save-update" />

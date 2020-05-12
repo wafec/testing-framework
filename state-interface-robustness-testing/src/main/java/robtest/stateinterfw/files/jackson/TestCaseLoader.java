@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.inject.Inject;
 import robtest.stateinterfw.ITestCase;
 import robtest.stateinterfw.data.IRepository;
+import robtest.stateinterfw.data.TestCase;
 import robtest.stateinterfw.files.IFileTestCase;
 import robtest.stateinterfw.files.ITestCaseLoader;
 import robtest.stateinterfw.files.mapper.IFileMapper;
@@ -35,7 +36,7 @@ public class TestCaseLoader implements ITestCaseLoader {
 
     @Override
     public void add(IFileTestCase fileTestCase) {
-        ITestCase testCase = _fileMapper.map(fileTestCase, ITestCase.class);
+        ITestCase testCase = _fileMapper.map(fileTestCase, TestCase.class);
         _repository.save(testCase);
     }
 }

@@ -59,4 +59,20 @@ public class TestSpecs implements ITestSpecs {
     public int getMessageDeviceCount() {
         return messageDevices.size();
     }
+
+    public Set<Environment> getEnvironments() {
+        return environments;
+    }
+
+    public void setEnvironments(Set<Environment> environments) {
+        this.environments = environments;
+    }
+
+    public Set<MessageDevice> getMessageDevices() {
+        return messageDevices;
+    }
+
+    public void setMessageDevices(Set<MessageDevice> messageDevices) {
+        this.messageDevices = messageDevices;
+    }
 }

@@ -1,0 +1,30 @@
+{
+  "id": 1,
+  "uniqueIdentifier": "test",
+  "inputs": [
+    {
+      "action": "do_action",
+      "locked": false,
+      "args": [
+        {
+          "name": "param1",
+          "type": "int",
+          "value": "1"
+        },
+        {
+          "name": "param2",
+          "type": "int",
+          "value": "2"
+        }
+      ],
+      "states": [
+        {
+          "name": "state1",
+          "timeout": 60,
+          "required": true,
+          "order": 1
+        }
+      ]
+    }
+  ]
+}

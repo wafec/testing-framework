@@ -8,7 +8,7 @@
         <discriminator column="device_type" />
         <subclass name="robtest.stateinterfw.rabbit.RabbitMessageDevice" discriminator-value="rabbitmq">
             <join table="MESSAGE_DEVICE_RABBIT">
-                <key colum="message_device_id" />
+                <key column="message_device_id" />
                 <property name="url" type="text" column="url" />
                 <property name="user" type="text" column="username" />
                 <property name="password" type="text" column="passwd" />

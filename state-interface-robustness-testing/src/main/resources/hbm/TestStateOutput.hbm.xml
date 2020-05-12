@@ -6,7 +6,7 @@
             <generator class="native" />
         </id>
         <property name="time" type="date" column="output_time" />
-        <property name="text" type="longtext" column="output_text" />
+        <property name="text" type="text" column="output_text" />
         <many-to-one name="testState" class="robtest.stateinterfw.data.TestState" column="test_state_id" cascade="save-update" />
     </class>
 </hibernate-mapping>
