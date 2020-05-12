@@ -3,6 +3,7 @@ package robtest.stateinterfw.files.jackson;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.inject.Inject;
 import robtest.stateinterfw.ITestCase;
+import robtest.stateinterfw.ITestInput;
 import robtest.stateinterfw.data.IRepository;
 import robtest.stateinterfw.data.TestCase;
 import robtest.stateinterfw.files.IFileTestCase;

@@ -7,15 +7,15 @@
         </id>
         <property name="action" type="text" column="action" />
         <property name="locked" type="boolean" column="locked" />
-        <set name="testStates" inverse="true" lazy="true" order-by="order">
+        <set name="testStates" inverse="true" lazy="true" order-by="order" cascade="save-update">
             <key column="test_input_id" />
             <one-to-many class="robtest.stateinterfw.data.TestState" />
         </set>
-        <set name="testMessages" inverse="true" lazy="true" order-by="order">
+        <set name="testMessages" inverse="true" lazy="true" order-by="order" cascade="save-update">
             <key column="test_input_id" />
             <one-to-many class="robtest.stateinterfw.data.TestMessage" />
         </set>
-        <set name="testInputArguments" inverse="true" lazy="true">
+        <set name="testInputArguments" inverse="true" lazy="true" cascade="save-update">
             <key column="test_input_id" />
             <one-to-many class="robtest.stateinterfw.data.TestInputArgument" />
         </set>

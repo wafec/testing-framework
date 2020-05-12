@@ -1,6 +1,8 @@
 package robtest.stateinterfw;
 
-public interface ITestInput {
+import robtest.stateinterfw.data.IEntity;
+
+public interface ITestInput extends IEntity {
     int getId();
     String getAction();
     ITestInputArgs getArgs();

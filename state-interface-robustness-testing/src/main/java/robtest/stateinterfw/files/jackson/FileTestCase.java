@@ -55,9 +55,4 @@ public class FileTestCase implements IFileTestCase {
     public List<FileTestInput> getFileInputs() {
         return this.fileInputs;
     }
-
-    @Override
-    public ITestCase toTestCase() {
-        return null;
-    }
 }

@@ -4,6 +4,8 @@ import robtest.stateinterfw.IMutantTestCase;
 import robtest.stateinterfw.ITestCase;
 import robtest.stateinterfw.ITestInput;
 
+import java.util.Iterator;
+
 public class MutantTestCase implements IMutantTestCase {
     private int id;
     private TestCase originalTestCase;
@@ -65,5 +67,14 @@ public class MutantTestCase implements IMutantTestCase {
         if (originalTestCase == null)
             throw new NullPointerException();
         return originalTestCase.getUniqueIdentifier();
+    }
+
+    @Override
+    public Iterator<ITestInput> iterator() {
+        if (originalTestCase != null) {
+            return originalTestCase.iterator();
+        } else {
+            return null;
+        }
     }
 }

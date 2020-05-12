@@ -2,7 +2,7 @@
 
 <hibernate-mapping>
     <class name="robtest.stateinterfw.data.State" table="STATE">
-        <id name="id" type="int" column="int">
+        <id name="id" type="int" column="id">
             <generator class="native" />
         </id>
         <property name="name" type="text" column="name" />

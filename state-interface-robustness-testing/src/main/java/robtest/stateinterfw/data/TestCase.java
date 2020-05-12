@@ -3,6 +3,8 @@ package robtest.stateinterfw.data;
 import robtest.stateinterfw.ITestCase;
 import robtest.stateinterfw.ITestInput;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Set;
 
@@ -62,5 +64,10 @@ public class TestCase implements ITestCase {
 
     public void setTestInputs(Set<TestInput> testInputs) {
         this.testInputs = testInputs;
+    }
+
+    @Override
+    public Iterator<ITestInput> iterator() {
+        return Arrays.asList(this.testInputs.toArray(new ITestInput[this.testInputs.size()])).iterator();
     }
 }

@@ -1,7 +1,8 @@
 package robtest.stateinterfw;
 
-public interface IState {
-    int getId();
+import robtest.stateinterfw.data.IEntity;
+
+public interface IState extends IEntity {
     String getName();
     int getTimeout();
     boolean isRequired();
