@@ -5,9 +5,7 @@ import robtest.stateinterfw.files.IFileTestState;
 
 public class FileTestState implements IFileTestState {
     private int order;
-    private String name;
-    private int timeout;
-    private boolean required;
+    private int stateId;
 
     public FileTestState() {
 
@@ -18,35 +16,16 @@ public class FileTestState implements IFileTestState {
         return order;
     }
 
+    @Override
+    public int getStateId() {
+        return stateId;
+    }
+
     public void setOrder(int order) {
         this.order = order;
     }
 
-    @Override
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    @Override
-    public int getTimeout() {
-        return timeout;
-    }
-
-    public void setTimeout(int timeout) {
-        this.timeout = timeout;
-    }
-
-    @JsonGetter("required")
-    @Override
-    public boolean isRequired() {
-        return required;
-    }
-
-    public void setRequired(boolean required) {
-        this.required = required;
+    public void setStateId(int stateId) {
+        this.stateId = stateId;
     }
 }

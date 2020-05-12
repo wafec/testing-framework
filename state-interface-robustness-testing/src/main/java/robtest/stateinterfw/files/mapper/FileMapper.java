@@ -5,15 +5,17 @@ import com.github.dozermapper.core.Mapper;
 import robtest.stateinterfw.data.IData;
 import robtest.stateinterfw.files.IFileObject;
 
-public class FileMapper implements IFileMapper {
-    private Mapper _mapper;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 
+public class FileMapper implements IFileMapper {
     public FileMapper() {
-        _mapper = DozerBeanMapperBuilder.buildDefault();
+
     }
 
     @Override
     public <T extends IData> T map(IFileObject fileObject, Class<T> dataClass) {
-        return _mapper.map(fileObject, dataClass);
+        throw new UnsupportedOperationException();
     }
 }

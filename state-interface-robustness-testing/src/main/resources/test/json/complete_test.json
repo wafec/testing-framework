@@ -19,10 +19,8 @@
       ],
       "states": [
         {
-          "name": "state1",
-          "timeout": 60,
-          "required": true,
-          "order": 1
+          "order": 1,
+          "stateId": 1
         }
       ]
     }
