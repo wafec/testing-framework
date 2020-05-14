@@ -3,6 +3,7 @@ package robtest.stateinterfw.commandline;
 import com.google.inject.Inject;
 import robtest.stateinterfw.examples.openStack.IOpenStackCommandLine;
 import robtest.stateinterfw.files.commandline.IFileCommandLine;
+import robtest.stateinterfw.web.StateInterWebApplication;
 
 import java.util.Arrays;
 
@@ -30,6 +31,9 @@ public class StateInterCommandLine implements IStateInterCommandLine {
                 break;
             case "testCase":
                 this._fileCommandLine.run(mArgs);
+                break;
+            case "web":
+                StateInterWebApplication.run();
                 break;
         }
     }

@@ -29,7 +29,9 @@ public class RabbitMessageManager extends MessageManager implements IRabbitMessa
     private void bind(IRabbitMessageDevice messageDevice) {
         ConnectionFactory factory = new ConnectionFactory();
         try {
-            factory.setUri(messageDevice.getUrl());
+            factory.setHost(messageDevice.getUrl());
+            factory.setPassword(messageDevice.getPassword());
+            factory.setUsername(messageDevice.getUser());
             Connection connection = factory.newConnection();
             Channel channel = connection.createChannel();
         } catch (Exception exc) {
