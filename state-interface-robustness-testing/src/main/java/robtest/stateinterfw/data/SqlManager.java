@@ -9,17 +9,17 @@ import robtest.stateinterfw.data.ISqlManager;
 import robtest.stateinterfw.data.ISqlSession;
 
 public class SqlManager implements ISqlManager {
+    private static SessionFactory sessionFactory = new Configuration().configure("hbm/hibernate.cfg.xml").buildSessionFactory();
+
     public SqlManager() {
 
     }
 
     public void createSession(ISqlSession sqlSession)
     {
-        SessionFactory sessionFactory = null;
         Session session = null;
         Transaction transaction = null;
         try {
-            sessionFactory = new Configuration().configure("hbm/hibernate.cfg.xml").buildSessionFactory();
             session = sessionFactory.openSession();
             transaction = session.beginTransaction();
             if (sqlSession.run(session))

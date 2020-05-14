@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="
+        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+    <bean id="data.sqlmanager" class="robtest.stateinterfw.data.SqlManager" />
+    <bean id="data.datamapper" class="robtest.stateinterfw.data.mapper.DataMapper" />
+    <bean id="data.repository" class="robtest.stateinterfw.data.HibernateRepository">
+        <constructor-arg ref="data.sqlmanager" />
+        <constructor-arg ref="data.datamapper" />
+    </bean>
+</beans>

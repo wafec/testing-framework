@@ -5,7 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ImportResource;
 
 @SpringBootApplication
-@ImportResource("classpath:beans.xml")
+@ImportResource("classpath:spring/beans.xml")
 public class StateInterWebApplication {
     public static void run() {
         SpringApplication.run(StateInterWebApplication.class);
