@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<mappings xmlns="http://dozermapper.github.io/schema/bean-mapping"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://dozermapper.github.io/schema/bean-mapping http://dozermapper.github.io/schema/bean-mapping.xsd">
+    <mapping>
+        <class-a>robtest.stateinterfw.web.models.RabbitCreateRequestModel</class-a>
+        <class-b>robtest.stateinterfw.rabbit.RabbitMessageDevice</class-b>
+        <field>
+            <a>url</a>
+            <b>url</b>
+        </field>
+        <field>
+            <a>username</a>
+            <b>user</b>
+        </field>
+        <field>
+            <a>password</a>
+            <b>password</b>
+        </field>
+    </mapping>
+</mappings>

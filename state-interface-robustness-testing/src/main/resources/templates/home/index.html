@@ -6,13 +6,22 @@
     <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" />
     <script th:src="@{/js/bootstrap.min.js}"></script>
 </head>
-<body>
+<body class="py-2">
     <div class="container">
+        <div class="row">
+            <div class="col">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item active" aria-current="page">Home</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
         <div class="row">
             <div class="col">
                 <div class="card">
                     <div class="card-body">
-                        <h5 class="card-title">Cadastro</h5>
+                        <h5 class="card-title">Form</h5>
                         <div class="row">
                             <div class="col-3">
                                 <a href="/message-devices/index">Message Device</a>

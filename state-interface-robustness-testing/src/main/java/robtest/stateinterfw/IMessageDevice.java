@@ -1,5 +1,7 @@
 package robtest.stateinterfw;
 
-public interface IMessageDevice {
+import robtest.stateinterfw.data.IEntity;
+
+public interface IMessageDevice extends IEntity {
     int getId();
 }
