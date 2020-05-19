@@ -7,12 +7,12 @@
         </id>
         <discriminator column="environment_type" type="string" />
         <property name="name" type="text" column="name" />
+        <property name="state" type="text" column="state" />
         <subclass name="robtest.stateinterfw.virtualbox.VirtualBoxEnvironment" discriminator-value="virtualbox">
             <join table="ENVIRONMENT_VIRTUAL_BOX">
                 <key column="environment_id" />
                 <property name="snapshot" type="text" column="snapshot" />
                 <property name="priority" type="int" column="priority" />
-                <property name="environmentType" type="text" column="environment_type" />
             </join>
         </subclass>
     </class>

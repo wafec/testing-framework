@@ -1,18 +1,17 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://wwww.thymeleaf.org">
+<html th:replace="~{shared/master :: layout(~{::title}, ~{::section})}" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>Home</title>
-    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" />
-    <script th:src="@{/js/bootstrap.min.js}"></script>
+    <title>Index</title>
 </head>
-<body class="py-2">
-    <div class="container">
+<body>
+    <section>
         <div class="row">
             <div class="col">
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb">
-                        <li class="breadcrumb-item active" aria-current="page">Home</li>
+                        <li class="breadcrumb-item"><a href="/index">Home</a></li>
+                        <li class="breadcrumb-item"><a href="/environments/index">Environment</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">VirtualBox&reg;</li>
                     </ol>
                 </nav>
             </div>
@@ -24,16 +23,16 @@
                         <h5 class="card-title">Form</h5>
                         <div class="row">
                             <div class="col-3">
-                                <a href="/message-devices/index">Message Device</a>
+                                <a href="/environments/virtualbox/create" class="card-link">Create</a>
                             </div>
                             <div class="col-3">
-                                <a href="/environments/index">Environment</a>
+                                <a href="/environments/virtualbox/list" class="card-link">List</a>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
+    </section>
 </body>
 </html>

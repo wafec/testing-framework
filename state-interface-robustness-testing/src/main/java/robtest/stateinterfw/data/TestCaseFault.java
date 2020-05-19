@@ -1,20 +1,20 @@
 package robtest.stateinterfw.data;
 
-import robtest.stateinterfw.IMutantTestCase;
+import robtest.stateinterfw.ITestCaseFault;
 import robtest.stateinterfw.ITestCase;
 import robtest.stateinterfw.ITestInput;
 
 import java.util.Iterator;
 
-public class MutantTestCase implements IMutantTestCase {
+public class TestCaseFault implements ITestCaseFault {
     private int id;
     private TestCase originalTestCase;
 
-    public MutantTestCase(TestCase originalTestCase) {
+    public TestCaseFault(TestCase originalTestCase) {
         this.originalTestCase = originalTestCase;
     }
 
-    public MutantTestCase() {
+    public TestCaseFault() {
 
     }
 
@@ -59,7 +59,7 @@ public class MutantTestCase implements IMutantTestCase {
         if (originalTestCase == null)
             throw new NullPointerException();
         ITestCase testClone = originalTestCase.pureClone();
-        return new MutantTestCase((TestCase)testClone);
+        return new TestCaseFault((TestCase)testClone);
     }
 
     @Override

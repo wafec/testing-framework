@@ -1,5 +1,5 @@
 package robtest.stateinterfw;
 
-public interface IMutantTestCase extends ITestCase {
+public interface ITestCaseFault extends ITestCase {
     ITestCase getOriginalTestCase();
 }

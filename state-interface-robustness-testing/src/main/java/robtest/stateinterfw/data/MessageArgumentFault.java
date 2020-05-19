@@ -1,24 +1,24 @@
 package robtest.stateinterfw.data;
 
 import robtest.stateinterfw.IFault;
-import robtest.stateinterfw.IMutantMessageArgument;
+import robtest.stateinterfw.IMessageArgumentFault;
 
-public class MutantMessageArgument implements IMutantMessageArgument {
+public class MessageArgumentFault implements IMessageArgumentFault {
     private int id;
     private Fault fault;
     private MessageArgument originalMessageArgument;
-    private String mutationDataValue;
-    private MutantTestCase mutantTestCase;
+    private String faultData;
+    private TestCaseFault testCaseFault;
 
-    public MutantMessageArgument() {
+    public MessageArgumentFault() {
 
     }
 
-    public MutantMessageArgument(Fault fault, MessageArgument originalMessageArgument, String mutationDataValue, MutantTestCase mutantTestCase) {
+    public MessageArgumentFault(Fault fault, MessageArgument originalMessageArgument, String faultData, TestCaseFault testCaseFault) {
         this.fault = fault;
         this.originalMessageArgument = originalMessageArgument;
-        this.mutationDataValue = mutationDataValue;
-        this.mutantTestCase = mutantTestCase;
+        this.faultData = faultData;
+        this.testCaseFault = testCaseFault;
     }
 
     @Override
@@ -28,12 +28,12 @@ public class MutantMessageArgument implements IMutantMessageArgument {
     }
 
     @Override
-    public String getMutationDataValue() {
-        return mutationDataValue;
+    public String getFaultData() {
+        return faultData;
     }
 
-    public void setMutationDataValue(String mutationDataValue) {
-        this.mutationDataValue = mutationDataValue;
+    public void setFaultData(String faultData) {
+        this.faultData = faultData;
     }
 
     @Override
@@ -74,7 +74,7 @@ public class MutantMessageArgument implements IMutantMessageArgument {
 
     @Override
     public String getDataValue() {
-        return this.mutationDataValue;
+        return this.faultData;
     }
 
     void evalMessageArg() {
@@ -90,11 +90,11 @@ public class MutantMessageArgument implements IMutantMessageArgument {
         return this.originalMessageArgument;
     }
 
-    public void setMutantTestCase(MutantTestCase mutantTestCase) {
-        this.mutantTestCase = mutantTestCase;
+    public void setTestCaseFault(TestCaseFault testCaseFault) {
+        this.testCaseFault = testCaseFault;
     }
 
-    public MutantTestCase getMutantTestCase() {
-        return this.mutantTestCase;
+    public TestCaseFault getTestCaseFault() {
+        return this.testCaseFault;
     }
 }

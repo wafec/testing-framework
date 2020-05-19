@@ -6,15 +6,13 @@ public class VirtualBoxEnvironment extends Environment implements IVirtualBoxEnv
     private int environmentId;
     private String snapshot;
     private int priority;
-    private String environmentType;
 
     public VirtualBoxEnvironment() {
         super();
     }
 
-    public VirtualBoxEnvironment(String name, String state, String environmentType) {
+    public VirtualBoxEnvironment(String name, String state) {
         super(name, state);
-        this.environmentType = environmentType;
     }
 
     public void setEnvironmentId(int environmentId) {
@@ -48,13 +46,5 @@ public class VirtualBoxEnvironment extends Environment implements IVirtualBoxEnv
 
     public int getPriority() {
         return this.priority;
-    }
-
-    public void setEnvironmentType(String environmentType) {
-        this.environmentType = environmentType;
-    }
-
-    public String getEnvironmentType() {
-        return environmentType;
     }
 }

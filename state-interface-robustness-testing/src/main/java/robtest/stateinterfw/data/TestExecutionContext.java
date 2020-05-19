@@ -9,7 +9,7 @@ public class TestExecutionContext implements ITestExecutionContext, IEntity {
     private int id;
     private TestCase testCase;
     private TestInput testInput;
-    private MutantTestCase mutantTestCase;
+    private TestCaseFault testCaseFault;
     private TestSpecs testSpecs;
 
     public TestExecutionContext() {
@@ -37,8 +37,8 @@ public class TestExecutionContext implements ITestExecutionContext, IEntity {
 
     @Override
     public ITestCase get() {
-        if (mutantTestCase != null)
-            return mutantTestCase;
+        if (testCaseFault != null)
+            return testCaseFault;
         return testCase;
     }
 
@@ -76,11 +76,11 @@ public class TestExecutionContext implements ITestExecutionContext, IEntity {
         return this.testInput;
     }
 
-    public void setMutantTestCase(MutantTestCase mutantTestCase) {
-        this.mutantTestCase = mutantTestCase;
+    public void setTestCaseFault(TestCaseFault testCaseFault) {
+        this.testCaseFault = testCaseFault;
     }
 
-    public MutantTestCase getMutantTestCase() {
-        return mutantTestCase;
+    public TestCaseFault getTestCaseFault() {
+        return testCaseFault;
     }
 }

@@ -14,7 +14,7 @@ public class TestExecutionContextFactory implements ITestExecutionContextFactory
         if (testCase instanceof TestCase)
             testExecutionContext.setTestCase((TestCase) testCase);
         else
-            testExecutionContext.setMutantTestCase((MutantTestCase) testCase);
+            testExecutionContext.setTestCaseFault((TestCaseFault) testCase);
         testExecutionContext.setTestInput((TestInput) testInput);
         testExecutionContext.setTestSpecs((TestSpecs) testSpecs);
         return testExecutionContext;

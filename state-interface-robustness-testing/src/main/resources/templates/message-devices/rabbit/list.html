@@ -2,11 +2,13 @@
 <html lang="en" xmlns:th="http://www.thymeleaf">
 <head>
     <meta charset="UTF-8">
-    <title>Message Device Rabbit List</title>
+    <title>List</title>
     <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" />
+    <script th:src="@{/js/jquery.min.js}"></script>
+    <script th:src="@{/js/popper.min.js}"></script>
     <script th:src="@{/js/bootstrap.min.js}"></script>
 </head>
-<body>
+<body class="py-2">
     <div class="container">
         <div class="row">
             <div class="col">
@@ -18,6 +20,63 @@
                         <li class="breadcrumb-item active" aria-current="page">List</li>
                     </ol>
                 </nav>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <form class="form-row" method="post">
+                    <div class="col">
+                        <div class="form-group">
+                            <label class="sr-only">Filter:</label>
+                            <input type="text" class="form-control form-control-sm" name="filter" placeholder="Filter..." />
+                        </div>
+                    </div>
+                    <div class="col-auto">
+                        <div class="form-group">
+                            <label class="sr-only">Submit</label>
+                            <button type="button" class="btn btn-sm btn-primary">
+                                <span>Search</span>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="w-100"></div>
+            <div class="col-12">
+                <table class="table table-sm table-striped table-hover" tabindex="-1">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Host</th>
+                            <th>Username</th>
+                            <th>Password</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="device : ${messageDeviceList}">
+                            <th
+                                    style="width: 1%" class="align-middle text-nowrap" th:text="${device.id}"></th>
+                            <td class="align-middle" th:text="${device.url}"></td>
+                            <td class="align-middle" th:text="${device.user}"></td>
+                            <td class="align-middle" th:text="${device.password}"></td>
+                            <td
+                                    style="width: 1%" class="text-nowrap">
+                                <div class="btn-group">
+                                    <a href="#" class="btn btn-sm btn-warning">Edit</a>
+                                    <button type="button" class="btn btn-sm btn-warning dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <span class="sr-only">Dropdown</span>
+                                    </button>
+                                    <div class="dropdown-menu dropdown-menu-right">
+                                        <a class="dropdown-item" href="#">Details</a>
+                                        <a class="dropdown-item" href="#">Test Connection</a>
+                                        <a class="dropdown-item text-danger" href="#">Remove</a>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{shared/master :: layout(~{::title}, ~{::section})}">
+<head>
+    <title>List</title>
+</head>
+<body>
+    <section>
+        <div class="row">
+            <div class="col">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="/index">Home</a></li>
+                        <li class="breadcrumb-item"><a href="/environments/index">Environment</a></li>
+                        <li class="breadcrumb-item"><a href="/environments/virtualbox/index">VirtualBox&reg;</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">List</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <form class="form-row" method="get">
+                    <div class="col form-group">
+                        <label class="sr-only">Filter:</label>
+                        <input type="text" class="form-control form-control-sm" name="filter" />
+                    </div>
+                    <div class="col-auto form-group">
+                        <label class="sr-only">Search:</label>
+                        <button type="submit" class="btn btn-sm btn-primary">Search</button>
+                    </div>
+                </form>
+            </div>
+            <div class="w-100"></div>
+            <div class="col">
+                <table class="table table-sm table-striped table-hover" tabindex="-1">
+                    <thead>
+                        <tr>
+                            <th class="w-1-nowrap">#</th>
+                            <th>Name</th>
+                            <th>Snapshot</th>
+                            <th>Priority</th>
+                            <th>State</th>
+                            <th class="w-1-nowrap">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="environment : ${environmentList}">
+                            <th class="align-middle">
+                                <span th:text="${environment.id}" />
+                            </th>
+                            <td class="align-middle">
+                                <span th:text="${environment.name}" />
+                            </td>
+                            <td class="align-middle">
+                                <span th:text="${environment.snapshot}" />
+                            </td>
+                            <td class="align-middle">
+                                <span th:text="${environment.priority}" />
+                            </td>
+                            <td class="align-middle">
+                                <span th:text="${environment.state}" />
+                            </td>
+                            <td>
+                                <div class="btn-group">
+                                    <a href="#" class="btn btn-sm btn-warning">Edit</a>
+                                    <button type="button" class="btn btn-sm btn-warning dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-expanded="false" aria-haspopup="true">
+                                        <span class="sr-only">Dropdown</span>
+                                    </button>
+                                    <div class="dropdown-menu dropdown-menu-right">
+                                        <a href="#" class="dropdown-item">Remover</a>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+</body>
+</html>

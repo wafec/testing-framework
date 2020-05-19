@@ -17,9 +17,9 @@
         <mapping resource="hbm/TestMessage.hbm.xml" />
         <mapping resource="hbm/MessageArgument.hbm.xml" />
         <mapping resource="hbm/Fault.hbm.xml" />
-        <mapping resource="hbm/MutantTestCase.hbm.xml" />
+        <mapping resource="hbm/TestCaseFault.hbm.xml" />
         <mapping resource="hbm/Environment.hbm.xml" />
-        <mapping resource="hbm/MutantMessageArgument.hbm.xml" />
+        <mapping resource="hbm/MessageArgumentFault.hbm.xml" />
         <mapping resource="hbm/TestExecutionContext.hbm.xml" />
         <mapping resource="hbm/MessageDevice.hbm.xml" />
         <mapping resource="hbm/TestSpecs.hbm.xml" />

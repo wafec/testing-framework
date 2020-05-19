@@ -40,7 +40,7 @@ public class HibernateRepository implements IRepository {
     }
 
     @Override
-    public <T extends IData> List<T> Query(String queryString, Class<T> entityClass) {
+    public <T extends IData> List<T> query(String queryString, Class<T> entityClass) {
         Object[] result = new Object[1];
         _sqlManager.createSession(session -> {
             result[0] = session.createQuery(queryString, entityClass).list();

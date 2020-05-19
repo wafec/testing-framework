@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 
 <hibernate-mapping>
-    <class name="robtest.stateinterfw.data.MutantTestCase" table="MUTANT_TEST_CASE">
+    <class name="robtest.stateinterfw.data.TestCaseFault" table="MUTANT_TEST_CASE">
         <id name="id" type="int" column="id">
             <generator class="native" />
         </id>

@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html th:fragment="layout (title, content)" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:replace="${title}">Layout Title</title>
+    <link rel="stylesheet" th:href="@{/css/custom.css}" />
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" />
+    <script th:src="@{/js/jquery.min.js}"></script>
+    <script th:src="@{/js/popper.min.js}"></script>
+    <script th:src="@{/js/bootstrap.min.js}"></script>
+</head>
+<body class="py-2">
+    <div class="container">
+        <div th:replace="${content}">
+            <p>Layout Content</p>
+        </div>
+    </div>
+</body>
+</html>

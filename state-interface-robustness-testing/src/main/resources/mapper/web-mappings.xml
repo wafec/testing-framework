@@ -18,4 +18,24 @@
             <b>password</b>
         </field>
     </mapping>
+    <mapping>
+        <class-a>robtest.stateinterfw.web.models.VirtualBoxCreateRequestModel</class-a>
+        <class-b>robtest.stateinterfw.virtualbox.VirtualBoxEnvironment</class-b>
+        <field>
+            <a>name</a>
+            <b>name</b>
+        </field>
+        <field>
+            <a>snapshot</a>
+            <b>snapshot</b>
+        </field>
+        <field>
+            <a>priority</a>
+            <b>priority</b>
+        </field>
+        <field>
+            <a>state</a>
+            <b>state</b>
+        </field>
+    </mapping>
 </mappings>

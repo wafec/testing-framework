@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 
 <hibernate-mapping>
-    <class name="robtest.stateinterfw.data.MutantMessageArgument" table="MUTANT_MESSAGE_ARGUMENT">
+    <class name="robtest.stateinterfw.data.MessageArgumentFault" table="MUTANT_MESSAGE_ARGUMENT">
         <id name="id" type="int" column="id">
             <generator class="native" />
         </id>
         <many-to-one class="robtest.stateinterfw.data.Fault" name="fault" column="fault_id" cascade="save-update" />
         <many-to-one class="robtest.stateinterfw.data.MessageArgument" name="originalMessageArgument" column="message_argument_id" cascade="save-update" />
-        <property name="mutationDataValue" type="text" column="mutation_data_value" />
-        <many-to-one class="robtest.stateinterfw.data.MutantTestCase" name="mutantTestCase" column="test_case_id" cascade="save-update" />
+        <property name="faultData" type="text" column="fault_data" />
+        <many-to-one class="robtest.stateinterfw.data.TestCaseFault" name="testCaseFault" column="test_case_fault_id" cascade="save-update" />
     </class>
 </hibernate-mapping>

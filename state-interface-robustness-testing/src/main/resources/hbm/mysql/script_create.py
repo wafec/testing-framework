@@ -15,12 +15,13 @@ files = [
     "TestSpecs",
     "TestState",
     "TestStateOutput",
-    "MutantMessageArgument",
-    "MutantTestCase",
+    "TestCaseFault",
+    "MessageArgumentFault",
     "TestExecutionContext"
 ]
 print("-- CREATE USER 'test'@'localhost' IDENTIFIED BY 'test-321';")
 print("-- CREATE USER 'test'@'%' IDENTIFIED BY 'test-321';")
+print("-- DROP DATABASE IF EXISTS test;")
 print("-- CREATE DATABASE test;")
 print("-- GRANT ALL PRIVILEGES ON test.* TO 'test'@'localhost';")
 print("-- GRANT ALL PRIVILEGES ON test.* TO 'test'@'%';")

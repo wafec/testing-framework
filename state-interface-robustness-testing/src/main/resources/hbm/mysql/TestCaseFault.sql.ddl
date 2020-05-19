@@ -1,5 +1,5 @@
 
-CREATE TABLE MUTANT_TEST_CASE (
+CREATE TABLE TEST_CASE_FAULT (
     id int not null auto_increment,
     test_case_id int,
     primary key (id),

@@ -1,6 +1,5 @@
 package robtest.stateinterfw;
 
-import com.google.inject.Inject;
 import robtest.stateinterfw.data.IEntity;
 import robtest.stateinterfw.data.IRepository;
 
@@ -59,7 +58,7 @@ public abstract class TestManager implements ITestManager {
     private void handleFaultInjection(ITestCase testCase, ITestSpecs testSpecs, IFaultStrategy faultStrategy) {
         ITestSuite testSuite = _faultManager.generate(testCase, faultStrategy);
         for (int i = 0; i < testSuite.size(); i++) {
-            IMutantTestCase mutantTestCase = (IMutantTestCase) testSuite.get(i);
+            ITestCaseFault mutantTestCase = (ITestCaseFault) testSuite.get(i);
             try {
                 ITestExecutionContext testExecutionContext = _testExecutionContextFactory.create(mutantTestCase, testSpecs);
                 _repository.save((IEntity) testExecutionContext);
