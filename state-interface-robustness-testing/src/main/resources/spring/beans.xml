@@ -9,4 +9,9 @@
         <constructor-arg ref="data.sqlmanager" />
         <constructor-arg ref="data.datamapper" />
     </bean>
+    <bean id="files.filemapper" class="robtest.stateinterfw.files.mapper.FileMapper" />
+    <bean id="files.testcaseloader" class="robtest.stateinterfw.files.jackson.TestCaseLoader" >
+        <constructor-arg ref="data.repository" />
+        <constructor-arg ref="files.filemapper" />
+    </bean>
 </beans>

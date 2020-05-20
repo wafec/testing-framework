@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html th:replace="~{shared/master :: layout(~{::title}, ~{::section})}" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Create</title>
+</head>
+<body>
+    <section>
+        <div class="row">
+            <div class="col">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="/index">Home</a></li>
+                        <li class="breadcrumb-item"><a href="/testsuite/index">Test Suite</a></li>
+                        <li class="breadcrumb-item"><a href="/states/index">State</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Create</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+        <form class="form-row" method="post">
+            <div class="col">
+                <h3>State Create Form</h3>
+            </div>
+            <div class="w-100"></div>
+            <div class="col-6 form-group">
+                <label>Name:</label>
+                <input type="text" class="form-control form-control-sm" name="name" />
+            </div>
+            <div class="col-6 form-group">
+                <label>Timeout:</label>
+                <input type="text" class="form-control form-control-sm" name="timeout" />
+            </div>
+            <div class="col-6 form-group">
+                <label class="d-block">Required:</label>
+                <div class="custom-control custom-radio custom-control-inline">
+                    <input type="radio" class="custom-control-input" id="customCheckYes" name="required" value="true" />
+                    <label class="custom-control-label" for="customCheckYes">Yes</label>
+                </div>
+                <div class="custom-control custom-radio custom-control-inline">
+                    <input type="radio" class="custom-control-input" id="customCheckNo" name="required" value="false" />
+                    <label class="custom-control-label" for="customCheckNo">No</label>
+                </div>
+            </div>
+            <div class="w-100"></div>
+            <div class="col">
+                <button type="submit" class="btn btn-sm btn-secondary">Save</button>
+            </div>
+        </form>
+    </section>
+</body>
+</html>

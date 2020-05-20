@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html th:replace="~{shared/master :: layout(~{::title}, ~{::section})}" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Title</title>
+    <title>Index</title>
 </head>
 <body>
     <section>
@@ -16,18 +16,23 @@
             </div>
         </div>
         <div class="row">
-            <div class="col">
+            <div class="col-4">
                 <div class="card">
                     <div class="card-body">
-                        <h5 class="card-title">Test Suite Form</h5>
-                        <div class="row">
-                            <div class="col-3">
-                                <a href="/testsuite/importfile" class="card-link">Import</a>
-                            </div>
-                            <div class="col-3">
-                                <a href="/testsuite/list" class="card-link">List</a>
-                            </div>
-                        </div>
+                        <h5 class="card-title">Test Suite</h5>
+                        <h6 class="card-subtitle mb-2 text-muted">Form</h6>
+                        <a href="/testsuite/importfile" class="card-link">Import</a>
+                        <a href="/testsuite/list" class="card-link">List</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">State</h5>
+                        <h6 class="card-subtitle mb-2 text-muted">Form</h6>
+                        <a href="/states/create" class="card-link">Create</a>
+                        <a href="/states/list" class="card-link">List</a>
                     </div>
                 </div>
             </div>
