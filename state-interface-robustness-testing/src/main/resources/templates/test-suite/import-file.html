@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html th:replace="~{shared/master :: layout(~{::title}, ~{::section})}" xmlns:th="http://www.thymeleaft.org">
+<head>
+    <title>Import</title>
+</head>
+<body>
+    <section>
+        <div class="row">
+            <div class="col">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="/index">Home</a></li>
+                        <li class="breadcrumb-item"><a href="/testsuite/index">Test Suite</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Import</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <h3>Test Suite Import Form</h3>
+            </div>
+            <div class="w-100"></div>
+            <div class="col">
+                <form class="form-row" method="post">
+                    <div class="col form-group">
+                        <label>File:</label>
+                        <div class="custom-file">
+                            <input type="file" class="custom-file-input" id="customFile" />
+                            <label class="custom-file-label" for="customFile">Choose file</label>
+                        </div>
+                    </div>
+                    <div class="w-100"></div>
+                    <div class="col">
+                        <button type="submit" class="btn btn-sm btn-secondary">Create from File</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+</body>
+</html>
