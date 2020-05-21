@@ -1,6 +1,5 @@
 {
-  "id": 1,
-  "uniqueIdentifier": "test",
+  "uniqueIdentifier": "testOther",
   "inputs": [
     {
       "action": "do_action",
@@ -15,6 +14,23 @@
           "name": "param2",
           "type": "int",
           "value": "2"
+        }
+      ],
+      "states": [
+        {
+          "order": 1,
+          "stateId": 1
+        }
+      ]
+    },
+    {
+      "action": "do_action_other",
+      "locked": true,
+      "args": [
+        {
+          "name": "param1",
+          "type": "int",
+          "value": 3
         }
       ],
       "states": [

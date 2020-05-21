@@ -16,6 +16,50 @@
                 </nav>
             </div>
         </div>
+        <form class="form-row" method="post">
+            <div class="col form-group">
+                <label class="sr-only">Filter:</label>
+                <input type="text" placeholder="Filter..." name="filter" class="form-control form-control-sm" />
+            </div>
+            <div class="col-auto form-group">
+                <label class="sr-only">Search:</label>
+                <button type="button" class="btn btn-sm btn-primary">Search</button>
+            </div>
+        </form>
+        <div class="row">
+            <div class="col">
+                <table class="table table-sm table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <th class="w-1-nowrap">#</th>
+                            <th>UID</th>
+                            <th class="w-1-nowrap">#Inputs</th>
+                            <th class="w-1-nowrap">#States</th>
+                            <th class="w-1-nowrap">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="testCase : ${testCaseList}">
+                            <th><span th:text="${testCase.id}"></span></th>
+                            <td><span th:text="${testCase.uid}"></span></td>
+                            <td><span th:text="${testCase.inputCount}"></span></td>
+                            <td><span th:text="${testCase.stateCount}"></span></td>
+                            <td>
+                                <div class="btn-group">
+                                    <a href="#" class="btn btn-sm btn-primary">More</a>
+                                    <button type="button" class="btn btn-sm btn-primary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <span class="sr-only">Dropdown</span>
+                                    </button>
+                                    <div class="dropdown-menu dropdown-menu-right">
+                                        <a href="#" class="dropdown-item">Remove</a>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </section>
 </body>
 </html>

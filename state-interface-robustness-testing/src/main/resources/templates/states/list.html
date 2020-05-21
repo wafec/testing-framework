@@ -1,10 +1,68 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{shared/master :: layout(~{::title}, ~{::section})}">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <title>List</title>
 </head>
 <body>
-
+    <section>
+        <div class="row">
+            <div class="col">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="/index">Home</a></li>
+                        <li class="breadcrumb-item"><a href="/testsuite/index">Test Suite</a></li>
+                        <li class="breadcrumb-item"><a href="/states/index">State</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">List</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+        <form class="form-row" method="post">
+            <div class="col form-group">
+                <label class="sr-only">Filter:</label>
+                <input type="text" placeholder="Filter..." class="form-control form-control-sm" name="filter" />
+            </div>
+            <div class="col-auto form-group">
+                <label class="sr-only">Search:</label>
+                <button type="submit" class="btn btn-sm btn-primary">Search</button>
+            </div>
+        </form>
+        <div class="row">
+            <div class="col">
+                <table class="table table-sm table-striped table-hover" tabindex="-1">
+                    <thead>
+                        <tr>
+                            <th class="w-1-nowrap">#</th>
+                            <th>Name</th>
+                            <th class="w-1-nowrap">Timeout</th>
+                            <th class="w-1-nowrap">Required</th>
+                            <th class="w-1-nowrap">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="state : ${stateList}">
+                            <th class="align-middle"><span th:text="${state.id}"></span></th>
+                            <td class="align-middle"><span th:text="${state.name}"></span></td>
+                            <td class="align-middle"><span th:text="${state.timeout}"></span></td>
+                            <td class="align-middle">
+                                <span th:text="${state.required} ? 'Yes' : 'No'"></span>
+                            </td>
+                            <td class="align-middle">
+                                <div class="btn-group">
+                                    <a href="#" class="btn btn-sm btn-warning">Editar</a>
+                                    <button type="button" class="btn btn-sm btn-warning dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <span class="sr-only">Dropdown</span>
+                                    </button>
+                                    <div class="dropdown-menu dropdown-menu-right">
+                                        <a href="#" class="dropdown-item">Details</a>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
 </body>
 </html>

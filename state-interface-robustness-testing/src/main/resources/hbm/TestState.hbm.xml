@@ -6,7 +6,7 @@
             <generator class="native" />
         </id>
         <property name="order" type="int" column="position" />
-        <many-to-one name="state" class="robtest.stateinterfw.data.State" cascade="save-update"
+        <many-to-one name="state" class="robtest.stateinterfw.data.State" cascade=""
                      column="state_id" />
         <many-to-one name="testInput" class="robtest.stateinterfw.data.TestInput" cascade="save-update"
                      column="test_input_id" />

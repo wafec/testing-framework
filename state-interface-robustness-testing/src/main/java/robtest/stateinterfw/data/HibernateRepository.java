@@ -1,6 +1,7 @@
 package robtest.stateinterfw.data;
 
 import com.google.inject.Inject;
+import org.hibernate.transform.ResultTransformer;
 import robtest.stateinterfw.data.mapper.IDataMapper;
 
 import java.util.List;
@@ -47,6 +48,16 @@ public class HibernateRepository implements IRepository {
             return false;
         });
         return (List<T>)result[0];
+    }
+
+    @Override
+    public List query(String queryString, ResultTransformer resultTransformer) {
+        Object[] result = new Object[1];
+        _sqlManager.createSession(session -> {
+            result[0] = session.createQuery(queryString).setResultTransformer(resultTransformer).getResultList();
+            return false;
+        });
+        return (List)result[0];
     }
 
     @Override
