@@ -24,5 +24,6 @@
         <mapping resource="hbm/MessageDevice.hbm.xml" />
         <mapping resource="hbm/TestSpecs.hbm.xml" />
         <mapping resource="hbm/TestStateOutput.hbm.xml" />
+        <mapping resource="hbm/TestPlan.hbm.xml" />
     </session-factory>
 </hibernate-configuration>

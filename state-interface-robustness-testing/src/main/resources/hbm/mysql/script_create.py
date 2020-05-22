@@ -17,7 +17,8 @@ files = [
     "TestStateOutput",
     "TestCaseFault",
     "MessageArgumentFault",
-    "TestExecutionContext"
+    "TestExecutionContext",
+    "TestPlan"
 ]
 print("-- CREATE USER 'test'@'localhost' IDENTIFIED BY 'test-321';")
 print("-- CREATE USER 'test'@'%' IDENTIFIED BY 'test-321';")
@@ -25,7 +26,7 @@ print("-- DROP DATABASE IF EXISTS test;")
 print("-- CREATE DATABASE test;")
 print("-- GRANT ALL PRIVILEGES ON test.* TO 'test'@'localhost';")
 print("-- GRANT ALL PRIVILEGES ON test.* TO 'test'@'%';")
-print('-- use test;')
+print('-- USE test;')
 print()
 for f in files:
     with open('%s.sql.ddl' % f, 'r') as fp:

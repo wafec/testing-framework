@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{shared/master :: layout(~{::title}, ~{::section})}">
+<head>
+    <title>Create</title>
+</head>
+<body>
+    <section>
+        <div class="row">
+            <div class="col">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="/index">Home</a></li>
+                        <li class="breadcrumb-item"><a href="/examples/index">Examples</a></li>
+                        <li class="breadcrumb-item"><a href="/examples/openstack/index">OpenStack&reg;</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Create</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+        <form class="form-row" method="post">
+            <div class="col">
+                <h3>OpenStack&reg; Plan Create Form</h3>
+            </div>
+            <div class="w-100"></div>
+            <div class="col form-group">
+                <label>Name:</label>
+                <input type="text" class="form-control form-control-sm" name="name" />
+            </div>
+            <div class="w-100"></div>
+            <div class="col">
+                <button type="submit" class="btn btn-sm btn-secondary">Save</button>
+            </div>
+        </form>
+    </section>
+</body>
+</html>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<hibernate-mapping>
+    <class name="robtest.stateinterfw.data.TestPlan" table="TEST_PLAN">
+        <id name="id" type="int" column="id">
+            <generator class="native" />
+        </id>
+        <discriminator column="plan_type" type="string" />
+        <property name="name" type="text" column="name" />
+        <set name="testCases" table="TEST_PLAN_TEST_CASE" inverse="false" lazy="true" cascade="all">
+            <key>
+                <column name="test_plan_id" />
+            </key>
+            <many-to-many entity-name="robtest.stateinterfw.data.TestCase">
+                <column name="test_case_id" />
+            </many-to-many>
+        </set>
+        <set name="environments" table="TEST_PLAN_ENVIRONMENT" inverse="false" lazy="true" cascade="all">
+            <key>
+                <column name="test_plan_id" />
+            </key>
+            <many-to-many entity-name="robtest.stateinterfw.data.Environment">
+                <column name="environment_id" />
+            </many-to-many>
+        </set>
+        <set name="messageDevices" table="TEST_PLAN_MESSAGE_DEVICE" inverse="false" lazy="true" cascade="all">
+            <key>
+                <column name="test_plan_id" />
+            </key>
+            <many-to-many entity-name="robtest.stateinterfw.data.MessageDevice">
+                <column name="message_device_id" />
+            </many-to-many>
+        </set>
+        <subclass name="robtest.stateinterfw.examples.openStack.OpenStackTestPlan" discriminator-value="openstack" />
+    </class>
+</hibernate-mapping>
