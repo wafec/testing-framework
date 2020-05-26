@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{shared/master :: layout(~{::title}, ~{::section})}">
+<head>
+    <title>List</title>
+</head>
+<body>
+    <section>
+        <div class="row">
+            <div class="col">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="/index">Home</a></li>
+                        <li class="breadcrumb-item"><a href="/examples/index">Examples</a></li>
+                        <li class="breadcrumb-item"><a href="/examples/openstack/index">OpenStack&reg;</a></li>
+                        <li class="breadcrumb-item"><a href="/examples/openstack/list">List</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Environment</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+        <div class="row mb-2">
+            <div class="col">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">List of Environments</h5>
+                        <h6 class="card-subtitle text-muted mb-2">Choose an available environment below to add</h6>
+
+                        <a th:href="@{/examples/openstack/{id}/environment/virtualbox/add(id=${id})}" class="card-link">VirtualBox&reg;</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <form class="form-row">
+            <div class="col form-group">
+                <label class="sr-only">Filter:</label>
+                <input type="text" class="form-control form-control-sm" placeholder="Filter..." name="filter" />
+            </div>
+            <div class="col-auto form-group">
+                <label class="sr-only">Search:</label>
+                <button type="submit" class="btn btn-sm btn-primary">Search</button>
+            </div>
+        </form>
+        <div class="row">
+            <div class="col">
+                <table class="table table-sm table-striped table-hover" tabindex="-1">
+                    <thead>
+                        <tr>
+                            <th class="w-1-nowrap">#</th>
+                            <th>Name</th>
+                            <th>State</th>
+                            <th class="w-1-nowrap">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="environment : ${environmentList}">
+                            <th class="align-middle">
+                                <span th:text="${environment.id}" />
+                            </th>
+                            <td class="align-middle">
+                                <span th:text="${environment.name}" />
+                            </td>
+                            <td class="align-middle">
+                                <span th:text="${environment.state}" />
+                            </td>
+                            <td>
+                                <a href="#" class="btn btn-danger btn-sm">Remove</a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+</body>
+</html>

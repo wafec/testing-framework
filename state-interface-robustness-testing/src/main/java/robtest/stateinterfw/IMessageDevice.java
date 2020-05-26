@@ -4,4 +4,5 @@ import robtest.stateinterfw.data.IEntity;
 
 public interface IMessageDevice extends IEntity {
     int getId();
+    String getDescription();
 }

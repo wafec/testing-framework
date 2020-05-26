@@ -33,9 +33,5 @@
             <a>priority</a>
             <b>priority</b>
         </field>
-        <field>
-            <a>state</a>
-            <b>state</b>
-        </field>
     </mapping>
 </mappings>

@@ -2,7 +2,7 @@ package robtest.stateinterfw.data;
 
 import robtest.stateinterfw.IMessageDevice;
 
-public class MessageDevice implements IMessageDevice {
+public abstract class MessageDevice implements IMessageDevice {
     private int id;
 
     public MessageDevice() {

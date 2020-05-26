@@ -5,11 +5,14 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
+import org.springframework.beans.factory.DisposableBean;
 import robtest.stateinterfw.data.ISqlManager;
 import robtest.stateinterfw.data.ISqlSession;
 
-public class SqlManager implements ISqlManager {
+public class SqlManager implements ISqlManager, DisposableBean {
     private static SessionFactory sessionFactory = new Configuration().configure("hbm/hibernate.cfg.xml").buildSessionFactory();
+
+    private Session session;
 
     public SqlManager() {
 
@@ -17,10 +20,11 @@ public class SqlManager implements ISqlManager {
 
     public void createSession(ISqlSession sqlSession)
     {
-        Session session = null;
+        if (session == null || !session.isOpen()) {
+            session = sessionFactory.openSession();
+        }
         Transaction transaction = null;
         try {
-            session = sessionFactory.openSession();
             transaction = session.beginTransaction();
             if (sqlSession.run(session))
                 transaction.commit();
@@ -32,9 +36,13 @@ public class SqlManager implements ISqlManager {
             if (transaction != null)
                 transaction.rollback();
         }
-        finally {
-            if (session != null)
-                session.close();
+    }
+
+    @Override
+    public void destroy() throws Exception {
+        if (session != null && session.isOpen()) {
+            session.close();
         }
+        session = null;
     }
 }

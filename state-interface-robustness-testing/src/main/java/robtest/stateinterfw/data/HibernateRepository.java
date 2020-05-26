@@ -1,12 +1,14 @@
 package robtest.stateinterfw.data;
 
 import com.google.inject.Inject;
+import org.hibernate.query.Query;
 import org.hibernate.transform.ResultTransformer;
+import org.springframework.beans.factory.DisposableBean;
 import robtest.stateinterfw.data.mapper.IDataMapper;
 
 import java.util.List;
 
-public class HibernateRepository implements IRepository {
+public class HibernateRepository implements IRepository, DisposableBean {
     private ISqlManager _sqlManager;
     private IDataMapper _mapper;
 
@@ -41,20 +43,50 @@ public class HibernateRepository implements IRepository {
     }
 
     @Override
-    public <T extends IData> List<T> query(String queryString, Class<T> entityClass) {
+    public <T extends IData> List<T> query(String queryString, Class<T> entityClass, IParam[] parameters) {
         Object[] result = new Object[1];
         _sqlManager.createSession(session -> {
-            result[0] = session.createQuery(queryString, entityClass).list();
+            Query<T> q = session.createQuery(queryString, entityClass);
+            if (parameters != null) {
+                for (IParam param : parameters) {
+                    q.setParameter(param.getName(), param.getValue());
+                }
+            }
+            result[0] = q.list();
             return false;
         });
         return (List<T>)result[0];
     }
 
     @Override
-    public List query(String queryString, ResultTransformer resultTransformer) {
+    public <T extends IData> T querySingleResult(String queryString, Class<T> entityClass, IParam... parameters) {
+        List<T> result = query(queryString, entityClass, parameters);
+        if (result != null && result.size() > 0) {
+            return result.get(0);
+        }
+        return null;
+    }
+
+    @Override
+    public Object querySingleResult(String queryString, ResultTransformer resultTransformer, IParam... parameters) {
+        List result = query(queryString, resultTransformer, parameters);
+        if (result != null && result.size() > 0) {
+            return result.get(0);
+        }
+        return null;
+    }
+
+    @Override
+    public List query(String queryString, ResultTransformer resultTransformer, IParam[] parameters) {
         Object[] result = new Object[1];
         _sqlManager.createSession(session -> {
-            result[0] = session.createQuery(queryString).setResultTransformer(resultTransformer).getResultList();
+            Query q = session.createQuery(queryString);
+            if (parameters != null) {
+                for (IParam param : parameters) {
+                    q.setParameter(param.getName(), param.getValue());
+                }
+            }
+            result[0] = q.setResultTransformer(resultTransformer).getResultList();
             return false;
         });
         return (List)result[0];
@@ -77,5 +109,10 @@ public class HibernateRepository implements IRepository {
             _mapper.map(source, entity);
             return false;
         });
+    }
+
+    @Override
+    public void destroy() throws Exception {
+
     }
 }

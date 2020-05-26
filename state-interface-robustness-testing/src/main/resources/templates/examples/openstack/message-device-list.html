@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html xmlns:th="http://thymeleaf.org" th:replace="~{shared/master :: layout(~{::title}, ~{::section})}">
+<head>
+    <title>List</title>
+</head>
+<body>
+    <section>
+        <div class="row">
+            <div class="col">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="/index">Home</a></li>
+                        <li class="breadcrumb-item"><a href="/examples/index">Examples</a></li>
+                        <li class="breadcrumb-item"><a href="/examples/openstack/index">OpenStack&reg;</a></li>
+                        <li class="breadcrumb-item"><a href="/examples/openstack/list">List</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Message Device</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+        <div class="row mb-2">
+            <div class="col">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">List of Message Devices</h5>
+                        <h6 class="text-muted card-subtitle mb-2">Choose an available message device to add</h6>
+                        <a th:href="@{/examples/openstack/{id}/message-device/rabbit//add(id=${id})}" class="card-link">RabbitMQ&reg;</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <form class="form-row" method="post">
+            <div class="col form-group">
+                <label class="sr-only">Filter:</label>
+                <input type="text" class="form-control form-control-sm" placeholder="Filter..." name="filter" />
+            </div>
+            <div class="col-auto form-group">
+                <label class="sr-only">Search:</label>
+                <button type="submit" class="btn btn-sm btn-primary" name="action" value="search">Search</button>
+            </div>
+        </form>
+        <div class="row">
+            <div class="col">
+                <table class="table table-sm table-striped table-hover" tabindex="-1">
+                    <thead>
+                        <tr>
+                            <th class="w-1-nowrap">#</th>
+                            <th>Description</th>
+                            <th class="w-1-nowrap">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="messageDevice : ${messageDeviceList}">
+                            <th class="align-middle">
+                                <span th:text="${messageDevice.id}" />
+                            </th>
+                            <td class="align-middle">
+                                <span th:text="${messageDevice.description}" />
+                            </td>
+                            <td class="align-middle">
+                                <a href="#" class="btn btn-sm btn-danger">Remove</a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+</body>
+</html>

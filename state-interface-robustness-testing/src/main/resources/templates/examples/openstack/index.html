@@ -1,10 +1,35 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{shared/master :: layout(~{::title}, ~{::section})}">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Index</title>
 </head>
 <body>
-
+    <section>
+        <div class="row">
+            <div class="col">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="/index">Home</a></li>
+                        <li class="breadcrumb-item"><a href="/examples/index">Examples</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">OpenStack&reg;</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">OpenStack&reg; Form</h5>
+                        <h6 class="cards-subtitle text-muted">Test Plan</h6>
+                        <div class="row">
+                            <div class="col-3"><a href="/examples/openstack/create" class="card-link">Create</a></div>
+                            <div class="col-3"><a href="/examples/openstack/list" class="card-link">List</a></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 </body>
 </html>

@@ -4,7 +4,6 @@ public class VirtualBoxCreateRequestModel {
     private String name;
     private String snapshot;
     private int priority;
-    private String state;
 
     public VirtualBoxCreateRequestModel() {
 
@@ -32,13 +31,5 @@ public class VirtualBoxCreateRequestModel {
 
     public void setPriority(int priority) {
         this.priority = priority;
-    }
-
-    public String getState() {
-        return state;
-    }
-
-    public void setState(String state) {
-        this.state = state;
     }
 }

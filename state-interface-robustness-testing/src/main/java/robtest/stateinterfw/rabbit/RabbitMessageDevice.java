@@ -31,6 +31,11 @@ public class RabbitMessageDevice extends MessageDevice implements IRabbitMessage
         return messageDeviceId;
     }
 
+    @Override
+    public String getDescription() {
+        return String.format("Host=%s, User=%s, Password=%s", url, user, password);
+    }
+
     public void setId(int id) {
         this.messageDeviceId = id;
     }

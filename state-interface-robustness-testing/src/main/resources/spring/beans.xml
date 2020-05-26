@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:aop="http://www.springframework.org/schema/aop"
        xsi:schemaLocation="
-        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
-    <bean id="data.sqlmanager" class="robtest.stateinterfw.data.SqlManager" />
+        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.0.xsd ">
+    <bean id="data.sqlmanager" class="robtest.stateinterfw.data.SqlManager" scope="request">
+        <aop:scoped-proxy proxy-target-class="true" />
+    </bean>
     <bean id="data.datamapper" class="robtest.stateinterfw.data.mapper.DataMapper" />
-    <bean id="data.repository" class="robtest.stateinterfw.data.HibernateRepository">
+    <bean id="data.repository" class="robtest.stateinterfw.data.HibernateRepository" scope="request">
+        <aop:scoped-proxy proxy-target-class="true" />
         <constructor-arg ref="data.sqlmanager" />
         <constructor-arg ref="data.datamapper" />
     </bean>

@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{shared/master :: layout(~{::title}, ~{::section})}">
+<head>
+    <title>Add</title>
+</head>
+<body>
+    <section>
+        <div class="row">
+            <div class="col">
+                <nav aria-label="page">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="/index">Home</a></li>
+                        <li class="breadcrumb-item"><a href="/examples/index">Examples</a></li>
+                        <li class="breadcrumb-item"><a href="/examples/openstack/index">OpenStack&reg;</a></li>
+                        <li class="breadcrumb-item"><a href="/examples/openstack/list">List</a></li>
+                        <li class="breadcrumb-item"><a th:href="@{/examples/openstack/{id}/message-device/list(id=${id})}">Message Device</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">RabbitMQ&reg;</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+        <form class="form-row" method="post">
+            <div class="col form-group">
+                <label class="sr-only">Filter:</label>
+                <input type="text" class="form-control form-control-sm" placeholder="Filter..." name="filter" />
+            </div>
+            <div class="col-auto form-group">
+                <label class="sr-only">Search:</label>
+                <button type="submit" class="btn btn-sm btn-primary">Search</button>
+            </div>
+        </form>
+        <form class="form-row" method="post" th:action="@{/examples/openstack/{id}/message-device/rabbit/add/device(id=${id})}">
+            <div class="col">
+                <table class="table table-sm table-striped table-hover" tabindex="-1">
+                    <thead>
+                        <th class="w-1-nowrap">#</th>
+                        <th class="">Host</th>
+                        <th class="">User</th>
+                        <th clas="">Password</th>
+                        <th class="w-1-nowrap">Actions</th>
+                    </thead>
+                    <tbody>
+                        <tr th:each="messageDevice : ${messageDeviceList}">
+                            <th class="align-middle">
+                                <span th:text="${messageDevice.id}"></span>
+                            </th>
+                            <td class="align-middle">
+                                <span th:text="${messageDevice.url}" />
+                            </td>
+                            <td class="align-middle">
+                                <span th:text="${messageDevice.user}" />
+                            </td>
+                            <td class="align-middle">
+                                <span th:text="${messageDevice.password}" />
+                            </td>
+                            <td>
+                                <button type="submit" name="messageDeviceId" th:value="${messageDevice.id}"
+                                        class="btn btn-sm btn-primary">Add</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </form>
+    </section>
+</body>
+</html>

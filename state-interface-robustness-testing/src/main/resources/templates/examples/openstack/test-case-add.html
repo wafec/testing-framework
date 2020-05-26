@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{shared/master :: layout(~{::title}, ~{::section})}">
+<head>
+    <title>Add</title>
+</head>
+<body>
+    <section>
+        <div class="row">
+            <div class="col">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="/index">Home</a></li>
+                        <li class="breadcrumb-item"><a href="/examples/index">Examples</a></li>
+                        <li class="breadcrumb-item"><a href="/examples/openstack/index">OpenStack&reg;</a></li>
+                        <li class="breadcrumb-item"><a href="/examples/openstack/list">List</a></li>
+                        <li class="breadcrumb-item"><a th:href="@{/examples/openstack/{id}/test-case/list(id=${id}}">Test Case</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Add</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+        <form class="form-row" method="post">
+            <div class="col form-group">
+                <label class="sr-only">Filter:</label>
+                <input type="text" class="form-control form-control-sm" name="filter" placeholder="Filter..." />
+            </div>
+            <div class="col-auto form-group">
+                <label class="sr-only">Search:</label>
+                <button type="submit" class="btn btn-sm btn-primary">Search</button>
+            </div>
+        </form>
+        <form class="form-row" method="post" th:action="@{/examples/openstack/{id}/test-case/add/item(id=${id})}">
+            <div class="col">
+                <table class="table table-sm table-striped table-hover" tabindex="-1">
+                    <thead>
+                        <tr>
+                            <th class="w-1-nowrap">#</th>
+                            <th>UID</th>
+                            <th class="w-1-nowrap">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="testCase : ${testCaseList}">
+                            <th class="align-middle">
+                                <span th:text="${testCase.id}" />
+                            </th>
+                            <td class="align-middle">
+                                <span th:text="${testCase.uniqueIdentifier}" />
+                            </td>
+                            <td class="align-middle">
+                                <button type="submit" class="btn btn-sm btn-primary" name="testCaseId" th:value="${testCase.id}">Add</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </form>
+    </section>
+</body>
+</html>

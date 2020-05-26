@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{shared/master :: layout(~{::title}, ~{::section})}">
+<head>
+    <title>Add</title>
+</head>
+<body>
+    <section>
+        <div class="row">
+            <div class="col">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="/index">Home</a></li>
+                        <li class="breadcrumb-item"><a href="/examples/index">Examples</a></li>
+                        <li class="breadcrumb-item"><a href="/examples/openstack/index">OpenStack&reg;</a></li>
+                        <li class="breadcrumb-item"><a href="/examples/openstack/list">List</a></li>
+                        <li class="breadcrumb-item"><a th:href="@{/examples/openstack/{id}/environment/list(id=${id})}">Environment</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">VirtualBox&reg;</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+        <form class="form-row">
+            <div class="col form-group">
+                <label class="sr-only">Filter:</label>
+                <input type="text" class="form-control form-control-sm" name="filter" placeholder="Filter..." />
+            </div>
+            <div class="col-auto form-group">
+                <label class="sr-only">Search:</label>
+                <button type="submit" class="btn btn-sm btn-primary">Search</button>
+            </div>
+        </form>
+        <form class="form-row" method="post" th:action="@{/examples/openstack/{id}/environment/virtualbox/add/device(id=${id})}">
+            <div class="col">
+                <table class="table table-sm table-striped table-hover" tabindex="-1">
+                    <thead>
+                        <tr>
+                            <th class="w-1-nowrap">#</th>
+                            <th>Name</th>
+                            <th>Snapshot</th>
+                            <th class="w-1-nowrap">Priority</th>
+                            <th class="w-1-nowrap">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="environment : ${environmentList}">
+                            <th class="align-middle">
+                                <span th:text="${environment.id}" />
+                            </th>
+                            <td class="align-middle">
+                                <span th:text="${environment.name}" />
+                            </td>
+                            <td class="align-middle">
+                                <span th:text="${environment.snapshot}" />
+                            </td>
+                            <td class="align-middle">
+                                <span th:text="${environment.priority}" />
+                            </td>
+                            <td>
+                                <button type="submit" class="btn btn-sm btn-primary" name="environmentId" th:value="${environment.id}">
+                                    Add
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </form>
+    </section>
+</body>
+</html>

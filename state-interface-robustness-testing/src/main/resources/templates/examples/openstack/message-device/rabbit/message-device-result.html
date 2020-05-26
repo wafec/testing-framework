@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{shared/master :: layout(~{::title}, ~{::section})}">
+<head>
+    <title>Result</title>
+</head>
+<body>
+    <section>
+        <div class="row">
+            <div class="col">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="/index">Home</a></li>
+                        <li class="breadcrumb-item"><a href="/examples/index">Examples</a></li>
+                        <li class="breadcrumb-item"><a href="/examples/openstack/index">OpenStack&reg;</a></li>
+                        <li class="breadcrumb-item"><a th:href="@{/examples/openstack/{id}/list(id=${id}/)}">List</a></li>
+                        <li class="breadcrumb-item"><a th:href="@{/examples/openstack/{id}/message-device/list(id=${id})}">Message Device</a></li>
+                        <li class="breadcrumb-item"><a th:href="@{/examples/openstack/{id}/message-device/rabbit/add(id=${id})}">RabbitMQ&reg;</a></li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+    </section>
+</body>
+</html>
