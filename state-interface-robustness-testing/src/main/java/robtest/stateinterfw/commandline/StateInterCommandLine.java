@@ -3,6 +3,7 @@ package robtest.stateinterfw.commandline;
 import com.google.inject.Inject;
 import robtest.stateinterfw.examples.openStack.IOpenStackCommandLine;
 import robtest.stateinterfw.files.commandline.IFileCommandLine;
+import robtest.stateinterfw.rabbit.commandline.IRabbitCommandLine;
 import robtest.stateinterfw.virtualbox.commandline.IVirtualBoxCommandLine;
 import robtest.stateinterfw.web.StateInterWebApplication;
 
@@ -12,14 +13,17 @@ public class StateInterCommandLine implements IStateInterCommandLine {
     private IOpenStackCommandLine _openStackCommandLine;
     private IFileCommandLine _fileCommandLine;
     private IVirtualBoxCommandLine _virtualBoxCommandLine;
+    private IRabbitCommandLine _rabbitCommandLine;
 
     @Inject
     public StateInterCommandLine(IOpenStackCommandLine openStackCommandLine,
                                  IFileCommandLine fileCommandLine,
-                                 IVirtualBoxCommandLine virtualBoxCommandLine) {
+                                 IVirtualBoxCommandLine virtualBoxCommandLine,
+                                 IRabbitCommandLine rabbitCommandLine) {
         this._openStackCommandLine = openStackCommandLine;
         this._fileCommandLine = fileCommandLine;
         this._virtualBoxCommandLine = virtualBoxCommandLine;
+        this._rabbitCommandLine = rabbitCommandLine;
     }
 
     @Override
@@ -41,6 +45,9 @@ public class StateInterCommandLine implements IStateInterCommandLine {
                 break;
             case "virtualbox":
                 this._virtualBoxCommandLine.run(mArgs);
+                break;
+            case "rabbit":
+                this._rabbitCommandLine.run(mArgs);
                 break;
         }
     }
