@@ -12,5 +12,6 @@ public class RabbitModule extends AbstractModule {
         bind(IRabbitCommandLine.class).to(RabbitCommandLine.class);
         bind(IRabbitMessageDeviceService.class).to(RabbitMessageDeviceService.class);
         bind(IRabbitQueueDiscover.class).to(RabbitQueueDiscover.class);
+        bind(IRabbitManagementFactory.class).to(RabbitManagementFactory.class);
     }
 }

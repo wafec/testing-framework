@@ -1,5 +1,6 @@
 package robtest.stateinterfw.rabbit;
 
+import com.google.inject.Inject;
 import robtest.stateinterfw.IMessageDevice;
 import robtest.stateinterfw.data.IRepository;
 import robtest.stateinterfw.data.Param;
@@ -10,6 +11,7 @@ import java.util.List;
 public class RabbitMessageDeviceService implements IRabbitMessageDeviceService {
     private IRepository repository;
 
+    @Inject
     public RabbitMessageDeviceService(IRepository repository) {
         this.repository = repository;
     }

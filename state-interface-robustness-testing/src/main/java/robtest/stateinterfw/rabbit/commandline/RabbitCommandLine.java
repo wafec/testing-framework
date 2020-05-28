@@ -4,10 +4,11 @@ import com.google.inject.Inject;
 import com.rabbitmq.client.*;
 import org.apache.commons.cli.*;
 import robtest.stateinterfw.data.IRepository;
-import robtest.stateinterfw.rabbit.RabbitMessageDevice;
+import robtest.stateinterfw.rabbit.*;
 
 public class RabbitCommandLine implements IRabbitCommandLine {
     private IRepository repository;
+    private IRabbitManagementApi managementApi;
 
     @Inject
     public RabbitCommandLine(IRepository repository) {
@@ -18,10 +19,18 @@ public class RabbitCommandLine implements IRabbitCommandLine {
     public void run(String... args) {
         Options options = new Options();
         options.addOption(Option.builder().longOpt("id").hasArg().required().build());
+        OptionGroup optionGroup = new OptionGroup();
+        optionGroup.addOption(Option.builder().longOpt("management").build());
+        optionGroup.addOption(Option.builder().longOpt("connectivity").build());
+        options.addOptionGroup(optionGroup);
         CommandLineParser parser = new DefaultParser();
         try {
             CommandLine commandLine = parser.parse(options, args);
-            testRabbitConnectivity(Integer.parseInt(commandLine.getOptionValue("id")));
+            var id = Integer.parseInt(commandLine.getOptionValue("id"));
+            if (commandLine.hasOption("connectivity"))
+                testRabbitConnectivity(id);
+            else if (commandLine.hasOption("management"))
+                testRabbitManagement(id);
         } catch (ParseException exc) {
             exc.printStackTrace();
         }
@@ -82,5 +91,13 @@ public class RabbitCommandLine implements IRabbitCommandLine {
             channel.queueDelete(queueName);
             channel.exchangeDelete(exchangeName);
         });
+    }
+
+    private void testRabbitManagement(int id) {
+        RabbitMessageDevice messageDevice = repository.get(id, RabbitMessageDevice.class);
+        managementApi = new RabbitManagementApi(messageDevice.getUrl(), 15672, messageDevice.getUser(), messageDevice.getPassword());
+        for (var bind : managementApi.listBindings(null)) {
+            System.out.println(String.format("%s %s, %s %s, %s", bind.getSource(), bind.getSourceType(), bind.getDestination(), bind.getDestinationType(), bind.getRoutingKey()));
+        }
     }
 }
