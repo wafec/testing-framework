@@ -4,8 +4,11 @@ import com.google.inject.Inject;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
+import org.apache.commons.lang3.StringUtils;
 import robtest.stateinterfw.ITestExecutionContext;
 import robtest.stateinterfw.MessageManager;
+import robtest.stateinterfw.data.IRepository;
+import robtest.stateinterfw.data.Param;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -14,138 +17,99 @@ import java.util.Map;
 
 public class RabbitMessageManager extends MessageManager implements IRabbitMessageManager {
     private ITestExecutionContext _testExecutionContext;
-    private Map<IRabbitMessageDevice, Channel> _deviceChannelMap;
     private IRabbitQueueDiscover _queueDiscover;
-    private IRabbitMessageDeviceService _messageDeviceService;
+    private IRabbitManagementFactory managementFactory;
+    private IRabbitTestBindBuilder testBindBuilder;
+    private IRabbitMessageDevice _messageDevice;
+    private IRepository repository;
 
     @Inject
-    public RabbitMessageManager(IRabbitQueueDiscover queueDiscover, IRabbitMessageDeviceService messageDeviceService) {
+    public RabbitMessageManager(IRabbitQueueDiscover queueDiscover,
+                                IRabbitManagementFactory managementFactory,
+                                IRabbitTestBindBuilder testBindBuilder,
+                                IRepository repository) {
         this._testExecutionContext = null;
-        this._deviceChannelMap = new HashMap<>();
         this._queueDiscover = queueDiscover;
-        this._messageDeviceService = messageDeviceService;
+        this.managementFactory = managementFactory;
+        this.testBindBuilder = testBindBuilder;
+        this.repository = repository;
     }
 
-    private Channel connect(IRabbitMessageDevice rabbitMessageDevice) {
-        if (_deviceChannelMap.containsKey(rabbitMessageDevice))
-            return _deviceChannelMap.get(rabbitMessageDevice);
+    private Channel createChannel() {
+        return createChannel(this._messageDevice);
+    }
+
+    private Channel createChannel(IRabbitMessageDevice messageDevice) {
         ConnectionFactory factory = new ConnectionFactory();
-        factory.setHost(rabbitMessageDevice.getUrl());
-        factory.setUsername(rabbitMessageDevice.getUser());
-        factory.setPassword(rabbitMessageDevice.getPassword());
+        factory.setHost(messageDevice.getUrl());
+        factory.setUsername(messageDevice.getUser());
+        factory.setPassword(messageDevice.getPassword());
+        Channel channel = null;
         try {
-            Connection connection = factory.newConnection();
-            Channel channel = connection.createChannel();
-            _deviceChannelMap.put(rabbitMessageDevice, channel);
-            return channel;
+            Connection con = factory.newConnection();
+            channel = con.createChannel();
         } catch (Exception exc) {
             exc.printStackTrace();
-            return null;
         }
+        return channel;
     }
 
-    private void disconnect(IRabbitMessageDevice rabbitMessageDevice) {
-        if (_deviceChannelMap.containsKey(rabbitMessageDevice)) {
-            Channel channel = _deviceChannelMap.get(rabbitMessageDevice);
-            try {
-                channel.close();
-                channel.getConnection().close();
-            } catch (Exception exc) {
-                exc.printStackTrace();
-            } finally {
-                _deviceChannelMap.remove(rabbitMessageDevice);
-            }
-        }
-    }
 
     @Override
     public void bind(ITestExecutionContext testExecutionContext) {
         this._testExecutionContext = testExecutionContext;
-        bind();
-    }
-
-    private void bind() {
-        for (int i = 0; i < _testExecutionContext.getSpecs().getMessageDeviceCount(); i++) {
-            IRabbitMessageDevice messageDevice = (IRabbitMessageDevice) _testExecutionContext.getSpecs().getMessageDevice(i);
-            bind(messageDevice);
-        }
-    }
-
-    private void bind(IRabbitMessageDevice messageDevice) {
-        unbindFirst(messageDevice);
-        List<IQueue> queueList = _queueDiscover.listQueues(messageDevice);
-        for (IQueue queue : queueList) {
-            createQueueBind(queue);
-        }
-    }
-
-    private void createQueueBind(IQueue queue) {
-        String newName = String.format("test_%s", queue.getName());
-        String newRoutingKey = String.format("test_%s", queue.getRoutingKey());
-        String newExchange = String.format("test_%s", queue.getExchange());
-        IQueue newQueue = _messageDeviceService.createQueue(newName, queue.getExchange(), queue.getExchangeType(), queue.getRoutingKey(), queue.getMessageDevice());
-        IQueue oldQueue = _messageDeviceService.createQueue(queue.getName(), newExchange, queue.getExchangeType(), newRoutingKey, queue.getMessageDevice());
-        unbindQueue(queue);
-        bindQueue(newQueue);
-        bindQueue(oldQueue);
-        bindNewToOldQueue(newQueue, oldQueue);
-    }
-
-    private void bindNewToOldQueue(IQueue newQueue, IQueue oldQueue) {
-        Channel channel = connect(newQueue.getMessageDevice());
-        try {
-            var deliverCallback = new QueueBindDeliverCallback(newQueue, oldQueue);
-            channel.basicConsume(newQueue.getName(), true, deliverCallback, consumerTag -> { });
-        } catch (IOException exc) {
-            exc.printStackTrace();
-        }
-    }
-
-    private void unbindFirst(IRabbitMessageDevice messageDevice) {
-        List<IQueueBind> boundQueues = this._messageDeviceService.listBoundQueues(messageDevice);
-        for (IQueueBind queueBound : boundQueues) {
-            unbindQueue(queueBound);
-            _messageDeviceService.deleteBoundQueue(queueBound);
-        }
-    }
-
-    private void unbindQueue(IQueueBind queueBound) {
-        unbindQueue(queueBound.getQueue());
-        unbindQueue(queueBound.getTestQueue());
-        String name = queueBound.getQueue().getName();
-        String exchange = queueBound.getTestQueue().getExchange();
-        String exchangeType = queueBound.getTestQueue().getExchangeType();
-        String routingKey = queueBound.getTestQueue().getRoutingKey();
-        IQueue restored = _messageDeviceService.createQueue(name, exchange, exchangeType, routingKey, queueBound.getQueue().getMessageDevice());
-        bindQueue(restored);
-        _messageDeviceService.saveQueue(restored);
-    }
-
-    private void bindQueue(IQueue queue) {
-        try {
-            Channel channel = connect(queue.getMessageDevice());
-            channel.exchangeDeclare(queue.getExchange(), queue.getExchangeType());
-            channel.queueDeclare(queue.getName(), false, false, false, null);
-            channel.queueBind(queue.getName(), queue.getExchange(), queue.getRoutingKey());
-        } catch (IOException exc) {
-            exc.printStackTrace();
-        }
-    }
-
-    private void unbindQueue(IQueue queue) {
-        try {
-            Channel channel = connect(queue.getMessageDevice());
-            channel.queueUnbind(queue.getName(), queue.getExchange(), queue.getRoutingKey());
-        } catch (IOException exc) {
-            exc.printStackTrace();
+        for (var i = 0; i < this._testExecutionContext.getSpecs().getMessageDeviceCount(); i++) {
+            this.bind((IRabbitMessageDevice) testExecutionContext.getSpecs().getMessageDevice(i));
         }
     }
 
     @Override
+    public void bind(IRabbitMessageDevice messageDevice) {
+        try {
+            this._messageDevice = messageDevice;
+            List<IRabbitBind> bindings = _queueDiscover.listBindings(messageDevice);
+            for (var binding : bindings) {
+                IRabbitTestBind testBind = testBindBuilder.create(binding);
+                bind(testBind);
+            }
+        } catch (Exception exc) {
+            exc.printStackTrace();
+        }
+    }
+
+    private void unbind(IRabbitBind bind) throws IOException {
+        var channel = createChannel();
+        channel.queueUnbind(bind.getDestination().getName(), bind.getSource().getName(), bind.getRoutingKey());
+    }
+
+    private void bind(IRabbitBind bind) throws IOException {
+        var channel = createChannel();
+        channel.exchangeDeclare(bind.getSource().getName(), bind.getSource().getExchangeType());
+        channel.queueDeclare(bind.getDestination().getName(), false, false, false, null);
+        channel.queueBind(bind.getDestination().getName(), bind.getSource().getName(), bind.getRoutingKey());
+    }
+
+    private void bind(IRabbitTestBind testBind) throws IOException {
+        unbind((IRabbitBind) testBind.getOldBind());
+        bind(testBind.getSourceBind());
+        bind(testBind.getDestinationBind());
+    }
+
+    @Override
     public void unbind() {
-        for (int i = 0; i < this._testExecutionContext.getSpecs().getMessageDeviceCount(); i++) {
-            IRabbitMessageDevice messageDevice = (IRabbitMessageDevice) this._testExecutionContext.getSpecs().getMessageDevice(i);
-            unbindFirst(messageDevice);
+        List<RabbitTestBind> testBindList = repository.query("from RabbitTestBind where messageDevice.id = :id",
+                RabbitTestBind.class, Param.list("id", this._messageDevice.getId()));
+        for (var testBind : testBindList) {
+            try {
+                unbind(testBind.getSourceBind());
+                unbind(testBind.getDestinationBind());
+                bind(testBind.getOldBind());
+                repository.remove(testBind.getSourceBind());
+                repository.remove(testBind.getDestinationBind());
+                repository.remove(testBind);
+            } catch (Exception exc) {
+                exc.printStackTrace();
+            }
         }
     }
 

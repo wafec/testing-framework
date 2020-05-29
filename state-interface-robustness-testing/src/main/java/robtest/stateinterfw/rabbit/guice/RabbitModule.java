@@ -10,8 +10,8 @@ public class RabbitModule extends AbstractModule {
     public void configure() {
         bind(IRabbitMessageManager.class).to(RabbitMessageManager.class);
         bind(IRabbitCommandLine.class).to(RabbitCommandLine.class);
-        bind(IRabbitMessageDeviceService.class).to(RabbitMessageDeviceService.class);
         bind(IRabbitQueueDiscover.class).to(RabbitQueueDiscover.class);
         bind(IRabbitManagementFactory.class).to(RabbitManagementFactory.class);
+        bind(IRabbitTestBindBuilder.class).to(RabbitTestBindBuilder.class);
     }
 }

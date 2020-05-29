@@ -1,4 +1,4 @@
-package robtest.stateinterfw.rabbit;
+package robtest.stateinterfw.rabbit.management;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;

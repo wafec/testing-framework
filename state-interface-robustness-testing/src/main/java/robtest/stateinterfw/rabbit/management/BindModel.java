@@ -1,7 +1,8 @@
-package robtest.stateinterfw.rabbit;
+package robtest.stateinterfw.rabbit.management;
 
 import com.fasterxml.jackson.annotation.JsonSetter;
 import org.apache.commons.lang3.StringUtils;
+import robtest.stateinterfw.rabbit.management.IBindModel;
 
 public class BindModel implements IBindModel {
     private String source;

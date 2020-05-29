@@ -9,7 +9,7 @@ import org.springframework.beans.factory.DisposableBean;
 import robtest.stateinterfw.data.ISqlManager;
 import robtest.stateinterfw.data.ISqlSession;
 
-public class SqlManager implements ISqlManager, DisposableBean {
+public class SqlManager implements ISqlManager, DisposableBean  {
     private static SessionFactory sessionFactory = new Configuration().configure("hbm/hibernate.cfg.xml").buildSessionFactory();
 
     private Session session;
@@ -23,18 +23,11 @@ public class SqlManager implements ISqlManager, DisposableBean {
         if (session == null || !session.isOpen()) {
             session = sessionFactory.openSession();
         }
-        Transaction transaction = null;
         try {
-            transaction = session.beginTransaction();
-            if (sqlSession.run(session))
-                transaction.commit();
-            else
-                transaction.rollback();
+            sqlSession.run(session);
         }
         catch (HibernateException hex) {
             hex.printStackTrace();
-            if (transaction != null)
-                transaction.rollback();
         }
     }
 

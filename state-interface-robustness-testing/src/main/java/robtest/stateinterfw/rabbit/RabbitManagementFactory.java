@@ -1,5 +1,8 @@
 package robtest.stateinterfw.rabbit;
 
+import robtest.stateinterfw.rabbit.management.IRabbitManagementApi;
+import robtest.stateinterfw.rabbit.management.RabbitManagementApi;
+
 public class RabbitManagementFactory implements IRabbitManagementFactory {
     @Override
     public IRabbitManagementApi build(IRabbitMessageDevice messageDevice) {

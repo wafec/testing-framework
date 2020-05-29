@@ -1,7 +1,8 @@
-package robtest.stateinterfw.rabbit;
+package robtest.stateinterfw.rabbit.management;
 
 import org.apache.commons.lang3.StringUtils;
 import robtest.core.web.AbstractApi;
+import robtest.stateinterfw.rabbit.management.*;
 
 import java.util.*;
 
@@ -64,5 +65,11 @@ public class RabbitManagementApi extends AbstractApi implements IRabbitManagemen
     public List<IBindModel> listBindings(String virtualHost) {
         var result = request(String.format("/bindings/%s", parseVirtualHost(virtualHost)), "GET", null, null, BindModel.class, true);
         return list(result, IBindModel.class);
+    }
+
+    @Override
+    public IExchangeModel detailExchange(String name, String virtualHost) {
+        var result = request(String.format("/exchanges/%s/%s", parseVirtualHost(virtualHost), name), "GET", null, null, ExchangeModel.class);
+        return (IExchangeModel) result;
     }
 }

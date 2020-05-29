@@ -1,6 +1,7 @@
-package robtest.stateinterfw.rabbit;
+package robtest.stateinterfw.rabbit.management;
 
 import com.fasterxml.jackson.annotation.JsonSetter;
+import robtest.stateinterfw.rabbit.management.IQueueModel;
 
 public class QueueModel implements IQueueModel {
     private String name;

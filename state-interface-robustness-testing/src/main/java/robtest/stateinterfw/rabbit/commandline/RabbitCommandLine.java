@@ -5,14 +5,19 @@ import com.rabbitmq.client.*;
 import org.apache.commons.cli.*;
 import robtest.stateinterfw.data.IRepository;
 import robtest.stateinterfw.rabbit.*;
+import robtest.stateinterfw.rabbit.management.ExchangeDeclareModel;
+import robtest.stateinterfw.rabbit.management.IRabbitManagementApi;
+import robtest.stateinterfw.rabbit.management.RabbitManagementApi;
 
 public class RabbitCommandLine implements IRabbitCommandLine {
     private IRepository repository;
     private IRabbitManagementApi managementApi;
+    private IRabbitMessageManager messageManager;
 
     @Inject
-    public RabbitCommandLine(IRepository repository) {
+    public RabbitCommandLine(IRepository repository, IRabbitMessageManager messageManager) {
         this.repository = repository;
+        this.messageManager = messageManager;
     }
 
     @Override
@@ -22,6 +27,7 @@ public class RabbitCommandLine implements IRabbitCommandLine {
         OptionGroup optionGroup = new OptionGroup();
         optionGroup.addOption(Option.builder().longOpt("management").build());
         optionGroup.addOption(Option.builder().longOpt("connectivity").build());
+        optionGroup.addOption(Option.builder().longOpt("manager").build());
         options.addOptionGroup(optionGroup);
         CommandLineParser parser = new DefaultParser();
         try {
@@ -31,6 +37,8 @@ public class RabbitCommandLine implements IRabbitCommandLine {
                 testRabbitConnectivity(id);
             else if (commandLine.hasOption("management"))
                 testRabbitManagement(id);
+            else if (commandLine.hasOption("manager"))
+                testRabbitManager(id);
         } catch (ParseException exc) {
             exc.printStackTrace();
         }
@@ -96,8 +104,13 @@ public class RabbitCommandLine implements IRabbitCommandLine {
     private void testRabbitManagement(int id) {
         RabbitMessageDevice messageDevice = repository.get(id, RabbitMessageDevice.class);
         managementApi = new RabbitManagementApi(messageDevice.getUrl(), 15672, messageDevice.getUser(), messageDevice.getPassword());
-        for (var bind : managementApi.listBindings(null)) {
-            System.out.println(String.format("%s %s, %s %s, %s", bind.getSource(), bind.getSourceType(), bind.getDestination(), bind.getDestinationType(), bind.getRoutingKey()));
-        }
+        managementApi.exchangeDeclare(new ExchangeDeclareModel("test4", "fanout"), null);
+        var exchange = managementApi.detailExchange("test4", null);
+        System.out.println(exchange.getExchangeType());
+    }
+
+    private void testRabbitManager(int id) {
+        var messageDevice = repository.get(id, RabbitMessageDevice.class);
+        messageManager.bind(messageDevice);
     }
 }

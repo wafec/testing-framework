@@ -1,4 +1,4 @@
-package robtest.stateinterfw.rabbit;
+package robtest.stateinterfw.rabbit.management;
 
 import java.util.List;
 
@@ -12,4 +12,5 @@ public interface IRabbitManagementApi {
     void exchangeDelete(String name, String virtualHost);
     void queueBind(QueueBindModel bindModel, String virtualHost);
     List<IBindModel> listBindings(String virtualHost);
+    IExchangeModel detailExchange(String name, String virtualHost);
 }
