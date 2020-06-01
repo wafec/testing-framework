@@ -18,7 +18,11 @@ files = [
     "TestCaseFault",
     "MessageArgumentFault",
     "TestExecutionContext",
-    "TestPlan"
+    "TestPlan",
+    "RabbitQueue",
+    "RabbitExchange",
+    "RabbitBind",
+    "RabbitTestBind"
 ]
 print("-- CREATE USER 'test'@'localhost' IDENTIFIED BY 'test-321';")
 print("-- CREATE USER 'test'@'%' IDENTIFIED BY 'test-321';")

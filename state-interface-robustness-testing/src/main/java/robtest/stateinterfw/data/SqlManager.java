@@ -5,6 +5,7 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
+import org.hibernate.resource.transaction.spi.TransactionStatus;
 import org.springframework.beans.factory.DisposableBean;
 import robtest.stateinterfw.data.ISqlManager;
 import robtest.stateinterfw.data.ISqlSession;
@@ -23,11 +24,29 @@ public class SqlManager implements ISqlManager, DisposableBean  {
         if (session == null || !session.isOpen()) {
             session = sessionFactory.openSession();
         }
+        Transaction tx = session.getTransaction();
         try {
-            sqlSession.run(session);
+            if (sqlSession instanceof ISqlTransactionSession && !tx.getStatus().equals(TransactionStatus.ACTIVE))
+                tx = session.beginTransaction();
+            if (sqlSession.run(session)) {
+                if (tx != null) {
+                    if (!tx.getStatus().equals(TransactionStatus.COMMITTED))
+                        tx.commit();
+                }
+            }
         }
         catch (HibernateException hex) {
             hex.printStackTrace();
+            if (tx != null) {
+                tx.rollback();
+            }
+        }
+    }
+
+    @Override
+    public void commit() {
+        if (session != null && session.getTransaction().getStatus().equals(TransactionStatus.ACTIVE)) {
+            session.getTransaction().commit();
         }
     }
 

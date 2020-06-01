@@ -29,7 +29,8 @@ public abstract class TestManager implements ITestManager {
         this._testExecutionContextFactory = testExecutionContextFactory;
     }
 
-    private void handleGoldenRun(ITestCase testCase, ITestSpecs testSpecs) {
+    @Override
+    public void handleGoldenRun(ITestCase testCase, ITestSpecs testSpecs) {
         try {
             ITestExecutionContext testExecutionContext = _testExecutionContextFactory.create(testCase, testSpecs);
             _repository.save((IEntity) testExecutionContext);

@@ -3,17 +3,14 @@ package robtest.stateinterfw.rabbit;
 import com.google.inject.Inject;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
-import com.rabbitmq.client.ConnectionFactory;
-import org.apache.commons.lang3.StringUtils;
 import robtest.stateinterfw.ITestExecutionContext;
 import robtest.stateinterfw.MessageManager;
 import robtest.stateinterfw.data.IRepository;
+import robtest.stateinterfw.data.ITransactionRepository;
 import robtest.stateinterfw.data.Param;
 
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class RabbitMessageManager extends MessageManager implements IRabbitMessageManager {
     private ITestExecutionContext _testExecutionContext;
@@ -21,18 +18,24 @@ public class RabbitMessageManager extends MessageManager implements IRabbitMessa
     private IRabbitManagementFactory managementFactory;
     private IRabbitTestBindBuilder testBindBuilder;
     private IRabbitMessageDevice _messageDevice;
-    private IRepository repository;
+    private final IRepository repository;
+    private final ITransactionRepository transactionRepository;
+    private IRabbitTestBindHandler rabbitTestBindHandler;
 
     @Inject
     public RabbitMessageManager(IRabbitQueueDiscover queueDiscover,
                                 IRabbitManagementFactory managementFactory,
                                 IRabbitTestBindBuilder testBindBuilder,
-                                IRepository repository) {
+                                IRepository repository,
+                                ITransactionRepository transactionRepository,
+                                IRabbitTestBindHandler rabbitTestBindHandler) {
         this._testExecutionContext = null;
         this._queueDiscover = queueDiscover;
         this.managementFactory = managementFactory;
         this.testBindBuilder = testBindBuilder;
         this.repository = repository;
+        this.transactionRepository = transactionRepository;
+        this.rabbitTestBindHandler = rabbitTestBindHandler;
     }
 
     private Channel createChannel() {
@@ -40,18 +43,7 @@ public class RabbitMessageManager extends MessageManager implements IRabbitMessa
     }
 
     private Channel createChannel(IRabbitMessageDevice messageDevice) {
-        ConnectionFactory factory = new ConnectionFactory();
-        factory.setHost(messageDevice.getUrl());
-        factory.setUsername(messageDevice.getUser());
-        factory.setPassword(messageDevice.getPassword());
-        Channel channel = null;
-        try {
-            Connection con = factory.newConnection();
-            channel = con.createChannel();
-        } catch (Exception exc) {
-            exc.printStackTrace();
-        }
-        return channel;
+        return ChannelFactory.createChannel(messageDevice);
     }
 
 
@@ -70,7 +62,8 @@ public class RabbitMessageManager extends MessageManager implements IRabbitMessa
             List<IRabbitBind> bindings = _queueDiscover.listBindings(messageDevice);
             for (var binding : bindings) {
                 IRabbitTestBind testBind = testBindBuilder.create(binding);
-                bind(testBind);
+                if (testBind != null)
+                    bind(testBind);
             }
         } catch (Exception exc) {
             exc.printStackTrace();
@@ -78,21 +71,41 @@ public class RabbitMessageManager extends MessageManager implements IRabbitMessa
     }
 
     private void unbind(IRabbitBind bind) throws IOException {
-        var channel = createChannel();
-        channel.queueUnbind(bind.getDestination().getName(), bind.getSource().getName(), bind.getRoutingKey());
+        final var channel = createChannel();
+        try(Connection connection = channel.getConnection(); channel ) {
+            channel.queueUnbind(bind.getDestination().getName(), bind.getSource().getName(), bind.getRoutingKey());
+        } catch (Exception exc) {
+            exc.printStackTrace();
+        }
     }
 
     private void bind(IRabbitBind bind) throws IOException {
-        var channel = createChannel();
-        channel.exchangeDeclare(bind.getSource().getName(), bind.getSource().getExchangeType());
-        channel.queueDeclare(bind.getDestination().getName(), false, false, false, null);
-        channel.queueBind(bind.getDestination().getName(), bind.getSource().getName(), bind.getRoutingKey());
+        final var channel = createChannel();
+        try (Connection connection = channel.getConnection(); channel) {
+            channel.exchangeDeclare(bind.getSource().getName(), bind.getSource().getExchangeType());
+            channel.queueDeclare(bind.getDestination().getName(), false, false, false, null);
+            channel.queueBind(bind.getDestination().getName(), bind.getSource().getName(), bind.getRoutingKey());
+        } catch (Exception exc) {
+            exc.printStackTrace();
+        }
     }
 
     private void bind(IRabbitTestBind testBind) throws IOException {
         unbind((IRabbitBind) testBind.getOldBind());
         bind(testBind.getSourceBind());
         bind(testBind.getDestinationBind());
+        rabbitTestBindHandler.control(testBind);
+    }
+
+    private void deleteQueue(String name) {
+        try {
+            var channel = createChannel();
+            channel.queueDelete(name);
+            channel.close();
+            channel.getConnection().close();
+        } catch (Exception exc) {
+            exc.printStackTrace();
+        }
     }
 
     @Override
@@ -100,17 +113,27 @@ public class RabbitMessageManager extends MessageManager implements IRabbitMessa
         List<RabbitTestBind> testBindList = repository.query("from RabbitTestBind where messageDevice.id = :id",
                 RabbitTestBind.class, Param.list("id", this._messageDevice.getId()));
         for (var testBind : testBindList) {
-            try {
+            try (transactionRepository) {
                 unbind(testBind.getSourceBind());
                 unbind(testBind.getDestinationBind());
                 bind(testBind.getOldBind());
-                repository.remove(testBind.getSourceBind());
-                repository.remove(testBind.getDestinationBind());
-                repository.remove(testBind);
+                deleteQueue(testBind.getSourceBind().getDestination().getName());
+                transactionRepository.remove(testBind.getSourceBind().getDestination());
+                transactionRepository.remove(testBind.getSourceBind());
+                transactionRepository.remove(testBind.getDestinationBind());
+                transactionRepository.remove(testBind);
             } catch (Exception exc) {
                 exc.printStackTrace();
+            } finally {
+                rabbitTestBindHandler.leaveControl(testBind);
             }
         }
+    }
+
+    @Override
+    public void unbind(IRabbitMessageDevice messageDevice) {
+        this._messageDevice = messageDevice;
+        unbind();
     }
 
     @Override

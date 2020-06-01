@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<hibernate-mapping xmlns="http://www.hibernate.org/xsd/hibernate-mapping">
+    <class name="robtest.stateinterfw.rabbit.RabbitQueue" table="RABBIT_QUEUE">
+        <id name="id" column="id" type="int">
+            <generator class="native" />
+        </id>
+        <property name="virtualHost">
+            <column name="virtual_host" sql-type="text" />
+        </property>
+        <property name="name">
+            <column name="name" sql-type="text" />
+        </property>
+        <many-to-one name="messageDevice" column="message_device_id" class="robtest.stateinterfw.rabbit.RabbitMessageDevice" />
+    </class>
+</hibernate-mapping>

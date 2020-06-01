@@ -13,5 +13,6 @@ public class RabbitModule extends AbstractModule {
         bind(IRabbitQueueDiscover.class).to(RabbitQueueDiscover.class);
         bind(IRabbitManagementFactory.class).to(RabbitManagementFactory.class);
         bind(IRabbitTestBindBuilder.class).to(RabbitTestBindBuilder.class);
+        bind(IRabbitTestBindHandler.class).to(RabbitTestBindHandler.class);
     }
 }

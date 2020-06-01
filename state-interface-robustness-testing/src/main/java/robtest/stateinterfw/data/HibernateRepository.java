@@ -1,6 +1,7 @@
 package robtest.stateinterfw.data;
 
 import com.google.inject.Inject;
+import org.hibernate.Session;
 import org.hibernate.query.Query;
 import org.hibernate.transform.ResultTransformer;
 import org.springframework.beans.factory.DisposableBean;
@@ -9,8 +10,9 @@ import robtest.stateinterfw.data.mapper.IDataMapper;
 import java.util.List;
 
 public class HibernateRepository implements IRepository, DisposableBean {
-    private ISqlManager _sqlManager;
-    private IDataMapper _mapper;
+    protected final ISqlManager _sqlManager;
+    protected final IDataMapper _mapper;
+    protected boolean _commit = true;
 
     @Inject
     public HibernateRepository(ISqlManager sqlManager, IDataMapper mapper) {
@@ -20,25 +22,25 @@ public class HibernateRepository implements IRepository, DisposableBean {
 
     @Override
     public void save(IEntity entity) {
-        _sqlManager.createSession(session -> {
+        _sqlManager.createSession((ISqlTransactionSession) session -> {
             session.save(entity);
-            return true;
+            return _commit;
         });
     }
 
     @Override
     public void update(IEntity entity) {
-        _sqlManager.createSession(session -> {
+        _sqlManager.createSession((ISqlTransactionSession) session -> {
             session.update(entity);
-            return true;
+            return _commit;
         });
     }
 
     @Override
     public void remove(IEntity entity) {
-        _sqlManager.createSession(session -> {
+        _sqlManager.createSession((ISqlTransactionSession) session -> {
             session.remove(entity);
-            return true;
+            return _commit;
         });
     }
 

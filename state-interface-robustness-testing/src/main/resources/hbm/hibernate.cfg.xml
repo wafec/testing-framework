@@ -26,5 +26,9 @@
         <mapping resource="hbm/TestSpecs.hbm.xml" />
         <mapping resource="hbm/TestStateOutput.hbm.xml" />
         <mapping resource="hbm/TestPlan.hbm.xml" />
+        <mapping resource="hbm/RabbitBind.hbm.xml" />
+        <mapping resource="hbm/RabbitExchange.hbm.xml" />
+        <mapping resource="hbm/RabbitQueue.hbm.xml" />
+        <mapping resource="hbm/RabbitTestBind.hbm.xml" />
     </session-factory>
 </hibernate-configuration>

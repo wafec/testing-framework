@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<hibernate-mapping xmlns="http://www.hibernate.org/xsd/hibernate-mapping">
+    <class name="robtest.stateinterfw.rabbit.RabbitTestBind" table="RABBIT_TEST_BIND">
+        <id name="id" type="int" column="id">
+            <generator class="native" />
+        </id>
+        <many-to-one name="oldBind" column="old_bind_id" class="robtest.stateinterfw.rabbit.RabbitBind" />
+        <many-to-one name="sourceBind" column="source_bind_id" class="robtest.stateinterfw.rabbit.RabbitBind" />
+        <many-to-one name="destinationBind" column="destination_bind_id" class="robtest.stateinterfw.rabbit.RabbitBind" />
+        <many-to-one name="messageDevice" column="message_device_id" class="robtest.stateinterfw.rabbit.RabbitMessageDevice" />
+    </class>
+</hibernate-mapping>

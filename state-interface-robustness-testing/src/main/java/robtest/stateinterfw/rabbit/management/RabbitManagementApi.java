@@ -12,7 +12,7 @@ public class RabbitManagementApi extends AbstractApi implements IRabbitManagemen
     }
 
     private String parseVirtualHost(String virtualHost) {
-        if (StringUtils.isEmpty(virtualHost))
+        if (StringUtils.isEmpty(virtualHost) || virtualHost.equals("/"))
             return "%2F";
         return virtualHost;
     }
@@ -58,7 +58,7 @@ public class RabbitManagementApi extends AbstractApi implements IRabbitManagemen
 
     @Override
     public void queueBind(QueueBindModel bindModel, String virtualHost) {
-        request(String.format("/bindings/%s/e/%s/q/%s", parseVirtualHost(virtualHost), bindModel.getQueue(), bindModel.getExchange()), "POST", bindModel, null, null);
+        request(String.format("/bindings/%s/e/%s/q/%s", parseVirtualHost(virtualHost), bindModel.getExchange(), bindModel.getQueue()), "POST", bindModel, null, null);
     }
 
     @Override
@@ -71,5 +71,11 @@ public class RabbitManagementApi extends AbstractApi implements IRabbitManagemen
     public IExchangeModel detailExchange(String name, String virtualHost) {
         var result = request(String.format("/exchanges/%s/%s", parseVirtualHost(virtualHost), name), "GET", null, null, ExchangeModel.class);
         return (IExchangeModel) result;
+    }
+
+    @Override
+    public IQueueModel detailQueue(String name, String virtualHost) {
+        var result = request(String.format("/queues/%s/%s", parseVirtualHost(virtualHost), name), "GET", null, null, QueueModel.class);
+        return (IQueueModel) result;
     }
 }

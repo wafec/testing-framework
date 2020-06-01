@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<hibernate-mapping xmlns="http://www.hibernate.org/xsd/hibernate-mapping">
+    <class name="robtest.stateinterfw.rabbit.RabbitBind" table="RABBIT_BIND">
+        <id name="id" type="int" column="id">
+            <generator class="native" />
+        </id>
+        <property name="virtualHost">
+            <column name="virtual_host" sql-type="text" />
+        </property>
+        <property name="routingKey">
+            <column name="routing_key" sql-type="text" />
+        </property>
+        <many-to-one name="source" class="robtest.stateinterfw.rabbit.RabbitExchange" column="source_id" cascade="save-update" />
+        <many-to-one name="destination" class="robtest.stateinterfw.rabbit.RabbitQueue" column="destination_id" cascade="save-update" />
+        <many-to-one name="messageDevice" class="robtest.stateinterfw.rabbit.RabbitMessageDevice" column="message_device_id" cascade="save-update" />
+    </class>
+</hibernate-mapping>

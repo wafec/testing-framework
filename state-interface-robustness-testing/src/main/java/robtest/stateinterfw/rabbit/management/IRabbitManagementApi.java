@@ -13,4 +13,5 @@ public interface IRabbitManagementApi {
     void queueBind(QueueBindModel bindModel, String virtualHost);
     List<IBindModel> listBindings(String virtualHost);
     IExchangeModel detailExchange(String name, String virtualHost);
+    IQueueModel detailQueue(String name, String virtualHost);
 }

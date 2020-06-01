@@ -91,7 +91,6 @@ public abstract class AbstractApi {
         Object instance = null;
         if (clazz != null) {
             try {
-                System.out.println(content);
                 if (isList) {
                     TypeFactory typeFactory = objectMapper.getTypeFactory();
                     var collectionType = typeFactory.constructCollectionType(List.class, clazz);
