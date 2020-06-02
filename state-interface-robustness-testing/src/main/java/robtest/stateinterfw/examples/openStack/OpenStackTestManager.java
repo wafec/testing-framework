@@ -1,8 +1,7 @@
 package robtest.stateinterfw.examples.openStack;
 
 import com.google.inject.Inject;
-import robtest.stateinterfw.IFaultManager;
-import robtest.stateinterfw.ITestExecutionContextFactory;
+import robtest.stateinterfw.ITestExecutionContext;
 import robtest.stateinterfw.TestManager;
 import robtest.stateinterfw.data.IRepository;
 import robtest.stateinterfw.rabbit.IRabbitMessageManager;
@@ -14,9 +13,14 @@ public class OpenStackTestManager extends TestManager implements IOpenStackTestM
                                 IOpenStackTargetStateMonitor targetStateMonitor,
                                 IOpenStackTestDriver testDriver,
                                 IOpenStackFaultManager faultManager,
-                                IRepository repository,
-                                ITestExecutionContextFactory testExecutionContextFactory) {
+                                IRepository repository) {
         super(environmentManager, messageManager, targetStateMonitor,
-                testDriver, faultManager, repository, testExecutionContextFactory);
+                testDriver, faultManager, repository);
+    }
+
+    @Override
+    public void handleGoldenRun(ITestExecutionContext testExecutionContext) {
+        testExecutionContext.setVolatileUserContent(null);
+        super.handleGoldenRun(testExecutionContext);
     }
 }

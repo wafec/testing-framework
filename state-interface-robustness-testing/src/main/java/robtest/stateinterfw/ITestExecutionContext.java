@@ -5,4 +5,6 @@ public interface ITestExecutionContext {
     ITestCase get();
     ITestInput getCurrent();
     ITestSpecs getSpecs();
+    Object getVolatileUserContent();
+    void setVolatileUserContent(Object userContent);
 }

@@ -11,6 +11,7 @@ public class TestExecutionContext implements ITestExecutionContext, IEntity {
     private TestInput testInput;
     private TestCaseFault testCaseFault;
     private TestSpecs testSpecs;
+    private Object volatileUserContent;
 
     public TestExecutionContext() {
 
@@ -24,6 +25,10 @@ public class TestExecutionContext implements ITestExecutionContext, IEntity {
         this.testCase = testCase;
         this.testInput = testInput;
         this.testSpecs = testSpecs;
+
+        if (this.testCase != null && this.testInput == null && this.testCase.size() > 0) {
+            this.testInput = (TestInput) this.testCase.get(0);
+        }
     }
 
     @Override
@@ -82,5 +87,13 @@ public class TestExecutionContext implements ITestExecutionContext, IEntity {
 
     public TestCaseFault getTestCaseFault() {
         return testCaseFault;
+    }
+
+    public Object getVolatileUserContent() {
+        return volatileUserContent;
+    }
+
+    public void setVolatileUserContent(Object volatileUserContent) {
+        this.volatileUserContent = volatileUserContent;
     }
 }

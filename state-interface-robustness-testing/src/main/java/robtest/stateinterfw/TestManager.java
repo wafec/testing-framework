@@ -1,7 +1,6 @@
 package robtest.stateinterfw;
 
-import robtest.stateinterfw.data.IEntity;
-import robtest.stateinterfw.data.IRepository;
+import robtest.stateinterfw.data.*;
 
 public abstract class TestManager implements ITestManager {
     private IEnvironmentManager _environmentManager;
@@ -11,28 +10,29 @@ public abstract class TestManager implements ITestManager {
     private IFaultManager _faultManager;
 
     private IRepository _repository;
-    private ITestExecutionContextFactory _testExecutionContextFactory;
 
     public TestManager(IEnvironmentManager environmentManager,
                        IMessageManager messageManager,
                        ITargetStateMonitor targetStateMonitor,
                        ITestDriver testDriver,
                        IFaultManager faultManager,
-                       IRepository repository,
-                       ITestExecutionContextFactory testExecutionContextFactory) {
+                       IRepository repository) {
         this._environmentManager = environmentManager;
         this._messageManager = messageManager;
         this._targetStateMonitor = targetStateMonitor;
         this._testDriver = testDriver;
         this._faultManager = faultManager;
         this._repository = repository;
-        this._testExecutionContextFactory = testExecutionContextFactory;
     }
 
     @Override
     public void handleGoldenRun(ITestCase testCase, ITestSpecs testSpecs) {
+        ITestExecutionContext testExecutionContext = new TestExecutionContext((TestCase) testCase, null, (TestSpecs) testSpecs);
+        handleGoldenRun(testExecutionContext);
+    }
+
+    public void handleGoldenRun(ITestExecutionContext testExecutionContext) {
         try {
-            ITestExecutionContext testExecutionContext = _testExecutionContextFactory.create(testCase, testSpecs);
             _repository.save((IEntity) testExecutionContext);
             _environmentManager.initialize(testExecutionContext);
             _messageManager.bind(testExecutionContext);
@@ -61,7 +61,7 @@ public abstract class TestManager implements ITestManager {
         for (int i = 0; i < testSuite.size(); i++) {
             ITestCaseFault mutantTestCase = (ITestCaseFault) testSuite.get(i);
             try {
-                ITestExecutionContext testExecutionContext = _testExecutionContextFactory.create(mutantTestCase, testSpecs);
+                ITestExecutionContext testExecutionContext = new TestExecutionContext((TestCase) mutantTestCase, null, (TestSpecs) testSpecs);
                 _repository.save((IEntity) testExecutionContext);
                 _environmentManager.initialize(testExecutionContext);
                 _messageManager.bind(testExecutionContext);

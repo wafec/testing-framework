@@ -30,4 +30,12 @@ public class TestInputArgs implements ITestInputArgs {
         }
         return testInputArgument;
     }
+
+    @Override
+    public ITestInputArgument get(final String name) {
+        var optional = testInputArguments.stream().filter(i -> i.getName() != null && i.getName().equals(name));
+        if (optional.count() > 0)
+            return optional.findFirst().get();
+        return null;
+    }
 }
