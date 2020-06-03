@@ -5,6 +5,9 @@ import robtest.stateinterfw.ITestExecutionContext;
 import robtest.stateinterfw.ITestInput;
 import robtest.stateinterfw.ITestSpecs;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class TestExecutionContext implements ITestExecutionContext, IEntity {
     private int id;
     private TestCase testCase;
@@ -12,6 +15,8 @@ public class TestExecutionContext implements ITestExecutionContext, IEntity {
     private TestCaseFault testCaseFault;
     private TestSpecs testSpecs;
     private Object volatileUserContent;
+    private List<TestInput> inputs;
+    private int inputIndex;
 
     public TestExecutionContext() {
 
@@ -26,8 +31,14 @@ public class TestExecutionContext implements ITestExecutionContext, IEntity {
         this.testInput = testInput;
         this.testSpecs = testSpecs;
 
-        if (this.testCase != null && this.testInput == null && this.testCase.size() > 0) {
-            this.testInput = (TestInput) this.testCase.get(0);
+        if (this.testCase != null && this.testCase.size() > 0) {
+            inputs = new ArrayList<>(this.testCase.getTestInputs());
+            inputIndex = 0;
+            if (this.testInput != null) {
+                inputIndex = inputs.indexOf(this.testInput);
+            } else {
+                this.testInput = inputs.get(0);
+            }
         }
     }
 
@@ -58,6 +69,28 @@ public class TestExecutionContext implements ITestExecutionContext, IEntity {
     @Override
     public ITestInput getCurrent() {
         return testInput;
+    }
+
+    @Override
+    public int moveForward() {
+        if (inputIndex < inputs.size() - 1) {
+            inputIndex++;
+            this.testInput = inputs.get(inputIndex);
+            return inputIndex;
+        } else {
+            return -1;
+        }
+    }
+
+    @Override
+    public int moveBackward() {
+        if (inputIndex > 0) {
+            inputIndex--;
+            this.testInput = inputs.get(inputIndex);
+            return inputIndex;
+        } else {
+            return -1;
+        }
     }
 
     @Override

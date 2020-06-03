@@ -23,6 +23,8 @@ public abstract class TestInputCommand implements ITestInputCommand {
         if (actions.containsKey(testInput.getAction())) {
             var actionFunc = actions.get(testInput.getAction());
             result = actionFunc.apply(testInput.getArgs());
+        } else {
+            throw new IllegalArgumentException("Command not recognized");
         }
         return result;
     }

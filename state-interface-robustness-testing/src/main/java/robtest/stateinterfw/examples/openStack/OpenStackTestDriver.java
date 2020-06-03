@@ -1,13 +1,18 @@
 package robtest.stateinterfw.examples.openStack;
 
-import org.openstack4j.api.OSClient;
-import org.openstack4j.openstack.OSFactory;
-import robtest.stateinterfw.ITestDriver;
+import com.google.inject.Inject;
 import robtest.stateinterfw.ITestExecutionContext;
 import robtest.stateinterfw.TestDriver;
 
 public class OpenStackTestDriver extends TestDriver implements IOpenStackTestDriver {
     private ITestExecutionContext _testExecutionContext;
+    private IOpenStackTestInputCommand _testInputCommand;
+    private boolean _hasNext = true;
+
+    @Inject
+    public OpenStackTestDriver(IOpenStackTestInputCommand testInputCommand) {
+        _testInputCommand = testInputCommand;
+    }
 
     @Override
     public void initialize(ITestExecutionContext testExecutionContext) {
@@ -16,18 +21,16 @@ public class OpenStackTestDriver extends TestDriver implements IOpenStackTestDri
 
     @Override
     public void executeNext() {
-        this._testExecutionContext.getCurrent().getAction();
-        OSClient.OSClientV3 os = OSFactory.builderV3()
-                .endpoint("")
-                .credentials("user id", "password")
-                .authenticate();
-        var serverCreate = os.compute().servers().serverBuilder().flavor("").image("").build();
-
+        var testInput = this._testExecutionContext.getCurrent();
+        if (testInput != null && _hasNext) {
+            var result = _testInputCommand.command(_testExecutionContext, testInput);
+        }
+        _hasNext = _testExecutionContext.moveForward() >= 0;
     }
 
     @Override
     public boolean hasNext() {
-        return false;
+        return _hasNext;
     }
 
     @Override
