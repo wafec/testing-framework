@@ -1,5 +1,7 @@
 package robtest.stateinterfw;
 
-public interface ITestInputArgument extends IArgument {
+import robtest.stateinterfw.data.IEntity;
+
+public interface ITestInputArgument extends IArgument, IEntity {
     int getId();
 }

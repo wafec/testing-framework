@@ -5,12 +5,23 @@
         <id name="id" type="int" column="id">
             <generator class="native" />
         </id>
-        <set name="testInputs" inverse="true" lazy="true" cascade="save-update">
+        <set name="testInputs" inverse="true" lazy="true" order-by="order" cascade="save-update">
             <key column="test_id" />
             <one-to-many class="robtest.stateinterfw.data.TestInput" />
         </set>
         <property name="uniqueIdentifier" type="string">
             <column name="uid" length="512" />
+        </property>
+    </class>
+    <class name="robtest.stateinterfw.data.views.TestCaseView" table="TEST_CASE_VIEW" mutable="false">
+        <id name="id" type="int" column="id">
+            <generator class="native" />
+        </id>
+        <property name="uid">
+            <column name="uid" sql-type="text" />
+        </property>
+        <property name="inputCount">
+            <column name="input_count" sql-type="int" />
         </property>
     </class>
 </hibernate-mapping>

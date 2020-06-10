@@ -6,6 +6,7 @@ import robtest.stateinterfw.ITestMessageCollection;
 import robtest.stateinterfw.ITestStateCollection;
 
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class TestInput implements ITestInput {
     private int id;
@@ -15,6 +16,7 @@ public class TestInput implements ITestInput {
     private Set<TestState> testStates;
     private Set<TestMessage> testMessages;
     private TestCase testCase;
+    private int order;
 
     public TestInput() {
 
@@ -97,5 +99,23 @@ public class TestInput implements ITestInput {
 
     public TestCase getTestCase() {
         return testCase;
+    }
+
+    public int getOrder() {
+        return this.order;
+    }
+
+    public void setOrder(int order) {
+        this.order = order;
+    }
+
+    @Override
+    public String toString() {
+        var args = "";
+        if (testInputArguments != null && testInputArguments.size() > 0)
+            args = String.join(",", testInputArguments.stream().map(a -> {
+                return String.format("%s=%s", a.getName(), a.getDataValue());
+            }).collect(Collectors.toList()));
+        return String.format("%s(%s)", action, args);
     }
 }

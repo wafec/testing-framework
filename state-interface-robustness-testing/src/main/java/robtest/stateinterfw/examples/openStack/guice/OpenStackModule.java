@@ -15,5 +15,6 @@ public class OpenStackModule extends AbstractModule {
         bind(IOpenStackMutatorCatalog.class).to(OpenStackMutatorCatalog.class);
         bind(IOpenStackFaultMutatorFilter.class).to(OpenStackFaultMutatorFilter.class);
         bind(IOpenStackMutatorMessageUtils.class).to(OpenStackMutatorMessageUtils.class);
+        bind(IOpenStackTestInputCommand.class).to(OpenStackTestInputCommand.class);
     }
 }

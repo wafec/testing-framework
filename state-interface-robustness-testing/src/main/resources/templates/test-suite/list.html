@@ -32,9 +32,8 @@
                     <thead>
                         <tr>
                             <th class="w-1-nowrap">#</th>
-                            <th>UID</th>
-                            <th class="w-1-nowrap">#Inputs</th>
-                            <th class="w-1-nowrap">#States</th>
+                            <th>Name</th>
+                            <th class="w-1-nowrap">Size</th>
                             <th class="w-1-nowrap">Actions</th>
                         </tr>
                     </thead>
@@ -43,14 +42,14 @@
                             <th><span th:text="${testCase.id}"></span></th>
                             <td><span th:text="${testCase.uid}"></span></td>
                             <td><span th:text="${testCase.inputCount}"></span></td>
-                            <td><span th:text="${testCase.stateCount}"></span></td>
                             <td>
                                 <div class="btn-group">
-                                    <a href="#" class="btn btn-sm btn-primary">More</a>
-                                    <button type="button" class="btn btn-sm btn-primary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <a href="#" class="btn btn-sm btn-warning">Edit</a>
+                                    <button type="button" class="btn btn-sm btn-warning dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                         <span class="sr-only">Dropdown</span>
                                     </button>
                                     <div class="dropdown-menu dropdown-menu-right">
+                                        <a class="dropdown-item" th:href="@{/testsuite/{id}/input/manage(id=${testCase.id})}">Add Event</a>
                                         <a href="#" class="dropdown-item">Remove</a>
                                     </div>
                                 </div>

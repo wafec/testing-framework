@@ -2,15 +2,15 @@ package robtest.stateinterfw.web;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import robtest.stateinterfw.data.IRepository;
+import robtest.stateinterfw.data.TestCase;
+import robtest.stateinterfw.data.views.TestCaseView;
 import robtest.stateinterfw.files.IFileTestCase;
 import robtest.stateinterfw.files.ITestCaseLoader;
 import robtest.stateinterfw.web.models.TestCaseViewModel;
+import robtest.stateinterfw.web.models.TestSuiteTestCreateModel;
 
 import java.io.File;
 import java.util.List;
@@ -47,15 +47,21 @@ public class TestSuiteController {
 
     @GetMapping("/list")
     public String list(Model model) {
-        List result = repository.query(
-                "select " +
-                        "t.id as id, t.uniqueIdentifier,  count(i.id) as inputCount, count(distinct s.state) as stateCount " +
-                        "from " +
-                        "TestCase t, TestInput i, TestState s " +
-                        "where " +
-                        "t.id = i.testCase and i.id = s.testInput " +
-                        "group by t.id, t.uniqueIdentifier", new TestCaseViewModel("id", "uid", "inputCount", "stateCount"));
+        List result = repository.query("from TestCaseView", TestCaseView.class);
         model.addAttribute("testCaseList", result);
         return "test-suite/list";
+    }
+
+    @GetMapping("/create")
+    public String create() {
+        return "test-suite/create";
+    }
+
+    @PostMapping("/create")
+    public String create(@ModelAttribute TestSuiteTestCreateModel createModel, Model model) {
+        TestCase testCase = new TestCase();
+        testCase.setUniqueIdentifier(createModel.getUid());
+        repository.save(testCase);
+        return "test-suite/result";
     }
 }
