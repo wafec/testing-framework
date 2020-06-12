@@ -27,7 +27,30 @@
                 <button type="submit" class="btn btn-primary btn-sm">Search</button>
             </div>
         </form>
-        <div class="row">
+        <form class="form-row" method="post" th:action="@{/examples/openstack/add}">
+            <div class="col form-group">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-12 form-group d-none">
+                                <input type="hidden" class="form-control form-control-sm" name="planId" th:value="${planId}" />
+                                <input type="hidden" class="form-control form-control-sm" th:value="${planId == -1 ? 'post' : 'put'}" name="operation" />
+                            </div>
+                            <div class="col-12 form-group">
+                                <label>Name:</label>
+                                <input type="text" class="form-control form-control-sm" name="name" th:value="${name}" />
+                            </div>
+                            <div class="col-12 form-group">
+                                <button type="submit" class="btn btn-primary btn-sm">
+                                    Save<span th:if="${planId != -1}"> Changes</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <div class="row my-3">
             <div class="col">
                 <table class="table table-sm table-striped table-hover" tabindex="-1">
                     <thead>
@@ -59,7 +82,7 @@
                             </td>
                             <td>
                                 <div class="btn-group">
-                                    <a href="#" class="btn btn-sm btn-warning">Edit</a>
+                                    <a th:href="@{/examples/openstack/list/{id}(id=${plan.id})}" class="btn btn-sm btn-warning">Edit</a>
                                     <button type="button" class="btn btn-sm btn-warning dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                         <span class="sr-only">Dropdown</span>
                                     </button>
@@ -68,7 +91,7 @@
                                         <a th:href="@{/examples/openstack/{id}/message-device/list(id=${plan.id})}" class="dropdown-item">List Message Device</a>
                                         <a th:href="@{/examples/openstack/{id}/environment/list(id=${plan.id})}" class="dropdown-item">List Environment</a>
                                         <div class="dropdown-divider"></div>
-                                        <a href="#" class="dropdown-item">Remove</a>
+                                        <a th:href="@{/examples/openstack/delete/{planId}(planId=${plan.id})}" class="dropdown-item">Remove</a>
                                     </div>
                                 </div>
                             </td>

@@ -36,6 +36,10 @@
                 <div class="card">
                     <div class="card-body">
                         <form class="form-row" method="post" th:action="@{/testsuite/{id}/input/action/add(id=${id})}">
+                            <div class="col form-group d-none">
+                                <input type="hidden" class="form-control form-control-sm" name="operation" th:value="${inputId == -1 ? 'post' : 'put'}" />
+                                <input type="hidden" class="form-control form-control-sm" name="inputId" th:value="${inputId}" />
+                            </div>
                             <div class="col form-group">
                                 <label>Action:</label>
                                 <input type="text" class="form-control form-control-sm" name="action" th:value="${inputAction}" />
@@ -46,7 +50,7 @@
                             </div>
                             <div class="w-100"></div>
                             <div class="col-auto">
-                                <button type="submit" class="btn btn-sm btn-primary">Save</button>
+                                <button type="submit" class="btn btn-sm btn-primary">Save<span th:if="${inputId != -1}"> Changes</span></button>
                             </div>
                             <div class="col-auto ml-auto">
                                 <div class="custom-control custom-checkbox">
@@ -85,6 +89,7 @@
                                     </button>
                                     <div class="dropdown-menu dropdown-menu-right">
                                         <a class="dropdown-item" th:href="@{/testsuite/{id}/input/{inputId}/args/add(id=${id},inputId=${testInput.id})}">Add Argument</a>
+                                        <a class="dropdown-item" th:href="@{/testsuite/{id}/input/delete/{inputId}(id=${id},inputId=${testInput.id})}">Remove</a>
                                     </div>
                                 </div>
                             </td>

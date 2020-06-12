@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.ModelAndView;
 import robtest.stateinterfw.data.IRepository;
 import robtest.stateinterfw.virtualbox.VirtualBoxEnvironment;
 import robtest.stateinterfw.web.dozer.CustomDozerFactory;
@@ -36,11 +37,11 @@ public class EnvironmentVirtualBoxController {
     }
 
     @PostMapping("/create")
-    public String create(@ModelAttribute VirtualBoxCreateRequestModel createModel, Model model) {
+    public ModelAndView create(@ModelAttribute VirtualBoxCreateRequestModel createModel, Model model) {
         VirtualBoxEnvironment environment = _mapper.map(createModel, VirtualBoxEnvironment.class);
         _repository.save(environment);
         model.addAttribute("environment", environment);
-        return "/environments/virtualbox/result";
+        return new ModelAndView("redirect:/environments/virtualbox/list");
     }
 
     @GetMapping("/list")

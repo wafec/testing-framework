@@ -9,7 +9,7 @@ import robtest.stateinterfw.data.mapper.IDataMapper;
 
 import java.util.List;
 
-public class HibernateRepository implements IRepository, DisposableBean {
+public class HibernateRepository implements IRepository, DisposableBean, ITransactionRepositoryFactory {
     protected final ISqlManager _sqlManager;
     protected final IDataMapper _mapper;
     protected boolean _commit = true;
@@ -116,5 +116,10 @@ public class HibernateRepository implements IRepository, DisposableBean {
     @Override
     public void destroy() throws Exception {
 
+    }
+
+    @Override
+    public ITransactionRepository getTransaction() {
+        return new HibernateTransactionRepository(_sqlManager, this._mapper);
     }
 }

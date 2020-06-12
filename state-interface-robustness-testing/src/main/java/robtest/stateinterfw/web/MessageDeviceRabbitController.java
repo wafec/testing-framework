@@ -5,6 +5,7 @@ import com.github.dozermapper.core.Mapper;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 import robtest.stateinterfw.data.IRepository;
 import robtest.stateinterfw.rabbit.RabbitMessageDevice;
 import robtest.stateinterfw.web.dozer.CustomDozerFactory;
@@ -37,11 +38,11 @@ public class MessageDeviceRabbitController {
     }
 
     @PostMapping("/create")
-    public String create(@ModelAttribute RabbitCreateRequestModel createModel, Model model) {
+    public ModelAndView create(@ModelAttribute RabbitCreateRequestModel createModel, Model model) {
         RabbitMessageDevice entity = _mapper.map(createModel, RabbitMessageDevice.class);
         _repository.save(entity);
         model.addAttribute("device", entity);
-        return "message-devices/rabbit/result";
+        return new ModelAndView("redirect:/message-devices/rabbit/list");
     }
 
     @GetMapping("/list")

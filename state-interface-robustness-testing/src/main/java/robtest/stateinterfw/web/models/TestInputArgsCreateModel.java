@@ -1,10 +1,12 @@
 package robtest.stateinterfw.web.models;
 
 public class TestInputArgsCreateModel {
-    private int inputId;
+    private Integer inputId;
     private String name;
     private String dataType;
     private String dataValue;
+    private Integer argId;
+    private String operation;
 
     public void setName(String name) {
         this.name = name;
@@ -36,5 +38,21 @@ public class TestInputArgsCreateModel {
 
     public int getInputId() {
         return inputId;
+    }
+
+    public void setArgId(Integer argId) {
+        this.argId = argId;
+    }
+
+    public Integer getArgId() {
+        return argId;
+    }
+
+    public void setOperation(String operation) {
+        this.operation = operation;
+    }
+
+    public String getOperation() {
+        return operation;
     }
 }

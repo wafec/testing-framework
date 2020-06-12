@@ -6,7 +6,7 @@
             <generator class="native" />
         </id>
         <set name="testInputs" inverse="true" lazy="true" order-by="order" cascade="save-update">
-            <key column="test_id" />
+            <key column="test_case_id" />
             <one-to-many class="robtest.stateinterfw.data.TestInput" />
         </set>
         <property name="uniqueIdentifier" type="string">

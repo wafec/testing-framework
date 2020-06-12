@@ -27,7 +27,39 @@
                 <button type="submit" class="btn btn-sm btn-primary">Search</button>
             </div>
         </form>
-        <div class="row">
+        <form class="form-row" method="post" th:action="@{/states/add}">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row align-items-end">
+                            <div class="col-12 form-group d-none">
+                                <input type="hidden" name="operation" th:value="${id == -1 ? 'post' : 'put'}" />
+                                <input type="hidden" name="id" th:value="${id}" />
+                            </div>
+                            <div class="col form-group">
+                                <label>Name:</label>
+                                <input type="text" name="name" class="form-control form-control-sm" th:value="${name}" />
+                            </div>
+                            <div class="col-auto form-group">
+                                <label>Timeout:</label>
+                                <input type="text" style="width: 100px;" name="timeout" class="form-control form-control-sm" th:value="${timeout}" />
+                            </div>
+                            <div class="col-12 form-group">
+                                <label class="">This state is required for evaluation? If so, check as required.</label>
+                                <div class="custom-control custom-checkbox">
+                                    <input type="checkbox" class="custom-control-input" id="requiredCheck" name="required" th:checked="${required}" />
+                                    <label class="custom-control-label" for="requiredCheck">Required</label>
+                                </div>
+                            </div>
+                            <div class="col-12 form-group">
+                                <button type="submit" class="btn btn-sm btn-primary">Save<span th:if="${id != -1}"> Changes</span></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <div class="row my-3">
             <div class="col">
                 <table class="table table-sm table-striped table-hover" tabindex="-1">
                     <thead>
@@ -49,7 +81,7 @@
                             </td>
                             <td class="align-middle">
                                 <div class="btn-group">
-                                    <a href="#" class="btn btn-sm btn-warning">Editar</a>
+                                    <a th:href="@{/states/list/{id}(id=${state.id})}" class="btn btn-sm btn-warning">Editar</a>
                                     <button type="button" class="btn btn-sm btn-warning dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                         <span class="sr-only">Dropdown</span>
                                     </button>

@@ -26,7 +26,30 @@
                 <button type="button" class="btn btn-sm btn-primary">Search</button>
             </div>
         </form>
-        <div class="row">
+        <form class="form-row" method="post" th:action="@{/testsuite/list/add}">
+            <div class="col">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-12 d-none">
+                                <input type="hidden" name="id" class="form-control form-control-sm" th:value="${id}" />
+                                <input type="hidden" name="operation" class="form-control form-control-sm" th:value="${id != -1 ? 'put' : 'post'}" />
+                            </div>
+                            <div class="col-12 form-group">
+                                <label>Name:</label>
+                                <input type="text" class="form-control form-control-sm" name="uid" th:value="${name}"/>
+                            </div>
+                            <div class="col-12 form-group">
+                                <button type="submit" class="btn btn-sm btn-primary">
+                                    Save<span th:if="${id != -1}"> Changes</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <div class="row my-3">
             <div class="col">
                 <table class="table table-sm table-striped table-hover">
                     <thead>
@@ -44,13 +67,13 @@
                             <td><span th:text="${testCase.inputCount}"></span></td>
                             <td>
                                 <div class="btn-group">
-                                    <a href="#" class="btn btn-sm btn-warning">Edit</a>
+                                    <a th:href="@{/testsuite/list/{id}(id=${testCase.id})}" class="btn btn-sm btn-warning">Edit</a>
                                     <button type="button" class="btn btn-sm btn-warning dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                         <span class="sr-only">Dropdown</span>
                                     </button>
                                     <div class="dropdown-menu dropdown-menu-right">
                                         <a class="dropdown-item" th:href="@{/testsuite/{id}/input/manage(id=${testCase.id})}">Add Event</a>
-                                        <a href="#" class="dropdown-item">Remove</a>
+                                        <a th:href="@{/testsuite/delete/{id}(id=${testCase.id})}" class="dropdown-item">Remove</a>
                                     </div>
                                 </div>
                             </td>

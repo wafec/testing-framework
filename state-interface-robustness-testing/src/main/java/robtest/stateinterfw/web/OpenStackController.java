@@ -1,13 +1,12 @@
 package robtest.stateinterfw.web;
 
 import com.github.dozermapper.core.Mapper;
+import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import robtest.stateinterfw.data.IRepository;
-import robtest.stateinterfw.data.Param;
-import robtest.stateinterfw.data.TestCase;
-import robtest.stateinterfw.data.TestPlan;
+import org.springframework.web.servlet.ModelAndView;
+import robtest.stateinterfw.data.*;
 import robtest.stateinterfw.examples.openStack.OpenStackTestPlan;
 import robtest.stateinterfw.web.dozer.CustomDozerFactory;
 import robtest.stateinterfw.web.models.OpenStackTestCaseAddItemRequestModel;
@@ -46,8 +45,14 @@ public class OpenStackController {
         return "examples/openstack/index";
     }
 
-    @GetMapping("/list")
-    public String list(Model model) {
+    @GetMapping({"/list", "/list/{planId}"})
+    public String list(Model model, @PathVariable(required = false) Integer planId) {
+        model.addAttribute("planId", ObjectUtils.firstNonNull(planId, -1));
+        model.addAttribute("name", "");
+        if (planId != null) {
+            OpenStackTestPlan testPlan = repository.get(planId, OpenStackTestPlan.class);
+            model.addAttribute("name", testPlan.getName());
+        }
         List<OpenStackTestPlan> planList = repository.query("from OpenStackTestPlan", OpenStackTestPlan.class);
         model.addAttribute("planList", planList);
         return "examples/openstack/list";
@@ -103,5 +108,43 @@ public class OpenStackController {
         testPlan.getTestCases().add(testCase);
         repository.update(testPlan);
         return "examples/openstack/test-case-result";
+    }
+
+    @PostMapping("/add")
+    public ModelAndView add(Model model, TestPlanCreateRequestModel createModel) {
+        switch (createModel.getOperation()) {
+            case "post": addPost(createModel); break;
+            case "put": addPut(createModel); break;
+        }
+        ModelAndView modelAndView = new ModelAndView("redirect:/examples/openstack/list");
+        return modelAndView;
+    }
+
+    private void addPost(TestPlanCreateRequestModel createModel) {
+        OpenStackTestPlan openStackTestPlan = new OpenStackTestPlan();
+        openStackTestPlan.setName(createModel.getName());
+        repository.save(openStackTestPlan);
+    }
+
+    private void addPut(TestPlanCreateRequestModel createModel) {
+        OpenStackTestPlan testPlan = repository.get(createModel.getPlanId(), OpenStackTestPlan.class);
+        testPlan.setName(createModel.getName());
+        repository.update(testPlan);
+    }
+
+    @GetMapping("/delete/{planId}")
+    private ModelAndView delete(@PathVariable Integer planId) {
+        remove(planId);
+        ModelAndView modelAndView = new ModelAndView("redirect:/examples/openstack/list");
+        return modelAndView;
+    }
+
+    private void remove(Integer planId) {
+        try (var transactionRepository = ((ITransactionRepositoryFactory)repository).getTransaction()) {
+            OpenStackTestPlan testPlan = transactionRepository.get(planId, OpenStackTestPlan.class);
+            transactionRepository.remove(testPlan);
+        } catch (Exception exc) {
+            exc.printStackTrace();
+        }
     }
 }
