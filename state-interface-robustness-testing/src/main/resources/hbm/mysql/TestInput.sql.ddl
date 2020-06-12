@@ -10,3 +10,16 @@ CREATE TABLE TEST_INPUT (
 
 ALTER TABLE TEST_INPUT
     ADD COLUMN input_order int DEFAULT 0;
+
+CREATE OR REPLACE VIEW TEST_CASE_VIEW
+    AS
+    SELECT
+        T.id,
+        T.uid,
+        COUNT(I.id) as input_count
+    FROM
+        TEST_CASE T
+            LEFT JOIN TEST_INPUT I ON I.test_case_id = T.id
+    GROUP BY
+        T.id,
+        T.uid;
