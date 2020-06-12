@@ -114,8 +114,21 @@ public class TestInput implements ITestInput {
         var args = "";
         if (testInputArguments != null && testInputArguments.size() > 0)
             args = String.join(",", testInputArguments.stream().map(a -> {
-                return String.format("%s=%s", a.getName(), a.getDataValue());
+                return String.format("%s %s=%s", a.getDataType(), a.getName(), a.getDataValue());
             }).collect(Collectors.toList()));
         return String.format("%s(%s)", action, args);
+    }
+
+    public String toHtml() {
+        var args = "";
+        if (testInputArguments != null && testInputArguments.size() > 0) {
+            args = String.join(", ", testInputArguments.stream().map(a -> {
+                var type = String.format("<span class=\"text-primary\">%s</span>", a.getDataType());
+                var name = String.format("<span class=\"text-muted\">%s</span>", a.getName());
+                return String.format("%s %s=%s", type, name, a.getDataValue());
+            }).collect(Collectors.toList()));
+        }
+        var name = String.format("<span class=\"font-italic\">%s</span>", action);
+        return String.format("%s(%s)", name, args);
     }
 }

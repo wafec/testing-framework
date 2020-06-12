@@ -17,12 +17,54 @@
                 </nav>
             </div>
         </div>
-        <div class="row">
+        <div class="row my-2">
             <div class="col">
+                <h3>VirtualBox&reg;</h3>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Easy Form</h5>
+                        <form class="row" method="post" th:action="@{/environments/virtualbox/create}">
+                            <div class="col d-none">
+                                <input type="hidden" name="operation" th:value="${id == -1 ? 'post' : 'put'}" />
+                                <input type="hidden" name="id" th:value="${id}" />
+                            </div>
+                            <div class="col form-group">
+                                <label>Name:</label>
+                                <input type="text" class="form-control form-control-sm" th:value="${name}" name="name" />
+                            </div>
+                            <div class="col form-group">
+                                <label>Snapshot:</label>
+                                <input type="text" class="form-control form-control-sm" th:value="${snapshot}" name="snapshot" />
+                            </div>
+                            <div class="col-auto form-group">
+                                <label>Priority:</label>
+                                <input id="priorityElement" type="text" class="form-control form-control-sm" th:value="${priority}" name="priority" style="width: 100px;" />
+                                <script type="text/javascript">
+                                    var priorityElement = document.getElementById("priorityElement");
+                                    var priorityMask = IMask(priorityElement, {
+                                        mask: Number,
+                                        scale: 0,
+                                        signed: false
+                                    });
+                                </script>
+                            </div>
+                            <div class="w-100"></div>
+                            <div class="col-12">
+                                <button type="submit" class="btn btn-sm btn-primary">Save<span th:if="${id != -1}"> Changes</span></button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 mt-4">
                 <form class="form-row" method="get">
                     <div class="col form-group">
                         <label class="sr-only">Filter:</label>
-                        <input type="text" class="form-control form-control-sm" name="filter" />
+                        <input type="text" class="form-control form-control-sm" name="filter" placeholder="Filter..." />
                     </div>
                     <div class="col-auto form-group">
                         <label class="sr-only">Search:</label>
@@ -36,7 +78,7 @@
             </div>
             <div class="w-100"></div>
             <div class="col">
-                <table class="table table-sm table-striped table-hover" tabindex="-1">
+                <table class="table table-sm table-striped table-hover" tabindex="-1" th:if="${environmentList != null && environmentList.size() > 0}">
                     <thead>
                         <tr>
                             <th class="w-1-nowrap">#</th>
@@ -66,18 +108,21 @@
                             </td>
                             <td>
                                 <div class="btn-group">
-                                    <a href="#" class="btn btn-sm btn-warning">Edit</a>
+                                    <a th:href="@{/environments/virtualbox/list/{id}(id=${environment.id})}" class="btn btn-sm btn-warning">Edit</a>
                                     <button type="button" class="btn btn-sm btn-warning dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-expanded="false" aria-haspopup="true">
                                         <span class="sr-only">Dropdown</span>
                                     </button>
                                     <div class="dropdown-menu dropdown-menu-right">
-                                        <a href="#" class="dropdown-item">Remover</a>
+                                        <a th:href="@{/environments/virtualbox/delete/{id}(id=${environment.id})}" class="dropdown-item">Remove</a>
                                     </div>
                                 </div>
                             </td>
                         </tr>
                     </tbody>
                 </table>
+                <p th:if="${environmentList == null || environmentList.size() == 0}">
+                    No results...
+                </p>
             </div>
         </div>
     </section>

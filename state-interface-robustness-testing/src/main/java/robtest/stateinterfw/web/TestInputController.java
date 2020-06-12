@@ -21,20 +21,22 @@ public class TestInputController {
         this.repository = repository;
     }
 
-    private void loadTestInputs(Model model, int id) {
-        var testInputs = repository.query("from TestInput where testCase.id = :id order by order",
-                TestInput.class, Param.list("id", id).all());
+    private void loadTestInputs(Model model, int id, String filter) {
+        var testInputs = repository.query("from TestInput i where i.testCase.id = :id and (:filter is null or (i.action like :filter)) order by i.order",
+                TestInput.class, Param.list("id", id).add("filter",
+                        filter == null ? null : String.format("%%%s%%", filter)).all());
         model.addAttribute("testInputs", testInputs);
     }
 
     @GetMapping({"/manage", "/manage/{inputId}"})
-    public String index(@PathVariable int id, Model model, @PathVariable(required = false) Integer inputId) {
+    public String index(@PathVariable int id, Model model, @PathVariable(required = false) Integer inputId, @RequestParam(required = false) String filter) {
         model.addAttribute("id", id);
         model.addAttribute("inputId", ObjectUtils.firstNonNull(inputId, -1));
         model.addAttribute("inputAction", "");
         model.addAttribute("inputLocked", false);
-        model.addAttribute("inputOrder", 1);
-        loadTestInputs(model, id);
+        model.addAttribute("inputOrder", "");
+        model.addAttribute("filter", ObjectUtils.firstNonNull(filter, ""));
+        loadTestInputs(model, id, filter);
         if (inputId != null) {
             var testInput = repository.get(inputId, TestInput.class);
             model.addAttribute("inputAction", testInput.getAction());
@@ -51,7 +53,6 @@ public class TestInputController {
             case "post": create(id, createModel); break;
             case "put": update(createModel); break;
         }
-        create(id, createModel);
         ModelAndView modelAndView = new ModelAndView(String.format("redirect:/testsuite/%d/input/manage", id));
         return modelAndView;
     }

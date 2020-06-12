@@ -16,14 +16,14 @@
                 </nav>
             </div>
         </div>
-        <form class="form-row" method="post">
+        <form class="form-row" method="get">
             <div class="col form-group">
                 <label class="sr-only">Filter:</label>
-                <input type="text" placeholder="Filter..." name="filter" class="form-control form-control-sm" />
+                <input type="text" placeholder="Filter..." name="filter" th:value="${filter}" class="form-control form-control-sm" />
             </div>
             <div class="col-auto form-group">
                 <label class="sr-only">Search:</label>
-                <button type="button" class="btn btn-sm btn-primary">Search</button>
+                <button type="submit" class="btn btn-sm btn-primary">Search</button>
             </div>
         </form>
         <form class="form-row" method="post" th:action="@{/testsuite/list/add}">
@@ -51,7 +51,7 @@
         </form>
         <div class="row my-3">
             <div class="col">
-                <table class="table table-sm table-striped table-hover">
+                <table class="table table-sm table-striped table-hover" th:if="${testCaseList != null && testCaseList.size() > 0}">
                     <thead>
                         <tr>
                             <th class="w-1-nowrap">#</th>
@@ -80,6 +80,9 @@
                         </tr>
                     </tbody>
                 </table>
+                <p th:if="${testCaseList == null || testCaseList.size() == 0}">
+                    No results...
+                </p>
             </div>
         </div>
     </section>

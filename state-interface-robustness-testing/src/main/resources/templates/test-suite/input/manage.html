@@ -19,10 +19,10 @@
         </div>
         <div class="row">
             <div class="col">
-                <form class="form-row" method="post">
+                <form class="form-row" method="get">
                     <div class="col form-group">
                         <label class="sr-only">Filter:</label>
-                        <input type="text" class="form-control form-control-sm" name="filter" placeholder="Filter..." />
+                        <input type="text" class="form-control form-control-sm" name="filter" th:value="${filter}" placeholder="Filter..." />
                     </div>
                     <div class="col-auto form-group">
                         <label class="sr-only">Button</label>
@@ -32,7 +32,7 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-5">
+            <div class="col-12">
                 <div class="card">
                     <div class="card-body">
                         <form class="form-row" method="post" th:action="@{/testsuite/{id}/input/action/add(id=${id})}">
@@ -46,7 +46,16 @@
                             </div>
                             <div class="col-auto form-group">
                                 <label>Order:</label>
-                                <input type="text" class="form-control form-control-sm" name="order" th:value="${inputOrder}" style="width: 50px;" />
+                                <input id="orderInput" type="text" class="form-control form-control-sm" name="order" th:value="${inputOrder}" style="width: 100px;" />
+                                <script type="text/javascript">
+                                    var numberElement = document.getElementById("orderInput");
+                                    var numberMask = IMask(numberElement, {
+                                        scale: 0,
+                                        mask: Number,
+                                        signed: false,
+                                        thousandsSeparator: ''
+                                    });
+                                </script>
                             </div>
                             <div class="w-100"></div>
                             <div class="col-auto">
@@ -54,7 +63,7 @@
                             </div>
                             <div class="col-auto ml-auto">
                                 <div class="custom-control custom-checkbox">
-                                    <input type="checkbox" class="custom-control-input" id="lockedCheck" checked="${inputLocked}" name="locked" />
+                                    <input type="checkbox" class="custom-control-input" id="lockedCheck" th:checked="${inputLocked}" name="locked" />
                                     <label class="custom-control-label" for="lockedCheck">Locked</label>
                                 </div>
                             </div>
@@ -65,7 +74,7 @@
         </div>
         <div class="row my-3">
             <div class="col">
-                <table class="table table-sm table-striped table-hover">
+                <table class="table table-sm table-striped table-hover" th:if="${testInputs != null && testInputs.size() > 0}">
                     <thead>
                         <tr>
                             <th>Order</th>
@@ -79,7 +88,7 @@
                                 <span th:text="${testInput.order}"></span>
                             </td>
                             <td>
-                                <span th:text="${testInput.toString()}"></span>
+                                <span th:utext="${testInput.toHtml()}"></span>
                             </td>
                             <td style="width: 1%; white-space: nowrap;">
                                 <div class="btn-group">
@@ -96,6 +105,9 @@
                         </tr>
                     </tbody>
                 </table>
+                <p th:if="${testInputs == null || testInputs.size() == 0}">
+                    No results...
+                </p>
             </div>
         </div>
     </section>

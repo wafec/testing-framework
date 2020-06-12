@@ -1,5 +1,6 @@
 package robtest.stateinterfw.web;
 
+import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -22,13 +23,14 @@ public class TestInputArgsController {
     }
 
     @GetMapping({"/add", "/add/{argId}"})
-    public String add(@PathVariable Integer id, @PathVariable Integer inputId, @PathVariable Optional<Integer> argId, Model model) {
+    public String add(@PathVariable Integer id, @PathVariable Integer inputId, @PathVariable Optional<Integer> argId, Model model, @RequestParam(required = false) String filter) {
         model.addAttribute("id", id);
         model.addAttribute("inputId", inputId);
         model.addAttribute("argId", -1);
         model.addAttribute("name", "");
         model.addAttribute("dataType", "");
         model.addAttribute("dataValue", "");
+        model.addAttribute("filter", ObjectUtils.firstNonNull(filter, ""));
         if (argId.isPresent()) {
             model.addAttribute("argId", argId.get());
             TestInputArgument argument = repository.get(argId.get(), TestInputArgument.class);
@@ -36,8 +38,9 @@ public class TestInputArgsController {
             model.addAttribute("dataType", argument.getDataType());
             model.addAttribute("dataValue", argument.getDataValue());
         }
-        var args = repository.query("from TestInputArgument where test_input_id = :id order by id",
-                TestInputArgument.class, Param.list("id", inputId).all());
+        var args = repository.query("from TestInputArgument where test_input_id = :id and (:filter is null or (name like :filter or dataType like :filter or dataValue like :filter)) order by id",
+                TestInputArgument.class, Param.list("id", inputId)
+                        .add("filter", filter == null ? null : String.format("%%%s%%", filter)).all());
         model.addAttribute("args", args);
         return "test-suite/input/args/add";
     }

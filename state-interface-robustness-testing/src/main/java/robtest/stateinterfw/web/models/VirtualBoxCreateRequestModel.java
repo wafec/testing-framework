@@ -4,6 +4,8 @@ public class VirtualBoxCreateRequestModel {
     private String name;
     private String snapshot;
     private int priority;
+    private String operation;
+    private Integer id;
 
     public VirtualBoxCreateRequestModel() {
 
@@ -31,5 +33,21 @@ public class VirtualBoxCreateRequestModel {
 
     public void setPriority(int priority) {
         this.priority = priority;
+    }
+
+    public String getOperation() {
+        return operation;
+    }
+
+    public void setOperation(String operation) {
+        this.operation = operation;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 }

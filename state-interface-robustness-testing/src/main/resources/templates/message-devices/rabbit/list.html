@@ -22,7 +22,45 @@
                 </nav>
             </div>
         </div>
+        <div class="row my-2">
+            <div class="col-12">
+                <h3>
+                    RabbitMQ&reg;
+                </h3>
+            </div>
+        </div>
         <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Easy Form</h5>
+                        <form class="row" method="post" th:action="@{/message-devices/rabbit/add}">
+                            <div class="col d-none">
+                                <input type="hidden" name="id" th:value="${id}" />
+                                <input type="hidden" name="operation" th:value="${id == -1 ? 'post' : 'put'}" />
+                            </div>
+                            <div class="col form-group">
+                                <label>Host:</label>
+                                <input type="text" class="form-control form-control-sm" name="host" th:value="${host}" />
+                            </div>
+                            <div class="col form-group">
+                                <label>Username:</label>
+                                <input type="text" class="form-control form-control-sm" name="username" th:value="${username}" />
+                            </div>
+                            <div class="col form-group">
+                                <label>Password:</label>
+                                <input type="text" class="form-control form-control-sm" name="password" th:value="${password}" />
+                            </div>
+                            <div class="w-100"></div>
+                            <div class="col-12">
+                                <button type="submit" class="btn btn-sm btn-primary">Save<span th:if="${id != -1}"> Changes</span></button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row mt-4">
             <div class="col-12">
                 <form class="form-row" method="post">
                     <div class="col">
@@ -49,7 +87,7 @@
             </div>
             <div class="w-100"></div>
             <div class="col-12">
-                <table class="table table-sm table-striped table-hover" tabindex="-1">
+                <table class="table table-sm table-striped table-hover" tabindex="-1" th:if="${messageDeviceList != null && messageDeviceList.size() > 0}">
                     <thead>
                         <tr>
                             <th>#</th>
@@ -69,20 +107,23 @@
                             <td
                                     style="width: 1%" class="text-nowrap">
                                 <div class="btn-group">
-                                    <a href="#" class="btn btn-sm btn-warning">Edit</a>
+                                    <a th:href="@{/message-devices/rabbit/list/{id}(id=${device.id})}" class="btn btn-sm btn-warning">Edit</a>
                                     <button type="button" class="btn btn-sm btn-warning dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                         <span class="sr-only">Dropdown</span>
                                     </button>
                                     <div class="dropdown-menu dropdown-menu-right">
                                         <a class="dropdown-item" href="#">Details</a>
                                         <a class="dropdown-item" href="#">Test Connection</a>
-                                        <a class="dropdown-item text-danger" href="#">Remove</a>
+                                        <a class="dropdown-item text-danger" th:href="@{/message-devices/rabbit/delete/{id}(id=${device.id})}">Remove</a>
                                     </div>
                                 </div>
                             </td>
                         </tr>
                     </tbody>
                 </table>
+                <p th:if="${messageDeviceList == null || messageDeviceList.size() == 0}">
+                    No results...
+                </p>
             </div>
         </div>
     </div>

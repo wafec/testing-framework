@@ -51,11 +51,13 @@ public class TestSuiteController {
     }
 
     @GetMapping({"/list", "/list/{id}"})
-    public String list(Model model, @PathVariable(required = false) Integer id) {
-        List result = repository.query("from TestCaseView", TestCaseView.class);
+    public String list(Model model, @PathVariable(required = false) Integer id, @RequestParam(required = false) String filter) {
+        List result = repository.query("from TestCaseView t where (:filter is null or (t.uid like :filter)) ", TestCaseView.class,
+                Param.list("filter", filter == null ? null : String.format("%%%s%%", filter)));
         model.addAttribute("testCaseList", result);
         model.addAttribute("id", ObjectUtils.firstNonNull(id, -1));
         model.addAttribute("name", "");
+        model.addAttribute("filter", ObjectUtils.firstNonNull(filter, ""));
         if (id != null) {
             var testCase = repository.get(id, TestCase.class);
             model.addAttribute("name", testCase.getUniqueIdentifier());
