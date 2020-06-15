@@ -15,6 +15,7 @@ import robtest.stateinterfw.web.models.TestPlanCreateRequestModel;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/examples/openstack")
@@ -93,21 +94,25 @@ public class OpenStackController {
     }
 
     @GetMapping("/{id}/test-case/add")
-    public String addTestCase(@PathVariable int id, Model model) {
+    public String addTestCase(@PathVariable int id, Model model, @RequestParam(required = false) String filter) {
         model.addAttribute("id", id);
-        List<TestCase> testCase = repository.query("from TestCase", TestCase.class);
+        List<TestCase> testCase = repository.query("from TestCase where (:filter is null or (uid like :filter))", TestCase.class,
+                Param.list("filter", filter == null ? null : String.format("%%%s%%", filter)));
+        model.addAttribute("filter", ObjectUtils.firstNonNull(filter, ""));
+        OpenStackTestPlan testPlan = repository.get(id, OpenStackTestPlan.class);
+        testCase = testCase.stream().filter(t -> testPlan.getTestCases().stream().noneMatch(o -> o.getId() == t.getId())).collect(Collectors.toList());
         model.addAttribute("testCaseList", testCase);
         return "examples/openstack/test-case-add";
     }
 
     @PostMapping("/{id}/test-case/add/item")
-    public String addTestCase (@PathVariable int id, Model model, OpenStackTestCaseAddItemRequestModel addModel) {
+    public ModelAndView addTestCase (@PathVariable int id, Model model, OpenStackTestCaseAddItemRequestModel addModel) {
         model.addAttribute("id", id);
         OpenStackTestPlan testPlan = repository.get(id, OpenStackTestPlan.class);
         TestCase testCase = repository.get(addModel.getTestCaseId(), TestCase.class);
         testPlan.getTestCases().add(testCase);
         repository.update(testPlan);
-        return "examples/openstack/test-case-result";
+        return new ModelAndView(String.format("redirect:/examples/openstack/%d/test-case/add", id));
     }
 
     @PostMapping("/add")
@@ -134,17 +139,18 @@ public class OpenStackController {
 
     @GetMapping("/delete/{planId}")
     private ModelAndView delete(@PathVariable Integer planId) {
-        remove(planId);
         ModelAndView modelAndView = new ModelAndView("redirect:/examples/openstack/list");
+        remove(planId, modelAndView);
         return modelAndView;
     }
 
-    private void remove(Integer planId) {
+    private void remove(Integer planId, ModelAndView modelAndView) {
         try (var transactionRepository = ((ITransactionRepositoryFactory)repository).getTransaction()) {
             OpenStackTestPlan testPlan = transactionRepository.get(planId, OpenStackTestPlan.class);
             transactionRepository.remove(testPlan);
         } catch (Exception exc) {
             exc.printStackTrace();
+            modelAndView.addObject("errorMsg", exc.getMessage());
         }
     }
 }

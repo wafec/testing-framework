@@ -6,7 +6,7 @@
         </id>
         <discriminator column="plan_type" type="string" />
         <property name="name" type="text" column="name" />
-        <set name="testCases" table="TEST_PLAN_TEST_CASE" inverse="false" lazy="false" fetch="select" cascade="all">
+        <set name="testCases" table="TEST_PLAN_TEST_CASE" inverse="false" lazy="false" fetch="select" cascade="save-update">
             <key>
                 <column name="test_plan_id" />
             </key>
@@ -14,7 +14,7 @@
                 <column name="test_case_id" />
             </many-to-many>
         </set>
-        <set name="environments" table="TEST_PLAN_ENVIRONMENT" inverse="false" lazy="false" fetch="select" cascade="all">
+        <set name="environments" table="TEST_PLAN_ENVIRONMENT" inverse="false" lazy="false" fetch="select" cascade="save-update">
             <key>
                 <column name="test_plan_id" />
             </key>
@@ -22,7 +22,7 @@
                 <column name="environment_id" />
             </many-to-many>
         </set>
-        <set name="messageDevices" table="TEST_PLAN_MESSAGE_DEVICE" inverse="false" lazy="false" fetch="select" cascade="all">
+        <set name="messageDevices" table="TEST_PLAN_MESSAGE_DEVICE" inverse="false" lazy="false" fetch="select" cascade="save-update">
             <key>
                 <column name="test_plan_id" />
             </key>

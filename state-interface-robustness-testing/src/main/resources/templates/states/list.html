@@ -11,26 +11,16 @@
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item"><a href="/index">Home</a></li>
                         <li class="breadcrumb-item"><a href="/testsuite/index">Test Suite</a></li>
-                        <li class="breadcrumb-item"><a href="/states/index">State</a></li>
-                        <li class="breadcrumb-item active" aria-current="page">List</li>
+                        <li class="breadcrumb-item active" aria-current="page">State</li>
                     </ol>
                 </nav>
             </div>
         </div>
-        <form class="form-row" method="post">
-            <div class="col form-group">
-                <label class="sr-only">Filter:</label>
-                <input type="text" placeholder="Filter..." class="form-control form-control-sm" name="filter" />
-            </div>
-            <div class="col-auto form-group">
-                <label class="sr-only">Search:</label>
-                <button type="submit" class="btn btn-sm btn-primary">Search</button>
-            </div>
-        </form>
         <form class="form-row" method="post" th:action="@{/states/add}">
             <div class="col-12">
-                <div class="card">
+                <div class="card mb-3">
                     <div class="card-body">
+                        <h5 class="card-title">Easy Form</h5>
                         <div class="row align-items-end">
                             <div class="col-12 form-group d-none">
                                 <input type="hidden" name="operation" th:value="${id == -1 ? 'post' : 'put'}" />
@@ -45,7 +35,7 @@
                                 <input type="text" style="width: 100px;" name="timeout" class="form-control form-control-sm" th:value="${timeout}" />
                             </div>
                             <div class="col-12 form-group">
-                                <label class="">This state is required for evaluation? If so, check as required.</label>
+                                <label class="">This state is required to happen in the test execution? If so, check as required.</label>
                                 <div class="custom-control custom-checkbox">
                                     <input type="checkbox" class="custom-control-input" id="requiredCheck" name="required" th:checked="${required}" />
                                     <label class="custom-control-label" for="requiredCheck">Required</label>
@@ -53,15 +43,26 @@
                             </div>
                             <div class="col-12 form-group">
                                 <button type="submit" class="btn btn-sm btn-primary">Save<span th:if="${id != -1}"> Changes</span></button>
+                                <a th:href="@{/states/list}" th:if="${id != -1}" class="btn btn-sm btn-secondary">Cancel</a>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </form>
-        <div class="row my-3">
+        <form class="form-row" method="post">
+            <div class="col form-group">
+                <label class="sr-only">Filter:</label>
+                <input type="text" placeholder="Filter..." class="form-control form-control-sm" name="filter" />
+            </div>
+            <div class="col-auto form-group">
+                <label class="sr-only">Search:</label>
+                <button type="submit" class="btn btn-sm btn-primary">Search</button>
+            </div>
+        </form>
+        <div class="row">
             <div class="col">
-                <table class="table table-sm table-striped table-hover" tabindex="-1">
+                <table class="table table-sm table-striped table-hover" tabindex="-1" th:if="${stateList != null && stateList.size() > 0}">
                     <thead>
                         <tr>
                             <th class="w-1-nowrap">#</th>
@@ -81,18 +82,21 @@
                             </td>
                             <td class="align-middle">
                                 <div class="btn-group">
-                                    <a th:href="@{/states/list/{id}(id=${state.id})}" class="btn btn-sm btn-warning">Editar</a>
+                                    <a th:href="@{/states/list/{id}(id=${state.id})}" class="btn btn-sm btn-warning">Edit</a>
                                     <button type="button" class="btn btn-sm btn-warning dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                         <span class="sr-only">Dropdown</span>
                                     </button>
                                     <div class="dropdown-menu dropdown-menu-right">
-                                        <a href="#" class="dropdown-item">Details</a>
+                                        <a th:href="@{/states/delete/{id}(id=${state.id})}" class="dropdown-item">Remove</a>
                                     </div>
                                 </div>
                             </td>
                         </tr>
                     </tbody>
                 </table>
+                <p th:if="${stateList == null || stateList.size() == 0}">
+                    No results...
+                </p>
             </div>
         </div>
     </section>

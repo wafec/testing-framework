@@ -26,8 +26,24 @@ public class RabbitQueueDiscover implements IRabbitQueueDiscover {
         for (var virtualHost : managementApi.listVirtualHosts()) {
             for (var binding : managementApi.listBindings(virtualHost.getName())) {
                 // default exchange (source) cannot be bound
-                if (StringUtils.isEmpty(binding.getSource()))
+                // reply is a queue or an exchange is used by services to return values
+                // avoid reply queues and exchanges in the interception initialization
+                // trying intercept them can cause some crashes
+                if (StringUtils.isEmpty(binding.getSource()) ||
+                    binding.getSource().startsWith("reply") ||
+                    binding.getDestination().startsWith("reply"))
                     continue;
+                // fanout is very hard to handle and it is better in in this code to skip the handling of them
+                // fanout feature is to broadcast messages
+                // we can't know which are the receivers as they can appear in any time
+                // consumer queues of fanout exchanges are often not durable and it did not require routing keys
+                if (binding.getSourceType().equals("exchange")) {
+                    var exchangeDetails = managementApi.detailExchange(binding.getSource(), binding.getVirtualHost());
+                    if (StringUtils.isNotEmpty(exchangeDetails.getExchangeType()) && exchangeDetails.getExchangeType().equals("fanout")) {
+                        System.out.println(String.format("Skipping '%s' due to invalid exchange type (fanout)!", exchangeDetails.getName()));
+                        continue;
+                    }
+                }
                 System.out.println(String.format("Source: %s, Destination: %s", binding.getSource(), binding.getDestination()));
                 RabbitBind bind = repository.querySingleResult("from RabbitBind bind where bind.source.name = :source and bind.destination.name = :destination and bind.virtualHost = :virtualHost",
                         RabbitBind.class, Param.list("source", binding.getSource()).add("destination", binding.getDestination())

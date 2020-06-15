@@ -82,4 +82,11 @@ public class StateController {
         state.setRequired(model.isRequired());
         repository.update(state);
     }
+
+    @GetMapping("/delete/{id}")
+    public ModelAndView delete(@PathVariable Integer id) {
+        State state = repository.get(id, State.class);
+        repository.remove(state);
+        return new ModelAndView("redirect:/states/list");
+    }
 }

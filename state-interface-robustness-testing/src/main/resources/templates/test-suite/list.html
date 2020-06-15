@@ -11,25 +11,16 @@
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item"><a href="/index">Home</a></li>
                         <li class="breadcrumb-item"><a href="/testsuite/index">Test Suite</a></li>
-                        <li class="breadcrumb-item active" aria-current="page">List</li>
+                        <li class="breadcrumb-item active" aria-current="page">Test Case</li>
                     </ol>
                 </nav>
             </div>
         </div>
-        <form class="form-row" method="get">
-            <div class="col form-group">
-                <label class="sr-only">Filter:</label>
-                <input type="text" placeholder="Filter..." name="filter" th:value="${filter}" class="form-control form-control-sm" />
-            </div>
-            <div class="col-auto form-group">
-                <label class="sr-only">Search:</label>
-                <button type="submit" class="btn btn-sm btn-primary">Search</button>
-            </div>
-        </form>
         <form class="form-row" method="post" th:action="@{/testsuite/list/add}">
             <div class="col">
-                <div class="card">
+                <div class="card mb-3">
                     <div class="card-body">
+                        <h5 class="card-title">Easy Form</h5>
                         <div class="row">
                             <div class="col-12 d-none">
                                 <input type="hidden" name="id" class="form-control form-control-sm" th:value="${id}" />
@@ -49,7 +40,17 @@
                 </div>
             </div>
         </form>
-        <div class="row my-3">
+        <form class="form-row" method="get">
+            <div class="col form-group">
+                <label class="sr-only">Filter:</label>
+                <input type="text" placeholder="Filter..." name="filter" th:value="${filter}" class="form-control form-control-sm" />
+            </div>
+            <div class="col-auto form-group">
+                <label class="sr-only">Search:</label>
+                <button type="submit" class="btn btn-sm btn-primary">Search</button>
+            </div>
+        </form>
+        <div class="row">
             <div class="col">
                 <table class="table table-sm table-striped table-hover" th:if="${testCaseList != null && testCaseList.size() > 0}">
                     <thead>
@@ -57,7 +58,7 @@
                             <th class="w-1-nowrap">#</th>
                             <th>Name</th>
                             <th class="w-1-nowrap">Size</th>
-                            <th class="w-1-nowrap">Actions</th>
+                            <th class="" style="width: 160px;">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -67,12 +68,12 @@
                             <td><span th:text="${testCase.inputCount}"></span></td>
                             <td>
                                 <div class="btn-group">
-                                    <a th:href="@{/testsuite/list/{id}(id=${testCase.id})}" class="btn btn-sm btn-warning">Edit</a>
-                                    <button type="button" class="btn btn-sm btn-warning dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <a th:href="@{/testsuite/list/{id}(id=${testCase.id})}" class="btn btn-sm btn-secondary">Edit</a>
+                                    <a th:href="@{/testsuite/{id}/input/manage(id=${testCase.id})}" class="btn btn-sm btn-secondary">Add Event</a>
+                                    <button type="button" class="btn btn-sm btn-secondary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                         <span class="sr-only">Dropdown</span>
                                     </button>
                                     <div class="dropdown-menu dropdown-menu-right">
-                                        <a class="dropdown-item" th:href="@{/testsuite/{id}/input/manage(id=${testCase.id})}">Add Event</a>
                                         <a th:href="@{/testsuite/delete/{id}(id=${testCase.id})}" class="dropdown-item">Remove</a>
                                     </div>
                                 </div>

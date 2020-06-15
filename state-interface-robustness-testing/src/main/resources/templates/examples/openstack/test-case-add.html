@@ -11,18 +11,16 @@
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item"><a href="/index">Home</a></li>
                         <li class="breadcrumb-item"><a href="/examples/index">Examples</a></li>
-                        <li class="breadcrumb-item"><a href="/examples/openstack/index">OpenStack&reg;</a></li>
-                        <li class="breadcrumb-item"><a href="/examples/openstack/list">List</a></li>
-                        <li class="breadcrumb-item"><a th:href="@{/examples/openstack/{id}/test-case/list(id=${id}}">Test Case</a></li>
+                        <li class="breadcrumb-item"><a href="/examples/openstack/list">OpenStack&reg;</a></li>
                         <li class="breadcrumb-item active" aria-current="page">Add</li>
                     </ol>
                 </nav>
             </div>
         </div>
-        <form class="form-row" method="post">
+        <form class="form-row" method="get">
             <div class="col form-group">
                 <label class="sr-only">Filter:</label>
-                <input type="text" class="form-control form-control-sm" name="filter" placeholder="Filter..." />
+                <input type="text" class="form-control form-control-sm" name="filter" th:value="${filter}" placeholder="Filter..." />
             </div>
             <div class="col-auto form-group">
                 <label class="sr-only">Search:</label>
@@ -31,7 +29,7 @@
         </form>
         <form class="form-row" method="post" th:action="@{/examples/openstack/{id}/test-case/add/item(id=${id})}">
             <div class="col">
-                <table class="table table-sm table-striped table-hover" tabindex="-1">
+                <table class="table table-sm table-striped table-hover" tabindex="-1" th:if="${testCaseList != null && testCaseList.size() > 0}">
                     <thead>
                         <tr>
                             <th class="w-1-nowrap">#</th>
@@ -55,6 +53,9 @@
                 </table>
             </div>
         </form>
+        <p th:if="${testCaseList == null || testCaseList.size() == 0}">
+            No results...
+        </p>
     </section>
 </body>
 </html>

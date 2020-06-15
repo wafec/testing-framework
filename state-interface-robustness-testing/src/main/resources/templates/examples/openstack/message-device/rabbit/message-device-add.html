@@ -11,18 +11,17 @@
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item"><a href="/index">Home</a></li>
                         <li class="breadcrumb-item"><a href="/examples/index">Examples</a></li>
-                        <li class="breadcrumb-item"><a href="/examples/openstack/index">OpenStack&reg;</a></li>
-                        <li class="breadcrumb-item"><a href="/examples/openstack/list">List</a></li>
-                        <li class="breadcrumb-item"><a th:href="@{/examples/openstack/{id}/message-device/list(id=${id})}">Message Device</a></li>
+                        <li class="breadcrumb-item"><a href="/examples/openstack/list">OpenStack&reg;</a></li>
                         <li class="breadcrumb-item active" aria-current="page">RabbitMQ&reg;</li>
                     </ol>
                 </nav>
+                </nav>
             </div>
         </div>
-        <form class="form-row" method="post">
+        <form class="form-row" method="get">
             <div class="col form-group">
                 <label class="sr-only">Filter:</label>
-                <input type="text" class="form-control form-control-sm" placeholder="Filter..." name="filter" />
+                <input type="text" class="form-control form-control-sm" placeholder="Filter..." th:value="${filter}" name="filter" />
             </div>
             <div class="col-auto form-group">
                 <label class="sr-only">Search:</label>
@@ -31,7 +30,7 @@
         </form>
         <form class="form-row" method="post" th:action="@{/examples/openstack/{id}/message-device/rabbit/add/device(id=${id})}">
             <div class="col">
-                <table class="table table-sm table-striped table-hover" tabindex="-1">
+                <table class="table table-sm table-striped table-hover" tabindex="-1" th:if="${messageDeviceList != null && messageDeviceList.size() > 0}">
                     <thead>
                         <th class="w-1-nowrap">#</th>
                         <th class="">Host</th>
@@ -60,6 +59,9 @@
                         </tr>
                     </tbody>
                 </table>
+                <p th:if="${messageDeviceList == null || messageDeviceList.size() == 0}">
+                    No results...
+                </p>
             </div>
         </form>
     </section>

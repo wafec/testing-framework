@@ -7,7 +7,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import robtest.stateinterfw.data.IRepository;
+import robtest.stateinterfw.data.Param;
 import robtest.stateinterfw.rabbit.RabbitMessageDevice;
 import robtest.stateinterfw.web.dozer.CustomDozerFactory;
 import robtest.stateinterfw.web.models.RabbitAddRequestModel;
@@ -60,7 +62,8 @@ public class MessageDeviceRabbitController {
             model.addAttribute("username", rabbit.getUser());
             model.addAttribute("password", rabbit.getPassword());
         }
-        List<RabbitMessageDevice> messageDeviceList =_repository.query("from RabbitMessageDevice", RabbitMessageDevice.class);
+        List<RabbitMessageDevice> messageDeviceList =_repository.query("from RabbitMessageDevice where (:filter is null or (url like :filter or user like :filter or password like :filter))", RabbitMessageDevice.class,
+                Param.list("filter", filter == null ? null : String.format("%%%s%%", filter)).all());
         model.addAttribute("messageDeviceList", messageDeviceList);
         return "message-devices/rabbit/list";
     }
@@ -91,9 +94,15 @@ public class MessageDeviceRabbitController {
     }
 
     @GetMapping("/delete/{id}")
-    public ModelAndView delete(@PathVariable Integer id) {
+    public ModelAndView delete(@PathVariable Integer id, RedirectAttributes redirectAttributes) {
+        var modelAndView = new ModelAndView("redirect:/message-devices/rabbit/list");
         var device = _repository.get(id, RabbitMessageDevice.class);
-        _repository.remove(device);
-        return new ModelAndView("redirect:/message-devices/rabbit/list");
+        try {
+            _repository.remove(device);
+        } catch (Exception exc) {
+            exc.printStackTrace();
+            redirectAttributes.addFlashAttribute("errorMsg", exc.getMessage());
+        }
+        return modelAndView;
     }
 }

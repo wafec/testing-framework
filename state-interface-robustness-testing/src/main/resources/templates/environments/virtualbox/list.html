@@ -11,8 +11,7 @@
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item"><a href="/index">Home</a></li>
                         <li class="breadcrumb-item"><a href="/environments/index">Environment</a></li>
-                        <li class="breadcrumb-item"><a href="/environments/virtualbox/index">VirtualBox&reg;</a></li>
-                        <li class="breadcrumb-item active" aria-current="page">List</li>
+                        <li class="breadcrumb-item active" aria-current="page">VirtualBox&reg;</li>
                     </ol>
                 </nav>
             </div>
@@ -55,6 +54,7 @@
                             <div class="w-100"></div>
                             <div class="col-12">
                                 <button type="submit" class="btn btn-sm btn-primary">Save<span th:if="${id != -1}"> Changes</span></button>
+                                <a th:href="@{/environments/virtualbox/list}" class="btn btn-sm btn-secondary ml-2" th:if="${id != -1}">Cancel</a>
                             </div>
                         </form>
                     </div>
@@ -69,10 +69,6 @@
                     <div class="col-auto form-group">
                         <label class="sr-only">Search:</label>
                         <button type="submit" class="btn btn-sm btn-primary">Search</button>
-                    </div>
-                    <div class="col-auto form-group">
-                        <label class="sr-only">Create:</label>
-                        <a th:href="@{/environments/virtualbox/create}" class="btn btn-sm btn-primary">Create</a>
                     </div>
                 </form>
             </div>

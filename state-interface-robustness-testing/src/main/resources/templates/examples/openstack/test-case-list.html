@@ -11,30 +11,29 @@
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item"><a href="/index">Home</a></li>
                         <li class="breadcrumb-item"><a href="/examples/index">Examples</a></li>
-                        <li class="breadcrumb-item"><a href="/examples/openstack/index">OpenStack&reg;</a></li>
-                        <li class="breadcrumb-item"><a href="/examples/openstack/list">List</a></li>
+                        <li class="breadcrumb-item"><a href="/examples/openstack/list">OpenStack&reg;</a></li>
                         <li class="breadcrumb-item active" aria-current="page">Test Case</li>
                     </ol>
                 </nav>
             </div>
         </div>
-        <form class="form-row" method="post">
+        <form class="form-row" method="get">
             <div class="col form-group">
                 <label class="sr-only">Filter:</label>
-                <input type="text" class="form-control form-control-sm" name="filter" placeholder="Filter..." />
+                <input type="text" class="form-control form-control-sm" th:value="${filter}" name="filter" placeholder="Filter..." />
             </div>
             <div class="col-auto form-group">
                 <label class="sr-only">Search:</label>
                 <button type="submit" class="btn btn-sm btn-primary">Search</button>
             </div>
-            <div class="col-auto form-group">
+            <div class="col-auto form-group d-none">
                 <label class="sr-only">Add:</label>
                 <a th:href="@{/examples/openstack/{id}/test-case/add(id=${id})}" class="btn btn-sm btn-secondary">Add</a>
             </div>
         </form>
         <div class="row">
             <div class="col">
-                <table class="table table-sm table-striped table-hover" tabindex="-1">
+                <table class="table table-sm table-striped table-hover" tabindex="-1" th:if="${testCaseList != null && testCaseList.size() > 0}">
                     <thead>
                         <tr>
                             <th class="w-1-nowrap">#</th>
@@ -56,6 +55,9 @@
                         </tr>
                     </tbody>
                 </table>
+                <p th:if="${testCaseList == null || testCaseList.size() == 0}">
+                    No results...
+                </p>
             </div>
         </div>
     </section>
