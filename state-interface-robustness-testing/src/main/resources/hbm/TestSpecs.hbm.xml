@@ -5,23 +5,6 @@
         <id name="id" type="int" column="id">
             <generator class="native" />
         </id>
-        <set name="environments" table="TEST_SPECS_ENVIRONMENT" inverse="false" lazy="true"
-             fetch="select" cascade="all">
-            <key>
-                <column name="test_specs_id" not-null="true" />
-            </key>
-            <many-to-many entity-name="robtest.stateinterfw.data.Environment">
-                <column name="environment_id" not-null="true" />
-            </many-to-many>
-        </set>
-        <set name="messageDevices" table="TEST_SPECS_MESSAGE_DEVICE" inverse="false" lazy="true"
-             fetch="select" cascade="all">
-            <key>
-                <column name="test_specs_id" not-null="true" />
-            </key>
-            <many-to-many entity-name="robtest.stateinterfw.data.MessageDevice">
-                <column name="message_device_id" not-null="true" />
-            </many-to-many>
-        </set>
+        <many-to-one class="robtest.stateinterfw.data.TestPlan" name="testPlan" column="test_plan_id" cascade="save-update" />
     </class>
 </hibernate-mapping>

@@ -36,6 +36,10 @@ public class TestExecutionContext implements ITestExecutionContext, IEntity {
             inputIndex = 0;
             if (this.testInput != null) {
                 inputIndex = inputs.indexOf(this.testInput);
+                if (inputIndex < 0) {
+                    inputIndex = 0;
+                    testInput = (TestInput) testCase.get(0);
+                }
             } else {
                 this.testInput = inputs.get(0);
             }
@@ -60,6 +64,19 @@ public class TestExecutionContext implements ITestExecutionContext, IEntity {
 
     public void setTestCase(TestCase testCase) {
         this.testCase = testCase;
+        if (testInput == null) {
+            if (testCase.size() > 0) {
+                testInput = (TestInput) testCase.get(0);
+                inputIndex = 0;
+            }
+        } else {
+            var list = new ArrayList<>(this.testCase.getTestInputs());
+            inputIndex = list.indexOf(testInput);
+            if (inputIndex < 0) {
+                inputIndex = 0;
+                testInput = (TestInput) testCase.get(0);
+            }
+        }
     }
 
     public TestCase getTestCase() {
@@ -107,6 +124,16 @@ public class TestExecutionContext implements ITestExecutionContext, IEntity {
     }
 
     public void setTestInput(TestInput testInput) {
+        if (testCase == null)
+            testCase = testInput.getTestCase();
+        var list = new ArrayList<>(testCase.getTestInputs());
+        var index = list.indexOf(testInput);
+        if (index == -1) {
+            testCase = testInput.getTestCase();
+            list  = new ArrayList<>(testCase.getTestInputs());
+            index = list.indexOf(testInput);
+        }
+        inputIndex = index;
         this.testInput = testInput;
     }
 

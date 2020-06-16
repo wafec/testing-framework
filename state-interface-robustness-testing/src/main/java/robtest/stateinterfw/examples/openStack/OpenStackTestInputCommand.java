@@ -21,6 +21,8 @@ public class OpenStackTestInputCommand extends TestInputCommand implements IOpen
         add("image.create", this::imageCreate);
         add("compute.server.create", this::serverCreate);
         add("compute.server.delete", this::serverDelete);
+        add("compute.flavor.delete", this::flavorDelete);
+        add("image.delete", this::imageDelete);
     }
 
     private OpenStackUserContent getUserContent() {
@@ -126,6 +128,34 @@ public class OpenStackTestInputCommand extends TestInputCommand implements IOpen
         if (client != null) {
             var server = client.compute().servers().list(Collections.singletonMap("name", args.get("name").getDataValue())).get(0);
             client.compute().servers().delete(server.getId());
+        }
+        return result;
+    }
+
+    private Object imageDelete(ITestInputArgs arg) {
+        var client = createClient();
+        Object result = null;
+        if (client != null) {
+            var imageOpt = client.imagesV2().list().stream().filter(i -> i.getName().equals(arg.get("name"))).findFirst();
+            if (imageOpt.isPresent()) {
+                var image = imageOpt.get();
+                client.imagesV2().delete(image.getId());
+                result = image;
+            }
+        }
+        return result;
+    }
+
+    private Object flavorDelete(ITestInputArgs arg) {
+        var client = createClient();
+        Object result = null;
+        if (client != null) {
+            var flavorOpt = client.compute().flavors().list().stream().filter(f -> f.getName().equals(arg.get("name"))).findFirst();
+            if (flavorOpt.isPresent()) {
+                var flavor = flavorOpt.get();
+                client.compute().flavors().delete(flavor.getId());
+                result = flavor;
+            }
         }
         return result;
     }

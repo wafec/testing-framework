@@ -9,16 +9,34 @@ import java.util.Set;
 
 public class TestSpecs implements ITestSpecs {
     private int id;
-    private Set<Environment> environments;
-    private Set<MessageDevice> messageDevices;
+    private TestPlan testPlan;
 
     public TestSpecs() {
 
     }
 
-    public TestSpecs(Set<Environment> environments, Set<MessageDevice> messageDevices) {
-        this.environments = environments;
-        this.messageDevices = messageDevices;
+    public TestSpecs(TestPlan testPlan) {
+        this.testPlan = testPlan;
+    }
+
+    @Override
+    public IEnvironment getEnvironment(int index) {
+        return testPlan.getEnvironment(index);
+    }
+
+    @Override
+    public int getEnvironmentCount() {
+        return testPlan.getEnvironmentCount();
+    }
+
+    @Override
+    public IMessageDevice getMessageDevice(int index) {
+        return testPlan.getMessageDevice(index);
+    }
+
+    @Override
+    public int getMessageDeviceCount() {
+        return testPlan.getMessageDeviceCount();
     }
 
     @Override
@@ -26,53 +44,16 @@ public class TestSpecs implements ITestSpecs {
         return id;
     }
 
+    @Override
     public void setId(int id) {
         this.id = id;
     }
 
-    @Override
-    public IEnvironment getEnvironment(int index) {
-        IEnvironment environment = null;
-        int i = 0;
-        for (Iterator<Environment> it = this.environments.iterator(); it.hasNext() && i <= index; i++) {
-            environment = it.next();
-        }
-        return environment;
+    public TestPlan getTestPlan() {
+        return testPlan;
     }
 
-    @Override
-    public int getEnvironmentCount() {
-        return environments.size();
-    }
-
-    @Override
-    public IMessageDevice getMessageDevice(int index) {
-        IMessageDevice messageDevice = null;
-        int i = 0;
-        for (Iterator<MessageDevice> it = this.messageDevices.iterator(); it.hasNext() && i <= index; i++) {
-            messageDevice = it.next();
-        }
-        return messageDevice;
-    }
-
-    @Override
-    public int getMessageDeviceCount() {
-        return messageDevices.size();
-    }
-
-    public Set<Environment> getEnvironments() {
-        return environments;
-    }
-
-    public void setEnvironments(Set<Environment> environments) {
-        this.environments = environments;
-    }
-
-    public Set<MessageDevice> getMessageDevices() {
-        return messageDevices;
-    }
-
-    public void setMessageDevices(Set<MessageDevice> messageDevices) {
-        this.messageDevices = messageDevices;
+    public void setTestPlan(TestPlan testPlan) {
+        this.testPlan = testPlan;
     }
 }
