@@ -23,7 +23,7 @@ public class OpenStackCommandLine extends AbstractCommandLine implements IOpenSt
 
     private void testInputCommand(String[] args) {
         Options options = new Options();
-        options.addOption(Option.builder().longOpt("plan").build());
+        options.addOption(Option.builder().longOpt("plan").hasArg().build());
         CommandLineParser parser = new DefaultParser();
         try {
             var commandLine = parser.parse(options, args);
@@ -37,6 +37,8 @@ public class OpenStackCommandLine extends AbstractCommandLine implements IOpenSt
             if (opt.isPresent()) {
                 var specs = opt.get();
                 context.setTestSpecs(specs);
+                command.command(context, context.getTestInput());
+                context.moveForward();
                 command.command(context, context.getTestInput());
             }
         } catch (ParseException exc) {

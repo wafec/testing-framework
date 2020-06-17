@@ -1,7 +1,8 @@
 package robtest.stateinterfw.examples.openStack;
 
 import org.openstack4j.api.Builders;
-import org.openstack4j.api.OSClient;
+import org.openstack4j.api.OSClient.OSClientV3;
+import org.openstack4j.core.transport.Config;
 import org.openstack4j.model.common.Identifier;
 import org.openstack4j.model.common.payloads.FilePayload;
 import org.openstack4j.model.image.v2.ContainerFormat;
@@ -41,15 +42,15 @@ public class OpenStackTestInputCommand extends TestInputCommand implements IOpen
         return null;
     }
 
-    private OSClient.OSClientV3 createClient() {
+    private OSClientV3 createClient() {
         var userContent = getUserContent();
         if (userContent != null) {
             Identifier domainIdentifier = Identifier.byName(userContent.getLogin().getDomain());
             Identifier projectIdentifier = Identifier.byName(userContent.getLogin().getProject());
-            OSClient.OSClientV3 client = OSFactory.builderV3()
+            OSClientV3 client = OSFactory.builderV3()
                     .endpoint(userContent.getLogin().getEndpoint())
                     .credentials(userContent.getLogin().getUser(), userContent.getLogin().getPassword(), domainIdentifier)
-                    .scopeToProject(projectIdentifier)
+                    .withConfig(Config.newConfig().withEndpointNATResolution("controller"))
                     .authenticate();
             return client;
         }
@@ -81,8 +82,10 @@ public class OpenStackTestInputCommand extends TestInputCommand implements IOpen
                     .name(args.get("name").getDataValue())
                     .vcpus(Integer.parseInt(args.get("vcpus").getDataValue()))
                     .ram(Integer.parseInt(args.get("ram").getDataValue()))
+                    .disk(1)
                     .build();
-            result = client.compute().flavors().create(flavor);
+            var flavorResult = client.compute().flavors().create("test", 100, 5, 1, 0, 0, 1.2f, true);
+            result = flavorResult;
         }
         return result;
     }

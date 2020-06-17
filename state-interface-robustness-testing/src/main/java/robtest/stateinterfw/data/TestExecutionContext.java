@@ -77,6 +77,7 @@ public class TestExecutionContext implements ITestExecutionContext, IEntity {
                 testInput = (TestInput) testCase.get(0);
             }
         }
+        inputs = new ArrayList<>(testCase.getTestInputs());
     }
 
     public TestCase getTestCase() {
