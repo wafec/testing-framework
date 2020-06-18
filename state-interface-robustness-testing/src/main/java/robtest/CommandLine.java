@@ -1,7 +1,7 @@
 package robtest;
 
 import com.google.inject.Inject;
-import robtest.os.cli.commandline.IOSCommandLine;
+import robtest.stateinterfw.os.cli.commandline.IOSCommandLine;
 import robtest.stateinterfw.commandline.IStateInterCommandLine;
 
 import java.util.Arrays;

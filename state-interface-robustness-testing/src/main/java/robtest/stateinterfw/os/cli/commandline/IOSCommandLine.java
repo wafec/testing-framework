@@ -1,4 +1,4 @@
-package robtest.os.cli.commandline;
+package robtest.stateinterfw.os.cli.commandline;
 
 import robtest.ICommandLine;
 

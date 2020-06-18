@@ -1,4 +1,4 @@
-package robtest.os.cli;
+package robtest.stateinterfw.os.cli;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -36,12 +36,20 @@ public abstract class BaseClient {
                         httpRequestBuilder = httpRequestBuilder.PUT(HttpRequest.BodyPublishers.ofString(bodyString));
                         break;
                 }
+            } else {
+                switch (method.toLowerCase()) {
+                    case "delete":
+                        httpRequestBuilder = httpRequestBuilder.DELETE();
+                        break;
+                }
             }
             var response = HttpClient.newHttpClient()
                     .send(httpRequestBuilder.build(), HttpResponse.BodyHandlers.ofString());
             if (response.statusCode() >= 200 && response.statusCode() < 300) {
-                ObjectMapper objectMapper = new ObjectMapper();
-                result = objectMapper.readValue(response.body(), returnType);
+                if (returnType != null) {
+                    ObjectMapper objectMapper = new ObjectMapper();
+                    result = objectMapper.readValue(response.body(), returnType);
+                }
             }
         } catch (Exception exc) {
             exc.printStackTrace();

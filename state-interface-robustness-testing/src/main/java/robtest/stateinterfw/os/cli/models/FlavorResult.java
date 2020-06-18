@@ -1,10 +1,19 @@
-package robtest.os.cli.models;
+package robtest.stateinterfw.os.cli.models;
 
 public class FlavorResult {
+    private String id;
     private String name;
     private Integer ram;
     private Integer vcpus;
     private Integer disk;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public String getName() {
         return name;
@@ -36,5 +45,10 @@ public class FlavorResult {
 
     public void setDisk(Integer disk) {
         this.disk = disk;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("<Flavor(id=%s, name=%s, ram=%d, vcpus=%d, disk=%d)>", id, name, ram, vcpus, disk);
     }
 }

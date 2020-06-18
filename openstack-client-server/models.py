@@ -13,7 +13,7 @@ class OSTest(Base):
     id = Column(Integer, primary_key=True)
     alias = Column(String)
     username = Column(String)
-    password = Column(String)
+    password = Column('passwd', String)
     project_name = Column(String)
     user_domain_name = Column(String)
     project_domain_name = Column(String)
@@ -24,10 +24,12 @@ class OSFlavor(Base):
     __tablename__ = 'OS_FLAVOR'
 
     id = Column(Integer, primary_key=True)
+    uid = Column(String)
     name = Column(String)
     vcpus = Column(Integer)
     ram = Column(Integer)
     disk = Column(Integer)
+    test_id = Column(Integer, ForeignKey('OS_TEST.id'))
 
     test = relationship("OSTest", back_populates="flavors")
 
@@ -39,9 +41,11 @@ class OSImage(Base):
     __tablename__ = 'OS_IMAGE'
 
     id = Column(Integer, primary_key=True)
+    uid = Column(String)
     name = Column(String)
     disk_format = Column(String)
     container_format = Column(String)
+    test_id = Column(Integer, ForeignKey('OS_TEST.id'))
 
     test = relationship("OSTest", back_populates="images")
 

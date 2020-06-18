@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<hibernate-mapping xmlns="http://www.hibernate.org/xsd/hibernate-mapping">
+    <class name="robtest.stateinterfw.data.os.OSTest" table="OS_TEST">
+        <id name="id" type="int" column="id">
+            <generator class="native" />
+        </id>
+        <property name="alias" type="string" column="alias" />
+        <property name="username" type="string" column="username" />
+        <property name="password" type="string" column="passwd" />
+        <property name="projectName" type="string" column="project_name" />
+        <property name="userDomainName" type="string" column="user_domain_name" />
+        <property name="projectDomainName" type="string" column="project_domain_name" />
+        <property name="authUrl" type="string" column="auth_url" />
+        <set name="flavors">
+            <key column="test_id" />
+            <one-to-many class="robtest.stateinterfw.data.os.OSFlavor" />
+        </set>
+        <set name="images">
+            <key column="test_id" />
+            <one-to-many class="robtest.stateinterfw.data.os.OSImage" />
+        </set>
+    </class>
+</hibernate-mapping>
