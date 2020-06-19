@@ -3,8 +3,8 @@ package robtest.guice;
 import com.google.inject.AbstractModule;
 import robtest.CommandLine;
 import robtest.ICommandLine;
-import robtest.stateinterfw.os.cli.commandline.IOSCommandLine;
-import robtest.stateinterfw.os.cli.commandline.OSCommandLine;
+import robtest.stateinterfw.openStack.cli.commandline.IOSCommandLine;
+import robtest.stateinterfw.openStack.cli.commandline.OSCommandLine;
 
 public class RobTestModule extends AbstractModule {
     @Override

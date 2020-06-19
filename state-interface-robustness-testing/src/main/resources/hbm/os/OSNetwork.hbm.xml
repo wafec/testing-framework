@@ -1,14 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" ?>
+
 <hibernate-mapping xmlns="http://www.hibernate.org/xsd/hibernate-mapping">
-    <class name="robtest.stateinterfw.data.openStack.OSFlavor" table="OS_FLAVOR">
+    <class name="robtest.stateinterfw.data.openStack.OSNetwork" table="OS_NETWORK">
         <id name="id" type="int" column="id">
             <generator class="native" />
         </id>
         <property name="uid" type="string" column="uid" />
         <property name="name" type="string" column="name" />
-        <property name="vcpus" type="int" column="vcpus" />
-        <property name="ram" type="int" column="ram" />
-        <property name="disk" type="int" column="disk" />
         <many-to-one name="test" class="robtest.stateinterfw.data.openStack.OSTest" column="test_id" />
     </class>
 </hibernate-mapping>

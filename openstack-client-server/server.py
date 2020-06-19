@@ -4,9 +4,11 @@ from keystoneauth1.identity import v3
 from keystoneauth1 import session
 from novaclient import client as nova_cli
 from glanceclient import client as glance_cli
-from models import Session, OSTest, OSFlavor, OSImage
+from neutronclient.v2_0 import client as neutron_cli
+from models import Session, OSTest, OSFlavor, OSImage, OSNetwork, OSServer
 import tempfile
 import base64
+import pickle
 
 
 app = Flask(__name__)
@@ -118,7 +120,9 @@ def image_create():
         image_dao.uid = image.id
         db.add(image_dao)
         db.commit()
-    return jsonify(_os_image_to_json(image)), 201
+        return jsonify(_os_image_to_json(image)), 201
+    else:
+        abort(401)
 
 
 @app.route('/images')
@@ -145,6 +149,71 @@ def image_delete():
     db.delete(image_dao)
     db.commit()
     return jsonify(success=True)
+
+
+def _os_server_to_json(server):
+    image_id = None
+    if server.image and 'id' in server.image:
+        image_id = server.image['id']
+    return {"name": server.name, "image": image_id, "flavor": server.flavor['id'], "id": server.id}
+
+
+@app.route('/servers')
+def server_list():
+    test_id = request.args.get('test_id')
+    sess = _create_session(int(test_id))
+    nova = nova_cli.Client(session=sess, version='2.1')
+    servers = nova.servers.list()
+    result = list()
+    for server in servers:
+        result.append(_os_server_to_json(server))
+    return jsonify(result), 201
+
+
+@app.route('/servers', methods=['POST'])
+def server_create():
+    if not request.json:
+        abort(400)
+    test_id = request.args.get('test_id')
+    db = Session()
+    flavor_dao = db.query(OSFlavor).filter(OSFlavor.name == request.json['flavor']).first()
+    image_dao = db.query(OSImage).filter(OSImage.name == request.json['image']).first()
+    network_dao = db.query(OSNetwork).filter(OSNetwork.name == request.json['network']).first()
+    sess = _create_session(int(test_id))
+    nova = nova_cli.Client(session=sess, version='2.1')
+    server_dao = OSServer(
+        name=request.json['name'],
+        flavor=flavor_dao,
+        image=image_dao,
+        network=network_dao,
+        test_id=int(test_id)
+    )
+    server = nova.servers.create(name=server_dao.name, flavor=flavor_dao.uid, image=image_dao.uid,
+                                 network=network_dao.uid)
+    if server:
+        server_dao.uid = server.id
+        db.add(server_dao)
+        db.commit()
+        return jsonify(_os_server_to_json(server)), 201
+    else:
+        print('error')
+        abort(401)
+
+
+def _os_network_to_json(network):
+    return {"id": network['id'], "name": network['name'], "project": network['project_id']}
+
+
+@app.route('/networks')
+def network_list():
+    test_id = request.args.get('test_id')
+    sess = _create_session(int(test_id))
+    neutron = neutron_cli.Client(session=sess)
+    networks = neutron.list_networks()
+    result = list()
+    for network in networks['networks']:
+        result.append(_os_network_to_json(network))
+    return jsonify(result), 201
 
 
 if __name__ == "__main__":

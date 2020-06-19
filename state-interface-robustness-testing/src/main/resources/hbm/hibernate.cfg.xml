@@ -34,5 +34,6 @@
         <mapping resource="hbm/os/OSTest.hbm.xml" />
         <mapping resource="hbm/os/OSImage.hbm.xml" />
         <mapping resource="hbm/os/OSFlavor.hbm.xml" />
+        <mapping resource="hbm/os/OSNetwork.hbm.xml" />
     </session-factory>
 </hibernate-configuration>

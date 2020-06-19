@@ -1,5 +1,6 @@
 flask
 python-openstackclient
 python-glanceclient
+python-neutronclient
 sqlalchemy
 PyMySQL

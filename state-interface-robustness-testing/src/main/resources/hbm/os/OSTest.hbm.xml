@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <hibernate-mapping xmlns="http://www.hibernate.org/xsd/hibernate-mapping">
-    <class name="robtest.stateinterfw.data.os.OSTest" table="OS_TEST">
+    <class name="robtest.stateinterfw.data.openStack.OSTest" table="OS_TEST">
         <id name="id" type="int" column="id">
             <generator class="native" />
         </id>
@@ -13,11 +13,15 @@
         <property name="authUrl" type="string" column="auth_url" />
         <set name="flavors">
             <key column="test_id" />
-            <one-to-many class="robtest.stateinterfw.data.os.OSFlavor" />
+            <one-to-many class="robtest.stateinterfw.data.openStack.OSFlavor" />
         </set>
         <set name="images">
             <key column="test_id" />
-            <one-to-many class="robtest.stateinterfw.data.os.OSImage" />
+            <one-to-many class="robtest.stateinterfw.data.openStack.OSImage" />
+        </set>
+        <set name="networks">
+            <key column="test_id" />
+            <one-to-many class="robtest.stateinterfw.data.openStack.OSNetwork" />
         </set>
     </class>
 </hibernate-mapping>

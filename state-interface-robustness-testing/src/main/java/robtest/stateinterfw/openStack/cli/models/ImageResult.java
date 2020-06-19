@@ -1,4 +1,4 @@
-package robtest.stateinterfw.os.cli.models;
+package robtest.stateinterfw.openStack.cli.models;
 
 import com.fasterxml.jackson.annotation.JsonSetter;
 

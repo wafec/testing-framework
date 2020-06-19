@@ -1,8 +1,8 @@
-package robtest.stateinterfw.os.cli;
+package robtest.stateinterfw.openStack.cli;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FileUtils;
-import robtest.stateinterfw.os.cli.models.ImageResult;
+import robtest.stateinterfw.openStack.cli.models.ImageResult;
 
 import java.io.File;
 import java.nio.charset.StandardCharsets;

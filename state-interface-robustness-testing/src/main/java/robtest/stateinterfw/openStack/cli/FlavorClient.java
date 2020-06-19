@@ -1,6 +1,6 @@
-package robtest.stateinterfw.os.cli;
+package robtest.stateinterfw.openStack.cli;
 
-import robtest.stateinterfw.os.cli.models.FlavorResult;
+import robtest.stateinterfw.openStack.cli.models.FlavorResult;
 
 import java.util.Arrays;
 import java.util.List;

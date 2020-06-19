@@ -53,5 +53,40 @@ class OSImage(Base):
 OSTest.images = relationship("OSImage", order_by=OSImage.id, back_populates="test")
 
 
+class OSServer(Base):
+    __tablename__ = 'OS_SERVER'
+
+    id = Column(Integer, primary_key=True)
+    uid = Column(String)
+    name = Column(String)
+    flavor_id = Column(Integer, ForeignKey('OS_FLAVOR.id'))
+    image_id = Column(Integer, ForeignKey('OS_IMAGE.id'))
+    test_id = Column(Integer, ForeignKey('OS_TEST.id'))
+    network_id = Column(Integer, ForeignKey('OS_NETWORK.id'))
+
+    test = relationship("OSTest", back_populates="servers")
+    image = relationship("OSImage")
+    flavor = relationship("OSFlavor")
+    network = relationship("OSNetwork")
+
+
+OSTest.servers = relationship("OSServer", order_by=OSServer.id, back_populates="test")
+
+
+class OSNetwork(Base):
+    __tablename__ = 'OS_NETWORK'
+
+    id = Column(Integer, primary_key=True)
+    uid = Column(String)
+    name = Column(String)
+    project_uid = Column(String)
+    test_id = Column(Integer, ForeignKey('OS_TEST.id'))
+
+    test = relationship("OSTest", back_populates="networks")
+
+
+OSTest.networks = relationship("OSNetwork", order_by=OSNetwork.id, back_populates="test")
+
+
 engine = create_engine('mysql+pymysql://test:test-321@localhost/test', pool_recycle=3600)
 Session = sessionmaker(bind=engine)

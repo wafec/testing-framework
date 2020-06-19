@@ -1,4 +1,4 @@
-package robtest.stateinterfw.data.os;
+package robtest.stateinterfw.data.openStack;
 
 import robtest.stateinterfw.data.IEntity;
 

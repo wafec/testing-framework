@@ -1,4 +1,4 @@
-package robtest.stateinterfw.data.os;
+package robtest.stateinterfw.data.openStack;
 
 import robtest.stateinterfw.data.IEntity;
 
@@ -16,6 +16,7 @@ public class OSTest implements IEntity {
 
     private Set<OSImage> images;
     private Set<OSFlavor> flavors;
+    private Set<OSNetwork> networks;
 
     public int getId() {
         return id;
@@ -95,5 +96,13 @@ public class OSTest implements IEntity {
 
     public void setImages(Set<OSImage> images) {
         this.images = images;
+    }
+
+    public Set<OSNetwork> getNetworks() {
+        return networks;
+    }
+
+    public void setNetworks(Set<OSNetwork> networks) {
+        this.networks = networks;
     }
 }

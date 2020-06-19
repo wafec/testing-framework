@@ -1,4 +1,4 @@
-package robtest.stateinterfw.os.cli;
+package robtest.stateinterfw.openStack.cli;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 

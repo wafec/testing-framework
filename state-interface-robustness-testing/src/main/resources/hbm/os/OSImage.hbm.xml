@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <hibernate-mapping xmlns="http://www.hibernate.org/xsd/hibernate-mapping">
-    <class name="robtest.stateinterfw.data.os.OSImage" table="OS_IMAGE">
+    <class name="robtest.stateinterfw.data.openStack.OSImage" table="OS_IMAGE">
         <id name="id" type="int" column="id">
             <generator class="native" />
         </id>
@@ -8,7 +8,7 @@
         <property name="uid" type="string" column="uid" />
         <property name="diskFormat" type="string" column="disk_format" />
         <property name="containerFormat" type="string" column="container_format" />
-        <many-to-one name="test" class="robtest.stateinterfw.data.os.OSTest">
+        <many-to-one name="test" class="robtest.stateinterfw.data.openStack.OSTest">
             <column name="test_id" />
         </many-to-one>
     </class>
