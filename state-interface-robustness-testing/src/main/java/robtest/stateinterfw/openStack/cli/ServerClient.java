@@ -22,4 +22,9 @@ public class ServerClient extends BaseClient {
                 "post");
         return opt.orElse(null);
     }
+
+    public ServerResult serverDetails(int testId, String serverName) {
+        var opt = this.request(ServerResult.class, String.format("/details?test_id=%d&server_name=%s", testId, serverName), null, "get");
+        return opt.orElse(null);
+    }
 }

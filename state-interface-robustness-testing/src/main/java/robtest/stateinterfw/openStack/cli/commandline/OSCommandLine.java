@@ -3,17 +3,22 @@ package robtest.stateinterfw.openStack.cli.commandline;
 import org.apache.commons.cli.*;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
+import robtest.core.ConditionalWaiter;
 import robtest.core.commandline.AbstractCommandLine;
 import robtest.stateinterfw.openStack.cli.FlavorClient;
 import robtest.stateinterfw.openStack.cli.ImageClient;
 import robtest.stateinterfw.openStack.cli.ServerClient;
 
 import java.io.File;
+import java.util.Optional;
+import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 public class OSCommandLine extends AbstractCommandLine implements IOSCommandLine {
     public OSCommandLine() {
         add("test", this::test);
         add("server", this::server);
+        add("mserver", this::mtest);
     }
 
     protected void test(String[] args) {
@@ -56,7 +61,30 @@ public class OSCommandLine extends AbstractCommandLine implements IOSCommandLine
 
     protected void server(String[] args) {
         ServerClient serverCli = new ServerClient();
-        serverCli.createServer(1, "test", "testcirros", "testf512", "provider");
+        var createdServer = serverCli.createServer(1, UUID.randomUUID().toString(), "cirros", "f512", "provider");
+        if (createdServer != null) {
+            var result = ConditionalWaiter.waitFor(() -> {
+                var server = serverCli.serverDetails(1, createdServer.getName());
+                if (server != null) {
+                    System.out.println(server.toString());
+                    if (server.getStatus().toLowerCase().equals("active")) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                } else {
+                    throw new RuntimeException();
+                }
+            }, TimeUnit.MILLISECONDS.convert(2, TimeUnit.MINUTES), 500);
+            System.out.print(result.toString());
+        } else {
+            System.out.println("Error");
+        }
+    }
+
+    protected void mtest(String[] args) {
+        ServerClient serverCli = new ServerClient();
+        serverCli.serverDetails(1, "test");
     }
 
     @Override

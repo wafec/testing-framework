@@ -36,4 +36,9 @@ public class ImageClient extends BaseClient {
     public void imageDelete(Integer testId, String name) {
         this.request(null, String.format("?test_id=%d&image_name=%s", testId, name), null, "delete");
     }
+
+    public ImageResult imageDetails(int testId, String imageName) {
+        var opt = this.request(ImageResult.class, String.format("/details?test_id=%d&image_name=%s", testId, imageName), null, "get");
+        return opt.orElse(null);
+    }
 }

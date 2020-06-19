@@ -23,6 +23,6 @@ public class FlavorClient extends BaseClient {
     }
 
     public void deleteFlavor(Integer testId, String name) {
-        this.request(null, String.format("?test_id=%d&flavor_name=%s", testId, name), null, "delete");
+        this.request(null, String.format("/details?test_id=%d&flavor_name=%s", testId, name), null, "delete");
     }
 }

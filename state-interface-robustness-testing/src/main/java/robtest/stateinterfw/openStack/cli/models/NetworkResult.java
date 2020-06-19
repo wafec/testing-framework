@@ -28,4 +28,9 @@ public class NetworkResult {
     public void setProject(String project) {
         this.project = project;
     }
+
+    @Override
+    public String toString() {
+        return String.format("<OSNetwork(id=%s, name=%s, project=%s)>", id, name, project);
+    }
 }
