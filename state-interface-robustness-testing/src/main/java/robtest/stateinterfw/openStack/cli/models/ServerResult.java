@@ -7,6 +7,7 @@ public class ServerResult {
     private String image;
     private String name;
     private String flavor;
+    private String network;
     private String status;
     private String vmState;
     private String taskState;
@@ -79,9 +80,17 @@ public class ServerResult {
         this.powerState = powerState;
     }
 
+    public String getNetwork() {
+        return network;
+    }
+
+    public void setNetwork(String network) {
+        this.network = network;
+    }
+
     @Override
     public String toString() {
-        return String.format("<OSServer(id=%s, image=%s, name=%s, flavor=%s, status=%s, vmState=%s, taskState=%s, powerState=%s)>",
-                id, image, name, flavor, status, vmState, taskState, powerState);
+        return String.format("<OSServer(id=%s, image=%s, name=%s, flavor=%s, network=%s, status=%s, vmState=%s, taskState=%s, powerState=%s)>",
+                id, image, name, flavor, network, status, vmState, taskState, powerState);
     }
 }

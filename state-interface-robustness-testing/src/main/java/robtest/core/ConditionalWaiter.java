@@ -22,6 +22,6 @@ public class ConditionalWaiter {
                 }
         }
         long timeSpent = end - start;
-        return new ConditionalWaiterResult(timeSpent, lastResult);
+        return new ConditionalWaiterResult(timeSpent, lastResult, timeout);
     }
 }

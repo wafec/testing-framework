@@ -27,4 +27,59 @@ public class ServerClient extends BaseClient {
         var opt = this.request(ServerResult.class, String.format("/details?test_id=%d&server_name=%s", testId, serverName), null, "get");
         return opt.orElse(null);
     }
+
+    public void serverDelete(int testId, String serverName) {
+        this.request(null, String.format("?test_id=%d&server_name=%s", testId, serverName), null, "delete");
+    }
+
+    public void serverResize(int testId, String serverName, String targetFlavorName) {
+        this.request(null, String.format("/resize?test_id=%d", testId),
+                Map.of("server", serverName, "flavor", targetFlavorName), "post");
+    }
+
+    public void serverConfirmOrRejectResize(int testId, String serverName, boolean confirm) {
+        this.request(null, String.format("/resize?test_id=%d", testId),
+                Map.of("server", serverName, "confirm", confirm), "put");
+    }
+
+    public void serverSuspend(int testId, String serverName) {
+        this.request(null, String.format("/suspend?test_id=%d", testId), Map.of("server", serverName), "post");
+    }
+
+    public void serverResume(int testId, String serverName) {
+        this.request(null, String.format("/resume?test_id=%d", testId), Map.of("server", serverName), "post");
+    }
+
+    public void serverPause(int testId, String serverName) {
+        this.request(null, String.format("/pause?test_id=%d", testId), Map.of("server", serverName), "post");
+    }
+
+    public void serverUnpause(int testId, String serverName) {
+        this.request(null, String.format("/unpause?test_id=%d", testId), Map.of("server", serverName), "post");
+    }
+
+    public void serverShelve(int testId, String serverName) {
+        this.request(null, String.format("/shelve?test_id=%d", testId), Map.of("server", serverName), "post");
+    }
+
+    public void serverShelveOffload(int testId, String serverName) {
+        this.request(null, String.format("/shelve-offload?test_id=%d", testId), Map.of("server", serverName), "post");
+    }
+
+    public void serverUnshelve(int testId, String serverName) {
+        this.request(null, String.format("/unshelve?test_id=%d", testId), Map.of("server", serverName), "post");
+    }
+
+    public void serverStop(int testId, String serverName) {
+        this.request(null, String.format("/stop?test_id=%d", testId), Map.of("server", serverName), "post");
+    }
+
+    public void serverStart(int testId, String serverName) {
+        this.request(null, String.format("/start?test_id=%d", testId), Map.of("server", serverName), "post");
+    }
+
+    public void serverRebuild(int testId, String serverName, String imageName) {
+        this.request(null, String.format("/rebuild?test_id=%d", testId),
+                Map.of("server", serverName, "image", imageName), "post");
+    }
 }

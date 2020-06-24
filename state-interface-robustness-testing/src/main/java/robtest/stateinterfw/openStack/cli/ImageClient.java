@@ -1,5 +1,6 @@
 package robtest.stateinterfw.openStack.cli;
 
+import com.mysql.cj.util.StringUtils;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FileUtils;
 import robtest.stateinterfw.openStack.cli.models.ImageResult;
@@ -9,6 +10,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 public class ImageClient extends BaseClient {
     public ImageClient() {
@@ -38,7 +40,13 @@ public class ImageClient extends BaseClient {
     }
 
     public ImageResult imageDetails(int testId, String imageName) {
-        var opt = this.request(ImageResult.class, String.format("/details?test_id=%d&image_name=%s", testId, imageName), null, "get");
+        return imageDetails(testId, imageName, null);
+    }
+
+    public ImageResult imageDetails(int testId, String imageName, String id) {
+        if (StringUtils.isNullOrEmpty(imageName) && StringUtils.isNullOrEmpty(id))
+            return null;
+        var opt = this.request(ImageResult.class, String.format("/details?test_id=%d&image_name=%s&image_id=%s", testId, Optional.ofNullable(imageName).orElse(""), Optional.ofNullable(id).orElse("")), null, "get");
         return opt.orElse(null);
     }
 }
