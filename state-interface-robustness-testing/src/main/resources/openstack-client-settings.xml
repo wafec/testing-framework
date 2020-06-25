@@ -1,0 +1,5 @@
+<custom>
+    <openstack-client>
+        <address>http://localhost:5000</address>
+    </openstack-client>
+</custom>

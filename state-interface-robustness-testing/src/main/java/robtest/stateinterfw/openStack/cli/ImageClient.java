@@ -14,7 +14,7 @@ import java.util.Optional;
 
 public class ImageClient extends BaseClient {
     public ImageClient() {
-        super("http://localhost:5000/images");
+        super("/servers_api/images");
     }
 
     public List<ImageResult> listImages(Integer testId) {

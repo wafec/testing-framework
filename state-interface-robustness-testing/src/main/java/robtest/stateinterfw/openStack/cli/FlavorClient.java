@@ -10,7 +10,7 @@ import java.util.Optional;
 
 public class FlavorClient extends BaseClient {
     public FlavorClient() {
-        super("http://localhost:5000/flavors");
+        super("/servers_api/flavors");
     }
 
     public List<FlavorResult> listFlavors(Integer testId) {

@@ -24,7 +24,8 @@ public class ConfirmedOrRejectedResizeWaiter extends AbstractServerWaiter {
     protected boolean evaluate(ServerResult server, FlavorResult flavorOld, ImageResult image, NetworkResult network) {
         FlavorClient flavorClient = new FlavorClient();
         var flavor = flavorClient.flavorDetails(testId, flavorName);
+        final String flavorString = Optional.ofNullable(flavor).map(FlavorResult::getId).orElse("");
         return Optional.ofNullable(server.getStatus()).map(s -> s.toLowerCase().equals("active")).orElse(false) &&
-                server.getFlavor().equals(flavor.getName());
+                Optional.ofNullable(server.getFlavor()).map(f -> f.equals(flavorString)).orElse(false);
     }
 }

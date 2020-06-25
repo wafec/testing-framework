@@ -9,7 +9,7 @@ import java.util.Optional;
 
 public class NetworkClient extends BaseClient {
     public NetworkClient() {
-        super("http://localhost:5000/networks");
+        super("/servers_api/networks");
     }
 
     public List<NetworkResult> listNetworks(int testId) {

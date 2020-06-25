@@ -18,7 +18,7 @@ CREATE TABLE OS_TEST_LOG (
     id int not null auto_increment,
     test_id int not null,
     log text not null,
-    log_date timestamp not null default current_timestamp
+    log_date timestamp not null default current_timestamp,
     PRIMARY KEY (id),
     FOREIGN KEY (test_id) REFERENCES OS_TEST(id)
 );

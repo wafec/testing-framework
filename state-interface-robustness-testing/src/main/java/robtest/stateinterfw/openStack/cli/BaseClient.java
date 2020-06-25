@@ -1,19 +1,28 @@
 package robtest.stateinterfw.openStack.cli;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import robtest.stateinterfw.openStack.cli.models.ExceptionResult;
+import robtest.stateinterfw.openStack.cli.settings.ClientConfiguration;
+import robtest.stateinterfw.openStack.cli.settings.CustomConfiguration;
+import robtest.stateinterfw.openStack.cli.settings.CustomConfigurationException;
 
+import java.io.File;
+import java.io.IOException;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.nio.file.Files;
 import java.util.Optional;
 
 public abstract class BaseClient {
     private String prefix;
 
     public BaseClient(String prefix) {
-        this.prefix = prefix;
+        String address = this.getBaseAddress().orElseThrow(CustomConfigurationException::new);
+        this.prefix = String.format("%s%s", address, prefix);
     }
 
     protected <T> Optional<T> request(Class<T> returnType, String path, Object body, String method) {
@@ -51,7 +60,7 @@ public abstract class BaseClient {
                     ObjectMapper objectMapper = new ObjectMapper();
                     result = objectMapper.readValue(response.body(), returnType);
                 }
-            } else if (response.statusCode() >= 300 && response.statusCode() < 600) {
+            } else if (response.statusCode() >= 300 && response.statusCode() < 500) {
                 ObjectMapper objectMapper = new ObjectMapper();
                 var exceptionResult = objectMapper.readValue(response.body(), ExceptionResult.class);
                 if (exceptionResult.getSubCode() == 11)
@@ -61,6 +70,8 @@ public abstract class BaseClient {
                 if (exceptionResult.getSubCode() == 13)
                     throw new NetworkingException(response.statusCode(), exceptionResult.getMessage(), exceptionResult.getAction());
                 throw new ClientException(response.statusCode(), exceptionResult.getMessage());
+            } else if (response.statusCode() >= 500) {
+                throw new ClientException(response.statusCode());
             }
         } catch (ClientException cliExc) {
             throw cliExc;
@@ -69,5 +80,10 @@ public abstract class BaseClient {
             exc.printStackTrace();
         }
         return Optional.ofNullable(result);
+    }
+
+    private Optional<String> getBaseAddress() {
+        var opt = CustomConfiguration.instance();
+        return opt.map(CustomConfiguration::getClientConfiguration).map(ClientConfiguration::getAddress);
     }
 }

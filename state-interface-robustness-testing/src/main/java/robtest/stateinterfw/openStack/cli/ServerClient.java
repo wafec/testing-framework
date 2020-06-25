@@ -8,7 +8,7 @@ import java.util.Map;
 
 public class ServerClient extends BaseClient {
     public ServerClient() {
-        super("http://localhost:5000/servers");
+        super("/servers_api/servers");
     }
 
     public List<ServerResult> listServers(int testId) {
@@ -81,5 +81,15 @@ public class ServerClient extends BaseClient {
     public void serverRebuild(int testId, String serverName, String imageName) {
         this.request(null, String.format("/rebuild?test_id=%d", testId),
                 Map.of("server", serverName, "image", imageName), "post");
+    }
+
+    public void serverMigrate(int testId, String serverName) {
+        this.request(null, String.format("/migrate?test_id=%d", testId),
+                Map.of("server", serverName), "post");
+    }
+
+    public void serverLiveMigrate(int testId, String serverName) {
+        this.request(null, String.format("/live-migrate?test_id=%d", testId),
+                Map.of("server", serverName), "post");
     }
 }

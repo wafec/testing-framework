@@ -28,6 +28,8 @@ public class OSCommandLine extends AbstractCommandLine implements IOSCommandLine
         add("server-pause", this::serverPause);
         add("server-unpause", this::serverUnpause);
         add("server-rebuild", this::serverRebuild);
+        add("server-migrate", this::serverMigrate);
+        add("server-live-migrate", this::serverLiveMigrate);
     }
 
     protected void test(String[] args) {
@@ -303,6 +305,40 @@ public class OSCommandLine extends AbstractCommandLine implements IOSCommandLine
             ServerClient serverClient = new ServerClient();
             serverClient.serverRebuild(testId, serverName, imageName);
             new RebuildWaiter(testId, serverName).waitCondition();
+        } catch (ParseException exc) {
+            exc.printStackTrace();
+        }
+    }
+
+    protected void serverMigrate(String[] args) {
+        Options options = new Options();
+        options.addOption(Option.builder().longOpt("test_id").hasArg().build());
+        options.addOption(Option.builder().longOpt("server_name").hasArg().build());
+        CommandLineParser parser = new DefaultParser();
+        try {
+            var commandLine = parser.parse(options, args);
+            var testId = Integer.parseInt(commandLine.getOptionValue("test_id"));
+            var serverName = commandLine.getOptionValue("server_name");
+            ServerClient serverClient = new ServerClient();
+            serverClient.serverMigrate(testId, serverName);
+            new MigrateWaiter(testId, serverName).waitCondition();
+        } catch (ParseException exc) {
+            exc.printStackTrace();
+        }
+    }
+
+    protected void serverLiveMigrate(String[] args) {
+        Options options = new Options();
+        options.addOption(Option.builder().longOpt("test_id").hasArg().build());
+        options.addOption(Option.builder().longOpt("server_name").hasArg().build());
+        CommandLineParser parser = new DefaultParser();
+        try {
+            var commandLine = parser.parse(options, args);
+            var testId = Integer.parseInt(commandLine.getOptionValue("test_id"));
+            var serverName = commandLine.getOptionValue("server_name");
+            ServerClient serverClient = new ServerClient();
+            serverClient.serverLiveMigrate(testId, serverName);
+            new LiveMigrateWaiter(testId, serverName).waitCondition();
         } catch (ParseException exc) {
             exc.printStackTrace();
         }

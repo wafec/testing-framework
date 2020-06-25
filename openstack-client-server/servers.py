@@ -1,60 +1,14 @@
-from flask import Flask, jsonify, request, abort
-from werkzeug.exceptions import HTTPException
-from keystoneclient.v3 import client as keystone_cli
-from keystoneauth1.identity import v3
-from keystoneauth1 import session
+from flask import Blueprint, jsonify, request, abort
 from novaclient import client as nova_cli
 from glanceclient import client as glance_cli
-from glanceclient.exc import ClientException as glance_cli_exc
 from neutronclient.v2_0 import client as neutron_cli
-from models import Session, OSTest, OSFlavor, OSImage, OSNetwork, OSServer, OSTestLog
+from models import Session, OSFlavor, OSImage, OSNetwork, OSServer
+from commons import _make_error, _create_session, _create_test_log
 import tempfile
 import base64
-import pickle
-import json
-import traceback
-
-app = Flask(__name__)
 
 
-# https://stackoverflow.com/questions/21638922/custom-error-message-json-object-with-flask-restful
-def _make_error(status_code, sub_code, message, action):
-    response = jsonify({
-        "status": status_code,
-        "sub_code": sub_code,
-        "message": message,
-        "action": action
-    })
-    response.status_code = status_code
-    return response
-
-
-@app.route('/')
-def index():
-    return "Hello, World!"
-
-
-def _create_test_log(sess, test_id, log):
-    log_dao = OSTestLog()
-    log_dao.test_id = int(test_id)
-    log_dao.log = log
-
-    sess.add(log_dao)
-
-    return log_dao
-
-
-def _create_session(test_id):
-    sess = Session()
-    test = sess.query(OSTest).filter(OSTest.id == test_id).first()
-    auth = v3.Password(auth_url=test.auth_url,
-                       username=test.username,
-                       password=test.password,
-                       user_domain_name=test.user_domain_name,
-                       project_name=test.project_name,
-                       project_domain_name=test.project_domain_name)
-    os_sess = session.Session(auth=auth)
-    return os_sess
+servers_api = Blueprint('servers_api', __name__)
 
 
 def _os_flavor_to_json(flavor):
@@ -80,7 +34,7 @@ def _flavor_dao_create(sess, flavor, test_id, or_update=False):
     return flavor_dao
 
 
-@app.route('/flavors', methods=['POST'])
+@servers_api.route('/flavors', methods=['POST'])
 def flavor_create():
     if not request.json:
         abort(400)
@@ -100,7 +54,7 @@ def flavor_create():
         abort(401)
 
 
-@app.route('/flavors')
+@servers_api.route('/flavors')
 def flavor_list():
     test_id = request.args.get('test_id')
     sess = _create_session(int(test_id))
@@ -112,7 +66,7 @@ def flavor_list():
     return jsonify(result), 201
 
 
-@app.route('/flavors', methods=['DELETE'])
+@servers_api.route('/flavors', methods=['DELETE'])
 def flavor_delete():
     test_id = request.args.get('test_id')
     flavor_name = request.args.get('flavor_name')
@@ -129,7 +83,7 @@ def flavor_delete():
     return jsonify(success=True)
 
 
-@app.route('/flavors/details')
+@servers_api.route('/flavors/details')
 def flavor_details():
     test_id = request.args.get('test_id')
     flavor_name = request.args.get('flavor_name')
@@ -170,7 +124,7 @@ def _image_dao_create(sess, image, test_id, or_update=False):
 
 
 # Glance API Documentation = https://docs.openstack.org/python-glanceclient/latest/reference/apiv2.html
-@app.route('/images', methods=['POST'])
+@servers_api.route('/images', methods=['POST'])
 def image_create():
     if not request.json:
         abort(400)
@@ -195,7 +149,7 @@ def image_create():
         abort(401)
 
 
-@app.route('/images')
+@servers_api.route('/images')
 def image_list():
     test_id = request.args.get('test_id')
     sess = _create_session(int(test_id))
@@ -207,7 +161,7 @@ def image_list():
     return jsonify(result), 201
 
 
-@app.route('/images/details')
+@servers_api.route('/images/details')
 def image_details():
     test_id = request.args.get('test_id')
     image_name = request.args.get('image_name')
@@ -229,7 +183,7 @@ def image_details():
     abort(404)
 
 
-@app.route('/images', methods=['DELETE'])
+@servers_api.route('/images', methods=['DELETE'])
 def image_delete():
     test_id = request.args.get('test_id')
     image_name = request.args.get('image_name')
@@ -249,13 +203,15 @@ def _os_server_to_json(server):
     if server.image and 'id' in server.image:
         image_id = server.image['id']
         print(server.networks)
+    print(dir(server))
+    print(getattr(server, "hostId"))
     return {"name": server.name, "image": image_id, "flavor": server.flavor['id'], "id": server.id,
             "status": server.status, "power_state": str(getattr(server, 'OS-EXT-STS:power_state')),
             "network": "",
             "task_state": getattr(server, 'OS-EXT-STS:task_state'), "vm_state": getattr(server, 'OS-EXT-STS:vm_state')}
 
 
-@app.route('/servers')
+@servers_api.route('/servers')
 def server_list():
     test_id = request.args.get('test_id')
     sess = _create_session(int(test_id))
@@ -286,7 +242,7 @@ def _server_dao_create(sess, server, test_id, image, flavor, network, or_update=
     return server_dao
 
 
-@app.route('/servers', methods=['POST'])
+@servers_api.route('/servers', methods=['POST'])
 def server_create():
     if not request.json:
         abort(400)
@@ -313,7 +269,7 @@ def server_create():
         abort(401)
 
 
-@app.route('/servers/details')
+@servers_api.route('/servers/details')
 def server_details():
     test_id = request.args.get('test_id')
     server_name = request.args.get('server_name')
@@ -326,7 +282,7 @@ def server_details():
         abort(404)
 
 
-@app.route('/servers', methods=['DELETE'])
+@servers_api.route('/servers', methods=['DELETE'])
 def server_delete():
     test_id = request.args.get('test_id')
     server_name = request.args.get('server_name')
@@ -371,7 +327,7 @@ def _network_dao_create(sess, network, test_id, or_update=False):
     return network_dao
 
 
-@app.route('/networks')
+@servers_api.route('/networks')
 def network_list():
     test_id = request.args.get('test_id')
     sess = _create_session(int(test_id))
@@ -383,7 +339,7 @@ def network_list():
     return jsonify(result), 201
 
 
-@app.route('/networks/details')
+@servers_api.route('/networks/details')
 def network_details():
     test_id = request.args.get('test_id')
     network_name = request.args.get('network_name')
@@ -405,7 +361,7 @@ def network_details():
     abort(404)
 
 
-@app.route('/servers/resize', methods=['POST'])
+@servers_api.route('/servers/resize', methods=['POST'])
 def server_resize():
     test_id = request.args.get('test_id')
     if not request.json:
@@ -435,7 +391,7 @@ def server_resize():
         abort(404)
 
 
-@app.route('/servers/resize', methods=['PUT'])
+@servers_api.route('/servers/resize', methods=['PUT'])
 def server_confirm_or_reject_resize():
     test_id = request.args.get('test_id')
     if not request.json:
@@ -464,7 +420,7 @@ def server_confirm_or_reject_resize():
         abort(404)
 
 
-@app.route('/servers/suspend', methods=['POST'])
+@servers_api.route('/servers/suspend', methods=['POST'])
 def server_suspend():
     test_id = request.args.get('test_id')
     if not request.json:
@@ -488,7 +444,7 @@ def server_suspend():
         abort(404)
 
 
-@app.route('/servers/resume', methods=['POST'])
+@servers_api.route('/servers/resume', methods=['POST'])
 def server_resume():
     test_id = request.args.get('test_id')
     if not request.json:
@@ -509,7 +465,7 @@ def server_resume():
         abort(404)
 
 
-@app.route('/servers/pause', methods=['POST'])
+@servers_api.route('/servers/pause', methods=['POST'])
 def server_pause():
     test_id = request.args.get('test_id')
     if not request.json:
@@ -530,7 +486,7 @@ def server_pause():
         abort(404)
 
 
-@app.route('/servers/unpause', methods=['POST'])
+@servers_api.route('/servers/unpause', methods=['POST'])
 def server_unpause():
     test_id = request.args.get('test_id')
     if not request.json:
@@ -551,7 +507,7 @@ def server_unpause():
         abort(404)
 
 
-@app.route('/servers/shelve', methods=['POST'])
+@servers_api.route('/servers/shelve', methods=['POST'])
 def server_shelve():
     test_id = request.args.get('test_id')
     if not request.json:
@@ -572,7 +528,7 @@ def server_shelve():
         abort(404)
 
 
-@app.route('/servers/unshelve', methods=['POST'])
+@servers_api.route('/servers/unshelve', methods=['POST'])
 def server_unshelve():
     test_id = request.args.get('test_id')
     if not request.json:
@@ -593,7 +549,7 @@ def server_unshelve():
         abort(404)
 
 
-@app.route('/servers/shelve-offload', methods=["POST"])
+@servers_api.route('/servers/shelve-offload', methods=["POST"])
 def server_shelve_offload():
     test_id = request.args.get('test_id')
     if not request.json:
@@ -614,7 +570,7 @@ def server_shelve_offload():
         abort(404)
 
 
-@app.route('/servers/stop', methods=["POST"])
+@servers_api.route('/servers/stop', methods=["POST"])
 def server_stop():
     test_id = request.args.get('test_id')
     if not request.json:
@@ -635,7 +591,7 @@ def server_stop():
         abort(401)
 
 
-@app.route('/servers/start', methods=["POST"])
+@servers_api.route('/servers/start', methods=["POST"])
 def server_start():
     test_id = request.args.get('test_id')
     if not request.json:
@@ -656,7 +612,7 @@ def server_start():
         abort(401)
 
 
-@app.route('/servers/rebuild', methods=['POST'])
+@servers_api.route('/servers/rebuild', methods=['POST'])
 def server_rebuild():
     test_id = request.args.get('test_id')
     if not request.json:
@@ -685,25 +641,71 @@ def server_rebuild():
         abort(401)
 
 
-@app.errorhandler(nova_cli.exceptions.ClientException)
-def error_handler_nova(e):
-    return _make_error(401, 11, str(e), traceback.format_exc())
+@servers_api.route('/servers/migrate', methods=['POST'])
+def server_migrate():
+    test_id = request.args.get('test_id')
+    if not request.json:
+        abort(401)
+    server_name = request.json['server']
+    sess = _create_session(test_id)
+    nova = nova_cli.Client('2.1', session=sess)
+    servers = nova.servers.list(search_opts={"name": server_name})
+    if servers and len(servers):
+        server = servers[0]
+        nova.servers.migrate(server)
+        db = Session()
+        server_dao = db.query(OSServer).filter(OSServer.uid == server.id).first()
+        _create_test_log(db, test_id, 'Server %s MIGRATE' % repr(server_dao))
+        db.commit()
+        return jsonify(success=True)
+    else:
+        abort(401)
 
 
-@app.errorhandler(glance_cli_exc)
-def error_handler_glance(e):
-    return _make_error(401, 12, str(e), traceback.format_exc())
+@servers_api.route('/servers/live-migrate', methods=['POST'])
+def server_live_migrate():
+    test_id = request.args.get('test_id')
+    if not request.json:
+        abort(401)
+    server_name = request.json['server']
+    sess = _create_session(test_id)
+    nova = nova_cli.Client('2.1', session=sess)
+    servers = nova.servers.list(search_opts={"name": server_name})
+    if servers and len(servers):
+        server = servers[0]
+        nova.servers.live_migrate(server=server, host=None, block_migration=False, disk_over_commit=False)
+        db = Session()
+        server_dao = db.query(OSServer).filter(OSServer.uid == server.id).first()
+        _create_test_log(db, test_id, 'Server %s LIVE MIGRATE' % repr(server_dao))
+        db.commit()
+        return jsonify(success=True)
+    else:
+        abort(401)
 
 
-@app.errorhandler(neutron_cli.exceptions.NeutronClientException)
-def error_handler_neutron(e):
-    return _make_error(401, 13, str(e), traceback.format_exc())
+@servers_api.route('/hosts/<test_id>')
+def host_list(test_id):
+    sess = _create_session(test_id)
+    nova = nova_cli.Client('2.1', session=sess)
+    hosts = nova.hypervisors.list()
+    if hosts and len(hosts):
+        host = hosts[0]
+        return jsonify({
+            "text": str(dir(host)),
+            "hostname": host.hypervisor_hostname,
+            "ip": host.host_ip,
+            "id": host.id
+        })
+    return jsonify()
 
 
-@app.errorhandler(Exception)
-def error_handler_any(e):
-    return _make_error(401, 10, str(e), traceback.format_exc())
+@servers_api.route('/tests/<test_id>/<server_name>')
+def tests(test_id, server_name):
+    sess = _create_session(test_id)
+    nova = nova_cli.Client('2.1', session=sess)
+    servers = nova.servers.list(search_opts={"name": server_name})
+    server = servers[0]
+    nova.servers.live_migrate(server=server, host=None, block_migration=False, disk_over_commit=False)
+    return jsonify(success=True)
 
 
-if __name__ == "__main__":
-    app.run(debug=True)

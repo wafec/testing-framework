@@ -2,7 +2,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import Column, Integer, String, ForeignKey, DateTime
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, relationship
-
+import datetime
 
 Base = declarative_base()
 
@@ -34,7 +34,7 @@ class OSFlavor(Base):
     test = relationship("OSTest", back_populates="flavors")
 
     def __repr__(self):
-        return '<OSFlavor(id=%d, uid=%s, name=%s, vcpus=%d, ram=%d, disk=%d, test_id=%d)>' % (
+        return '<OSFlavor(id=%s, uid=%s, name=%s, vcpus=%s, ram=%s, disk=%s, test_id=%s)>' % (
             self.id, self.uid, self.name, self.vcpus, self.ram, self.disk, self.test_id
         )
 
@@ -55,7 +55,7 @@ class OSImage(Base):
     test = relationship("OSTest", back_populates="images")
 
     def __repr__(self):
-        return '<OSImage(id=%d, uid=%s, name=%s, disk_format=%s, container_format=%s, test_id=%d)>' % (
+        return '<OSImage(id=%s, uid=%s, name=%s, disk_format=%s, container_format=%s, test_id=%s)>' % (
             self.id, self.uid, self.name, self.disk_format, self.container_format, self.test_id
         )
 
@@ -69,6 +69,7 @@ class OSServer(Base):
     id = Column(Integer, primary_key=True)
     uid = Column(String)
     name = Column(String)
+    last_action = Column(String)
     flavor_id = Column(Integer, ForeignKey('OS_FLAVOR.id'))
     image_id = Column(Integer, ForeignKey('OS_IMAGE.id'))
     test_id = Column(Integer, ForeignKey('OS_TEST.id'))
@@ -82,9 +83,11 @@ class OSServer(Base):
     flavor_alt = relationship("OSFlavor", foreign_keys=[flavor_alt_id])
 
     def __repr__(self):
-        return '<OSServer(id=%d, uid=%s, name=%s, flavor_id=%d, image_id=%d, test_id=%d, network_id=%d)>' % (
-            self.id, self.uid, self.name, self.flavor_id, self.image_id, self.test_id, self.network_id
-        )
+        return '<OSServer(id=%s, uid=%s, name=%s, flavor_id=%s, image_id=%s, test_id=%s, network_id=%s, ' \
+               'last_action=%s)>' % (
+                   self.id, self.uid, self.name, self.flavor_id, self.image_id, self.test_id, self.network_id,
+                   self.last_action
+               )
 
 
 OSTest.servers = relationship("OSServer", order_by=OSServer.id, back_populates="test")
@@ -102,7 +105,7 @@ class OSNetwork(Base):
     test = relationship("OSTest", back_populates="networks")
 
     def __repr__(self):
-        return '<OSNetwork(id=%d, uid=%s, name=%s, project_uid=%s, test_id=%d)>' % (
+        return '<OSNetwork(id=%s, uid=%s, name=%s, project_uid=%s, test_id=%s)>' % (
             self.id, self.uid, self.name, self.project_uid, self.test_id
         )
 
@@ -116,13 +119,12 @@ class OSTestLog(Base):
     id = Column(Integer, primary_key=True)
     test_id = Column(Integer, ForeignKey('OS_TEST.id'))
     log = Column(String)
-    log_date = Column(DateTime)
+    log_date = Column(DateTime, default=datetime.datetime.now)
 
     test = relationship("OSTest", back_populates="logs")
 
 
 OSTest.logs = relationship("OSTestLog", order_by=OSTestLog.id, back_populates="test")
-
 
 engine = create_engine('mysql+pymysql://test:test-321@localhost/test', pool_recycle=3600)
 Session = sessionmaker(bind=engine)
