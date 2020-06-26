@@ -8,6 +8,7 @@ import robtest.core.commandline.AbstractCommandLine;
 import robtest.stateinterfw.openStack.cli.FlavorClient;
 import robtest.stateinterfw.openStack.cli.ImageClient;
 import robtest.stateinterfw.openStack.cli.ServerClient;
+import robtest.stateinterfw.openStack.cli.VolumeClient;
 import robtest.stateinterfw.openStack.cli.waiters.*;
 
 import java.io.File;
@@ -30,6 +31,10 @@ public class OSCommandLine extends AbstractCommandLine implements IOSCommandLine
         add("server-rebuild", this::serverRebuild);
         add("server-migrate", this::serverMigrate);
         add("server-live-migrate", this::serverLiveMigrate);
+        add("volume-list", this::volumeList);
+        add("volume-create", this::volumeCreate);
+        add("volume-details", this::volumeDetails);
+        add("volume-delete", this::volumeDelete);
     }
 
     protected void test(String[] args) {
@@ -339,6 +344,86 @@ public class OSCommandLine extends AbstractCommandLine implements IOSCommandLine
             ServerClient serverClient = new ServerClient();
             serverClient.serverLiveMigrate(testId, serverName);
             new LiveMigrateWaiter(testId, serverName).waitCondition();
+        } catch (ParseException exc) {
+            exc.printStackTrace();
+        }
+    }
+
+    protected void volumeList(String[] args) {
+        Options options = new Options();
+        options.addOption(Option.builder().longOpt("test_id").hasArg().build());
+        CommandLineParser parser = new DefaultParser();
+        try {
+            var commandLine = parser.parse(options, args);
+            var testId = Integer.parseInt(commandLine.getOptionValue("test_id"));
+            VolumeClient volumeClient = new VolumeClient();
+            var result = volumeClient.volumeList(testId);
+            if (result != null) {
+                for (var storage : result) {
+                    System.out.println(storage.toString());
+                }
+            }
+        } catch (ParseException exc) {
+            exc.printStackTrace();
+        }
+    }
+
+    protected void volumeCreate(String[] args) {
+        Options options = new Options();
+        options.addOption(Option.builder().longOpt("test_id").hasArg().build());
+        options.addOption(Option.builder().longOpt("name").hasArg().build());
+        options.addOption(Option.builder().longOpt("size").hasArg().build());
+        options.addOption(Option.builder().longOpt("zone").hasArg().build());
+        CommandLineParser parser = new DefaultParser();
+        try {
+            var commandLine = parser.parse(options, args);
+            var testId = Integer.parseInt(commandLine.getOptionValue("test_id"));
+            var name = commandLine.getOptionValue("name");
+            var size = Integer.parseInt(commandLine.getOptionValue("size"));
+            var zone = commandLine.getOptionValue("zone");
+            VolumeClient volumeClient = new VolumeClient();
+            var result = volumeClient.volumeCreate(testId, name, zone, size);
+            if (result != null)
+                System.out.println(result.toString());
+            else
+                System.out.println("Volume not created");
+        } catch (ParseException exc) {
+            exc.printStackTrace();
+        }
+    }
+
+    protected void volumeDetails(String[] args) {
+        Options options = new Options();
+        options.addOption(Option.builder().longOpt("test_id").hasArg().build());
+        options.addOption(Option.builder().longOpt("name").hasArg().build());
+        CommandLineParser parser = new DefaultParser();
+        try {
+            var commandLine = parser.parse(options, args);
+            var testId = Integer.parseInt(commandLine.getOptionValue("test_id"));
+            var name = commandLine.getOptionValue("name");
+            VolumeClient volumeClient = new VolumeClient();
+            var volume = volumeClient.volumeDetails(testId, name);
+            if (volume != null) {
+                System.out.println(volume.toString());
+            } else {
+                System.out.println("Volume not found");
+            }
+        } catch (ParseException exc) {
+            exc.printStackTrace();
+        }
+    }
+
+    protected void volumeDelete(String[] args) {
+        Options options = new Options();
+        options.addOption(Option.builder().longOpt("test_id").hasArg().build());
+        options.addOption(Option.builder().longOpt("name").hasArg().build());
+        CommandLineParser parser = new DefaultParser();
+        try {
+            var commandLine = parser.parse(options, args);
+            var testId = Integer.parseInt(commandLine.getOptionValue("test_id"));
+            var name = commandLine.getOptionValue("name");
+            VolumeClient volumeClient = new VolumeClient();
+            volumeClient.volumeDelete(testId, name);
         } catch (ParseException exc) {
             exc.printStackTrace();
         }

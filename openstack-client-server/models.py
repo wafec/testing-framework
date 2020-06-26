@@ -128,3 +128,25 @@ OSTest.logs = relationship("OSTestLog", order_by=OSTestLog.id, back_populates="t
 
 engine = create_engine('mysql+pymysql://test:test-321@localhost/test', pool_recycle=3600)
 Session = sessionmaker(bind=engine)
+
+
+class OSVolume(Base):
+    __tablename__ = 'OS_VOLUME'
+
+    id = Column(Integer, primary_key=True)
+    uid = Column(String)
+    test_id = Column(Integer, ForeignKey('OS_TEST.id'))
+    name = Column(String)
+    availability_zone = Column(String)
+    size = Column(Integer)
+    status = Column(String)
+
+    test = relationship('OSTest', back_populates='volumes')
+
+    def __repr__(self):
+        return '<OSVolume(id=%s, uid=%s, test_id=%s, name=%s, zone=%s, size=%s, status=%s)>' % (
+            self.id, self.uid, self.test_id, self.name, self.availability_zone, self.size, self.status
+        )
+
+
+OSTest.volumes = relationship("OSVolume", order_by=OSVolume.id, back_populates="test")
