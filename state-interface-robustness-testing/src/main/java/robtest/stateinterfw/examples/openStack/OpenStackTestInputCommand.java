@@ -1,22 +1,36 @@
 package robtest.stateinterfw.examples.openStack;
 
-import org.openstack4j.api.Builders;
-import org.openstack4j.api.OSClient.OSClientV3;
-import org.openstack4j.core.transport.Config;
-import org.openstack4j.model.common.Identifier;
-import org.openstack4j.model.common.payloads.FilePayload;
-import org.openstack4j.model.image.v2.ContainerFormat;
-import org.openstack4j.model.image.v2.DiskFormat;
-import org.openstack4j.model.image.v2.Image;
-import org.openstack4j.openstack.OSFactory;
+import com.google.inject.Inject;
 import robtest.stateinterfw.*;
+import robtest.stateinterfw.data.IRepository;
+import robtest.stateinterfw.data.openStack.OSTest;
 import robtest.stateinterfw.examples.openStack.content.OpenStackUserContent;
+import robtest.stateinterfw.examples.openStack.content.OpenStackUserResource;
+import robtest.stateinterfw.examples.openStack.content.ResourceTypeEnum;
+import robtest.stateinterfw.openStack.cli.FlavorClient;
+import robtest.stateinterfw.openStack.cli.ImageClient;
+import robtest.stateinterfw.openStack.cli.ServerClient;
+import robtest.stateinterfw.openStack.cli.VolumeClient;
 
 import java.io.File;
-import java.util.Collections;
 
 public class OpenStackTestInputCommand extends TestInputCommand implements IOpenStackTestInputCommand {
-    public OpenStackTestInputCommand() {
+    private IRepository _repository;
+    private OpenStackTestExecutionContextWrapper contextWrapper;
+
+    @Inject
+    public OpenStackTestInputCommand(IRepository repository) {
+        this._repository = repository;
+        this.configure();
+    }
+
+    @Override
+    public Object command(ITestExecutionContext testExecutionContext, ITestInput testInput) {
+        contextWrapper = new OpenStackTestExecutionContextWrapper(testExecutionContext);
+        return super.command(testExecutionContext, testInput);
+    }
+
+    private void configure() {
         add("identity.login", this::login);
         add("compute.flavor.create", this::flavorCreate);
         add("image.create", this::imageCreate);
@@ -24,142 +38,226 @@ public class OpenStackTestInputCommand extends TestInputCommand implements IOpen
         add("compute.server.delete", this::serverDelete);
         add("compute.flavor.delete", this::flavorDelete);
         add("image.delete", this::imageDelete);
+        add("compute.server.pause", this::serverPause);
+        add("compute.server.unpause", this::serverUnpause);
+        add("compute.server.shelve", this::serverShelve);
+        add("compute.server.unshelve", this::serverUnshelve);
+        add("compute.server.start", this::serverStart);
+        add("compute.server.stop", this::serverStop);
+        add("compute.server.suspend", this::serverSuspend);
+        add("compute.server.resume", this::serverResume);
+        add("compute.server.resize", this::serverResize);
+        add("compute.server.confirmresize", this::serverConfirmResize);
+        add("compute.server.revertresize", this::serverRevertResize);
+        add("storage.volume.create", this::volumeCreate);
+        add("storage.volume.extend", this::volumeExtend);
+        add("storage.volume.delete", this::volumeDelete);
+        add("storage.volume.detach", this::volumeDetach);
+        add("storage.volume.attach", this::volumeAttach);
     }
 
     private OpenStackUserContent getUserContent() {
-        if (this.testExecutionContext != null) {
-            if (this.testExecutionContext.getVolatileUserContent() != null &&
-                this.testExecutionContext.getVolatileUserContent() instanceof OpenStackUserContent) {
-                return (OpenStackUserContent) this.testExecutionContext.getVolatileUserContent();
-            } else if (this.testExecutionContext.getVolatileUserContent() != null) {
-                throw new IllegalArgumentException("User content is not an instance of OpenStackUserContent");
-            } else {
-                var userContent = new OpenStackUserContent();
-                this.testExecutionContext.setVolatileUserContent(userContent);
-                return userContent;
-            }
-        }
-        return null;
-    }
-
-    private OSClientV3 createClient() {
-        var userContent = getUserContent();
-        if (userContent != null) {
-            Identifier domainIdentifier = Identifier.byName(userContent.getLogin().getDomain());
-            Identifier projectIdentifier = Identifier.byName(userContent.getLogin().getProject());
-            OSClientV3 client = OSFactory.builderV3()
-                    .endpoint(userContent.getLogin().getEndpoint())
-                    .credentials(userContent.getLogin().getUser(), userContent.getLogin().getPassword(), domainIdentifier)
-                    .withConfig(Config.newConfig().withEndpointNATResolution("controller"))
-                    .authenticate();
-            return client;
-        }
-        return null;
+        return contextWrapper.getUserContent();
     }
 
     private Object login(ITestInputArgs args) {
-        var userContent = getUserContent();
-        if (userContent != null) {
-            String user = args.get("user").getDataValue();
-            String password = args.get("password").getDataValue();
-            String domain = args.get("domain").getDataValue();
-            String endpoint = args.get("endpoint").getDataValue();
-            String project = args.get("project").getDataValue();
-            userContent.getLogin().setUser(user);
-            userContent.getLogin().setPassword(password);
-            userContent.getLogin().setDomain(domain);
-            userContent.getLogin().setEndpoint(endpoint);
-            userContent.getLogin().setProject(project);
-        }
-        return null;
+        OSTest testConfig = new OSTest();
+        testConfig.setUsername(args.get("username").getDataValue());
+        testConfig.setPassword(args.get("password").getDataValue());
+        testConfig.setAuthUrl(args.get("auth_url").getDataValue());
+        testConfig.setProjectDomainName(args.get("project_domain_name").getDataValue());
+        testConfig.setUserDomainName(args.get("user_domain_name").getDataValue());
+        _repository.save(testConfig);
+        getUserContent().setId(testConfig.getId());
+        return testConfig;
     }
 
     private Object flavorCreate(ITestInputArgs args) {
-        var client = createClient();
-        Object result = null;
-        if (client != null) {
-            var flavor = Builders.flavor()
-                    .name(args.get("name").getDataValue())
-                    .vcpus(Integer.parseInt(args.get("vcpus").getDataValue()))
-                    .ram(Integer.parseInt(args.get("ram").getDataValue()))
-                    .disk(1)
-                    .build();
-            var flavorResult = client.compute().flavors().create("test", 100, 5, 1, 0, 0, 1.2f, true);
-            result = flavorResult;
-        }
+        OpenStackUserContent userContent = getUserContent();
+        FlavorClient flavorClient = new FlavorClient();
+        var result = flavorClient.createFlavor(userContent.getId(), args.get("name").getDataValue(), Integer.parseInt(args.get("ram").getDataValue()),
+                Integer.parseInt(args.get("vcpus").getDataValue()), Integer.parseInt(args.get("disk").getDataValue()));
+        OpenStackUserResource resource = new OpenStackUserResource();
+        resource.setUid(result.getId());
+        resource.setName(result.getName());
+        resource.setResourceType(ResourceTypeEnum.FLAVOR);
+        userContent.addResource(resource);
         return result;
     }
 
     private Object imageCreate(ITestInputArgs args) {
-        var client = createClient();
-        Object result = null;
-        if (client != null) {
-            var image = Builders.imageV2()
-                    .name(args.get("name").getDataValue())
-                    .diskFormat(DiskFormat.valueOf(args.get("diskFormat").getDataValue()))
-                    .containerFormat(ContainerFormat.valueOf(args.get("containerFormat").getDataValue()))
-                    .visibility(Image.ImageVisibility.valueOf(args.get("visibility").getDataValue()))
-                    .minDisk(Long.parseLong(args.get("minDisk").getDataValue()))
-                    .minRam(Long.parseLong(args.get("minRam").getDataValue()))
-                    .build();
-            var payload = new FilePayload(new File(args.get("file").getDataValue()));
-            var resultImage = client.imagesV2().create(image);
-            client.imagesV2().upload(resultImage.getId(), payload, null);
-        }
+        OpenStackUserContent userContent = getUserContent();
+        ImageClient imageClient = new ImageClient();
+        var result = imageClient.imageCreate(userContent.getId(), args.get("name").getDataValue(),
+                args.get("disk_format").getDataValue(), args.get("container_format").getDataValue(),
+                new File(args.get("file").getDataValue()));
+        OpenStackUserResource resource = new OpenStackUserResource();
+        resource.setUid(result.getId());
+        resource.setName(result.getName());
+        resource.setResourceType(ResourceTypeEnum.IMAGE);
+        userContent.addResource(resource);
         return result;
     }
 
     private Object serverCreate(ITestInputArgs args) {
-        var client = createClient();
-        Object result = null;
-        if (client != null) {
-            var image = client.imagesV2().list(Collections.singletonMap("name", args.get("image").getDataValue())).get(0);
-            var flavor = client.compute().flavors().list(Collections.singletonMap("name", args.get("flavor").getDataValue())).get(0);
-            var serverCreate = Builders.server()
-                    .name(args.get("name").getDataValue())
-                    .image(image.getId())
-                    .flavor(flavor.getId())
-                    .build();
-            result = client.compute().servers().boot(serverCreate);
-        }
+        OpenStackUserContent userContent = getUserContent();
+        ServerClient serverClient = new ServerClient();
+        var result = serverClient.createServer(userContent.getId(), args.get("name").getDataValue(),
+                args.get("image").getDataValue(), args.get("flavor").getDataValue(), args.get("network").getDataValue());
+        OpenStackUserResource resource = new OpenStackUserResource();
+        resource.setUid(result.getId());
+        resource.setName(result.getName());
+        resource.setResourceType(ResourceTypeEnum.SERVER);
+        userContent.addResource(resource);
         return result;
     }
 
     private Object serverDelete(ITestInputArgs args) {
-        var client = createClient();
-        Object result = null;
-        if (client != null) {
-            var server = client.compute().servers().list(Collections.singletonMap("name", args.get("name").getDataValue())).get(0);
-            client.compute().servers().delete(server.getId());
-        }
+        OpenStackUserContent userContent = getUserContent();
+        ServerClient serverClient = new ServerClient();
+        serverClient.serverDelete(userContent.getId(), args.get("name").getDataValue());
+        return null;
+    }
+
+    private Object imageDelete(ITestInputArgs args) {
+        OpenStackUserContent userContent = getUserContent();
+        ImageClient imageClient = new ImageClient();
+        imageClient.imageDelete(userContent.getId(), args.get("name").getDataValue());
+        return null;
+    }
+
+    private Object flavorDelete(ITestInputArgs args) {
+        OpenStackUserContent userContent = getUserContent();
+        FlavorClient flavorClient = new FlavorClient();
+        flavorClient.deleteFlavor(userContent.getId(), args.get("name").getDataValue());
+        return null;
+    }
+
+    private Object serverPause(ITestInputArgs args) {
+        OpenStackUserContent userContent = getUserContent();
+        ServerClient serverClient = new ServerClient();
+        serverClient.serverPause(userContent.getId(), args.get("name").getDataValue());
+        return null;
+    }
+
+    private Object serverUnpause(ITestInputArgs args) {
+        OpenStackUserContent userContent = getUserContent();
+        ServerClient serverClient = new ServerClient();
+        serverClient.serverUnpause(userContent.getId(), args.get("name").getDataValue());
+        return null;
+    }
+
+    private Object serverShelve(ITestInputArgs args) {
+        OpenStackUserContent userContent = getUserContent();
+        ServerClient serverClient = new ServerClient();
+        serverClient.serverShelveOffload(userContent.getId(), args.get("name").getDataValue());
+        return null;
+    }
+
+    private Object serverUnshelve(ITestInputArgs args) {
+        OpenStackUserContent userContent = getUserContent();
+        ServerClient serverClient = new ServerClient();
+        serverClient.serverUnshelve(userContent.getId(), args.get("name").getDataValue());
+        return null;
+    }
+
+    private Object serverStart(ITestInputArgs args) {
+        OpenStackUserContent userContent = getUserContent();
+        ServerClient serverClient = new ServerClient();
+        serverClient.serverStart(userContent.getId(), args.get("name").getDataValue());
+        return null;
+    }
+
+    private Object serverStop(ITestInputArgs args) {
+        OpenStackUserContent userContent = getUserContent();
+        ServerClient serverClient = new ServerClient();
+        serverClient.serverStop(userContent.getId(), args.get("name").getDataValue());
+        return null;
+    }
+
+    private Object serverMigrate(ITestInputArgs args) {
+        OpenStackUserContent userContent = getUserContent();
+        ServerClient serverClient = new ServerClient();
+        serverClient.serverMigrate(userContent.getId(), args.get("name").getDataValue());
+        return null;
+    }
+
+    private Object serverSuspend(ITestInputArgs args) {
+        OpenStackUserContent userContent = getUserContent();
+        ServerClient serverClient = new ServerClient();
+        serverClient.serverSuspend(userContent.getId(), args.get("name").getDataValue());
+        return null;
+    }
+
+    private Object serverResume(ITestInputArgs args) {
+        OpenStackUserContent userContent = getUserContent();
+        ServerClient serverClient = new ServerClient();
+        serverClient.serverResume(userContent.getId(), args.get("name").getDataValue());
+        return null;
+    }
+
+    private Object serverResize(ITestInputArgs args) {
+        OpenStackUserContent userContent = getUserContent();
+        ServerClient serverClient = new ServerClient();
+        serverClient.serverResize(userContent.getId(), args.get("name").getDataValue(),
+                args.get("flavor").getDataValue());
+        return null;
+    }
+
+    private Object serverConfirmResize(ITestInputArgs args) {
+        OpenStackUserContent userContent = getUserContent();
+        ServerClient serverClient = new ServerClient();
+        serverClient.serverConfirmOrRejectResize(userContent.getId(), args.get("name").getDataValue(), true);
+        return null;
+    }
+
+    private Object serverRevertResize(ITestInputArgs args) {
+        OpenStackUserContent userContent = getUserContent();
+        ServerClient serverClient = new ServerClient();
+        serverClient.serverConfirmOrRejectResize(userContent.getId(), args.get("name").getDataValue(), false);
+        return null;
+    }
+
+    private Object volumeCreate(ITestInputArgs args) {
+        OpenStackUserContent userContent = getUserContent();
+        VolumeClient volumeClient = new VolumeClient();
+        var result = volumeClient.volumeCreate(userContent.getId(), args.get("name").getDataValue(),
+                args.get("availabilityZone").getDataValue(), Integer.parseInt(args.get("size").getDataValue()));
+        OpenStackUserResource resource = new OpenStackUserResource();
+        resource.setUid(result.getId());
+        resource.setName(result.getName());
+        resource.setResourceType(ResourceTypeEnum.VOLUME);
+        userContent.addResource(resource);
         return result;
     }
 
-    private Object imageDelete(ITestInputArgs arg) {
-        var client = createClient();
-        Object result = null;
-        if (client != null) {
-            var imageOpt = client.imagesV2().list().stream().filter(i -> i.getName().equals(arg.get("name"))).findFirst();
-            if (imageOpt.isPresent()) {
-                var image = imageOpt.get();
-                client.imagesV2().delete(image.getId());
-                result = image;
-            }
-        }
-        return result;
+    private Object volumeExtend(ITestInputArgs args) {
+        OpenStackUserContent userContent = getUserContent();
+        VolumeClient volumeClient = new VolumeClient();
+        volumeClient.volumeExtend(userContent.getId(), args.get("name").getDataValue(),
+                Integer.parseInt(args.get("size").getDataValue()));
+        return null;
     }
 
-    private Object flavorDelete(ITestInputArgs arg) {
-        var client = createClient();
-        Object result = null;
-        if (client != null) {
-            var flavorOpt = client.compute().flavors().list().stream().filter(f -> f.getName().equals(arg.get("name"))).findFirst();
-            if (flavorOpt.isPresent()) {
-                var flavor = flavorOpt.get();
-                client.compute().flavors().delete(flavor.getId());
-                result = flavor;
-            }
-        }
-        return result;
+    private Object volumeAttach(ITestInputArgs args) {
+        OpenStackUserContent userContent = getUserContent();
+        VolumeClient volumeClient = new VolumeClient();
+        volumeClient.volumeAttach(userContent.getId(), args.get("name").getDataValue(),
+                args.get("server").getDataValue(), args.get("mountpoint").getDataValue());
+        return null;
+    }
+
+    private Object volumeDetach(ITestInputArgs args) {
+        OpenStackUserContent userContent = getUserContent();
+        VolumeClient volumeClient = new VolumeClient();
+        volumeClient.volumeDetach(userContent.getId(), args.get("name").getDataValue());
+        return null;
+    }
+
+    private Object volumeDelete(ITestInputArgs args) {
+        OpenStackUserContent userContent = getUserContent();
+        VolumeClient volumeClient = new VolumeClient();
+        volumeClient.volumeDelete(userContent.getId(), args.get("name").getDataValue());
+        return null;
     }
 }

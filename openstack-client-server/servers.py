@@ -38,7 +38,7 @@ def _flavor_dao_create(sess, flavor, test_id, or_update=False):
 def flavor_create():
     if not request.json:
         abort(400)
-    test_id = request.args.get('test_id')
+    test_id = request.args.get('key')
     sess = _create_session(int(test_id))
     nova = nova_cli.Client(session=sess, version='2.1')
 
@@ -56,7 +56,7 @@ def flavor_create():
 
 @servers_api.route('/flavors')
 def flavor_list():
-    test_id = request.args.get('test_id')
+    test_id = request.args.get('key')
     sess = _create_session(int(test_id))
     nova = nova_cli.Client(session=sess, version='2.1')
     flavors = nova.flavors.list()

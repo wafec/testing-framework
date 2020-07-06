@@ -2,6 +2,7 @@ package robtest.stateinterfw.openStack.cli.waiters;
 
 import robtest.core.ConditionalWaiter;
 import robtest.core.ConditionalWaiterResult;
+import robtest.stateinterfw.openStack.cli.ClientException;
 import robtest.stateinterfw.openStack.cli.VolumeClient;
 import robtest.stateinterfw.openStack.cli.models.VolumeResult;
 
@@ -26,12 +27,22 @@ public abstract class AbstractVolumeWaiter implements IOSWaiter {
 
     protected abstract boolean evaluate(VolumeResult volumeResult);
 
-    @Override
+    protected boolean evaluate(ClientException clientException) {
+        throw clientException;
+    }
+
+                               @Override
     public ConditionalWaiterResult waitCondition() {
-        VolumeClient volumeClient = new VolumeClient();
-        final var volumeResult = volumeClient.volumeDetails(testId, volumeName);
+        final VolumeClient volumeClient = new VolumeClient();
         return ConditionalWaiter.waitFor(() -> {
-            return evaluate(volumeResult);
+            try {
+                final var volumeResult = volumeClient.volumeDetails(testId, volumeName);
+                if (volumeResult != null)
+                    System.out.println(volumeResult.toString());
+                return evaluate(volumeResult);
+            } catch (ClientException clientException) {
+                return evaluate(clientException);
+            }
         }, timeout, interval);
     }
 }

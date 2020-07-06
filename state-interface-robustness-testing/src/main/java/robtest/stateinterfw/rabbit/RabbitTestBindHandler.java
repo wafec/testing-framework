@@ -9,6 +9,7 @@ import robtest.stateinterfw.data.IRepository;
 import robtest.stateinterfw.data.ITransactionRepository;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -77,7 +78,7 @@ public class RabbitTestBindHandler implements IRabbitTestBindHandler {
         public void handle(String consumerTag, Delivery message) throws IOException {
             Channel _channel = ChannelFactory.createChannel(this.rabbitTestBind.getMessageDevice());
             try (Connection connection = _channel.getConnection(); Channel channel = _channel) {
-                System.out.println(String.format("Message: %s", new String(message.getBody(), "UTF-8")));
+                System.out.println(String.format("Message: %s", new String(message.getBody(), StandardCharsets.UTF_8)));
                 System.out.println(String.format("Destination: %s, Routing Key: %s", rabbitTestBind.getDestinationBind().getSource().getName(),
                         rabbitTestBind.getDestinationBind().getRoutingKey()));
                 channel.basicPublish(this.rabbitTestBind.getDestinationBind().getSource().getName(),

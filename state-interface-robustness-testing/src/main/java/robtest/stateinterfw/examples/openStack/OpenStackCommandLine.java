@@ -9,10 +9,12 @@ import robtest.stateinterfw.data.*;
 
 public class OpenStackCommandLine extends AbstractCommandLine implements IOpenStackCommandLine {
     private IRepository repository;
+    private IOpenStackTestInputCommand openStackTestInputCommand;
 
     @Inject
-    public OpenStackCommandLine(IRepository repository) {
+    public OpenStackCommandLine(IRepository repository, IOpenStackTestInputCommand openStackTestInputCommand) {
         this.repository = repository;
+        this.openStackTestInputCommand = openStackTestInputCommand;
         add("input-command", this::testInputCommand);
     }
 
@@ -28,7 +30,7 @@ public class OpenStackCommandLine extends AbstractCommandLine implements IOpenSt
         try {
             var commandLine = parser.parse(options, args);
             var planId = Long.parseLong(commandLine.getOptionValue("plan"));
-            OpenStackTestInputCommand command = new OpenStackTestInputCommand();
+            var command = openStackTestInputCommand;
             OpenStackTestPlan testPlan = repository.get((int) planId, OpenStackTestPlan.class);
             TestExecutionContext context = new TestExecutionContext();
             context.setTestCase((TestCase) testPlan.getTestCase(0));

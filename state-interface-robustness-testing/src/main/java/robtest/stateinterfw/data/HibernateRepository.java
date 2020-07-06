@@ -105,7 +105,7 @@ public class HibernateRepository implements IRepository, DisposableBean, ITransa
     }
 
     @Override
-    public void Synchronize(IEntity entity) {
+    public void sync(IEntity entity) {
         _sqlManager.createSession(session -> {
             Object source = session.get(entity.getClass(), entity.getId());
             _mapper.map(source, entity);

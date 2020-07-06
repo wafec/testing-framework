@@ -7,4 +7,6 @@ public interface IFileTestCase extends IFileObject {
     int getId();
     IFileTestInput get(int index);
     int size();
+    IFileTestInput getLast();
+    IFileTestInput getFirst();
 }

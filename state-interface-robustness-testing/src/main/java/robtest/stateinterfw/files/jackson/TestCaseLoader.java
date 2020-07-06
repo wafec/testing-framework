@@ -6,6 +6,7 @@ import robtest.stateinterfw.ITestCase;
 import robtest.stateinterfw.ITestInput;
 import robtest.stateinterfw.data.IRepository;
 import robtest.stateinterfw.data.TestCase;
+import robtest.stateinterfw.files.AbstractTestCaseLoader;
 import robtest.stateinterfw.files.IFileTestCase;
 import robtest.stateinterfw.files.ITestCaseLoader;
 import robtest.stateinterfw.files.mapper.IFileMapper;
@@ -13,14 +14,10 @@ import robtest.stateinterfw.files.mapper.IFileMapper;
 import java.io.File;
 import java.io.IOException;
 
-public class TestCaseLoader implements ITestCaseLoader {
-    private IRepository _repository;
-    private IFileMapper _fileMapper;
-
+public class TestCaseLoader extends AbstractTestCaseLoader implements IJsonTestCaseLoader {
     @Inject
     public TestCaseLoader(IRepository repository, IFileMapper fileMapper) {
-        _repository = repository;
-        _fileMapper = fileMapper;
+        super(fileMapper, repository);
     }
 
     @Override
@@ -33,11 +30,5 @@ public class TestCaseLoader implements ITestCaseLoader {
             exc.printStackTrace();
         }
         return testCase;
-    }
-
-    @Override
-    public void add(IFileTestCase fileTestCase) {
-        ITestCase testCase = _fileMapper.map(fileTestCase, TestCase.class);
-        _repository.save(testCase);
     }
 }

@@ -62,14 +62,18 @@ public abstract class BaseClient {
                 }
             } else if (response.statusCode() >= 300 && response.statusCode() < 500) {
                 ObjectMapper objectMapper = new ObjectMapper();
-                var exceptionResult = objectMapper.readValue(response.body(), ExceptionResult.class);
-                if (exceptionResult.getSubCode() == 11)
-                    throw new ComputeException(response.statusCode(), exceptionResult.getMessage(), exceptionResult.getAction());
-                if (exceptionResult.getSubCode() == 12)
-                    throw new ImageException(response.statusCode(), exceptionResult.getMessage(), exceptionResult.getAction());
-                if (exceptionResult.getSubCode() == 13)
-                    throw new NetworkingException(response.statusCode(), exceptionResult.getMessage(), exceptionResult.getAction());
-                throw new ClientException(response.statusCode(), exceptionResult.getMessage());
+                if (response.headers().firstValue("Content-Type").map(String::toLowerCase).map(c -> c.contains("application/json")).orElse(false)) {
+                    var exceptionResult = objectMapper.readValue(response.body(), ExceptionResult.class);
+                    if (exceptionResult.getSubCode() == 11)
+                        throw new ComputeException(response.statusCode(), exceptionResult.getMessage(), exceptionResult.getAction());
+                    if (exceptionResult.getSubCode() == 12)
+                        throw new ImageException(response.statusCode(), exceptionResult.getMessage(), exceptionResult.getAction());
+                    if (exceptionResult.getSubCode() == 13)
+                        throw new NetworkingException(response.statusCode(), exceptionResult.getMessage(), exceptionResult.getAction());
+                    throw new ClientException(response.statusCode(), exceptionResult.getMessage());
+                } else {
+                    throw new ClientException(response.statusCode());
+                }
             } else if (response.statusCode() >= 500) {
                 throw new ClientException(response.statusCode());
             }

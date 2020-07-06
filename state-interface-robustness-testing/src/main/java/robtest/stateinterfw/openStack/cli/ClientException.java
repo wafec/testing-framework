@@ -27,4 +27,16 @@ public class ClientException extends RuntimeException {
     public ClientException(int code, String message, String action) {
         this(code, message, action, null);
     }
+
+    public int getCode() {
+        return code;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public String getAction() {
+        return action;
+    }
 }

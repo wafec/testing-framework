@@ -35,6 +35,9 @@ public class OSCommandLine extends AbstractCommandLine implements IOSCommandLine
         add("volume-create", this::volumeCreate);
         add("volume-details", this::volumeDetails);
         add("volume-delete", this::volumeDelete);
+        add("volume-extend", this::volumeExtend);
+        add("volume-attach", this::volumeAttach);
+        add("volume-detach", this::volumeDetach);
     }
 
     protected void test(String[] args) {
@@ -383,8 +386,10 @@ public class OSCommandLine extends AbstractCommandLine implements IOSCommandLine
             var zone = commandLine.getOptionValue("zone");
             VolumeClient volumeClient = new VolumeClient();
             var result = volumeClient.volumeCreate(testId, name, zone, size);
-            if (result != null)
+            if (result != null) {
                 System.out.println(result.toString());
+                new VolumeCreateWaiter(testId, name).waitCondition();
+            }
             else
                 System.out.println("Volume not created");
         } catch (ParseException exc) {
@@ -424,6 +429,64 @@ public class OSCommandLine extends AbstractCommandLine implements IOSCommandLine
             var name = commandLine.getOptionValue("name");
             VolumeClient volumeClient = new VolumeClient();
             volumeClient.volumeDelete(testId, name);
+            new VolumeDeleteWaiter(testId, name).waitCondition();
+        } catch (ParseException exc) {
+            exc.printStackTrace();
+        }
+    }
+
+    protected void volumeExtend(String[] args) {
+        Options options = new Options();
+        options.addOption(Option.builder().longOpt("test_id").hasArg().build());
+        options.addOption(Option.builder().longOpt("name").hasArg().build());
+        options.addOption(Option.builder().longOpt("size").hasArg().build());
+        CommandLineParser parser = new DefaultParser();
+        try {
+            var commandLine = parser.parse(options, args);
+            var testId = Integer.parseInt(commandLine.getOptionValue("test_id"));
+            var name = commandLine.getOptionValue("name");
+            var size = Integer.parseInt(commandLine.getOptionValue("size"));
+            VolumeClient volumeClient = new VolumeClient();
+            volumeClient.volumeExtend(testId, name, size);
+            new VolumeExtendWaiter(testId, name).waitCondition();
+        } catch (ParseException exc) {
+            exc.printStackTrace();
+        }
+    }
+
+    protected void volumeAttach(String[] args) {
+        Options options = new Options();
+        options.addOption(Option.builder().longOpt("test_id").hasArg().build());
+        options.addOption(Option.builder().longOpt("name").hasArg().build());
+        options.addOption(Option.builder().longOpt("server").hasArg().build());
+        options.addOption(Option.builder().longOpt("mountpoint").hasArg().build());
+        CommandLineParser parser = new DefaultParser();
+        try {
+            var commandLine = parser.parse(options, args);
+            var testId = Integer.parseInt(commandLine.getOptionValue("test_id"));
+            var name = commandLine.getOptionValue("name");
+            var server = commandLine.getOptionValue("server");
+            var mountpoint = commandLine.getOptionValue("mountpoint");
+            VolumeClient volumeClient = new VolumeClient();
+            volumeClient.volumeAttach(testId, name, server, mountpoint);
+            new VolumeAttachWaiter(testId, name).waitCondition();
+        } catch (ParseException exc) {
+            exc.printStackTrace();
+        }
+    }
+
+    protected void volumeDetach(String[] args) {
+        Options options = new Options();
+        options.addOption(Option.builder().longOpt("test_id").hasArg().build());
+        options.addOption(Option.builder().longOpt("name").hasArg().build());
+        CommandLineParser parser = new DefaultParser();
+        try {
+            var commandLine = parser.parse(options, args);
+            var testId = Integer.parseInt(commandLine.getOptionValue("test_id"));
+            var name = commandLine.getOptionValue("name");
+            VolumeClient volumeClient = new VolumeClient();
+            volumeClient.volumeDetach(testId, name);
+            new VolumeDetachWaiter(testId, name).waitCondition();
         } catch (ParseException exc) {
             exc.printStackTrace();
         }

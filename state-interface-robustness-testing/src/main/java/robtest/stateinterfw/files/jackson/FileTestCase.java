@@ -46,6 +46,20 @@ public class FileTestCase implements IFileTestCase {
         return fileInputs.size();
     }
 
+    @Override
+    public IFileTestInput getLast() {
+        if (fileInputs.size() > 0)
+            return fileInputs.get(fileInputs.size() - 1);
+        return null;
+    }
+
+    @Override
+    public IFileTestInput getFirst() {
+        if (fileInputs.size() > 0)
+            return fileInputs.get(0);
+        return null;
+    }
+
     @JsonProperty("inputs")
     public void setFileInputs(List<FileTestInput> fileInputs) {
         this.fileInputs = fileInputs;

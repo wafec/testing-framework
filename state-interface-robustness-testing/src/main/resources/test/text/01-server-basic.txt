@@ -1,0 +1,9 @@
+? name=text_test_11
+I identity.login username=admin password=supersecret auth_url=controller&doublecolon;5000/v3 project_domain_name=admin user_domain_name=default
+I compute.flavor.create name=flavor_test ram=256:int vcpus=1:int disk=1:int
+S compute.flavor.created required=true
+I image.create name=cirros_test disk_format=qcow2 container_format=bare file=cirros.img
+S image.created
+I compute.server.create name=server_test flavor=flavor_test image=cirros_test network=provider
+S compute.server.created required=true
+S compute.server.running

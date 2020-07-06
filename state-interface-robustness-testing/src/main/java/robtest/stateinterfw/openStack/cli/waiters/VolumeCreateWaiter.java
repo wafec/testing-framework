@@ -1,6 +1,9 @@
 package robtest.stateinterfw.openStack.cli.waiters;
 
+import org.apache.commons.lang3.StringUtils;
 import robtest.stateinterfw.openStack.cli.models.VolumeResult;
+
+import java.util.Optional;
 
 public class VolumeCreateWaiter extends AbstractVolumeWaiter {
     public VolumeCreateWaiter(int testId, String volumeName) {
@@ -9,7 +12,7 @@ public class VolumeCreateWaiter extends AbstractVolumeWaiter {
 
     @Override
     protected boolean evaluate(VolumeResult volumeResult) {
-        System.out.println(volumeResult.toString());
-        return false;
+        return Optional.ofNullable(volumeResult).map(VolumeResult::getStatus).map(StringUtils::lowerCase)
+                .map(s -> s.equals("available")).orElse(false);
     }
 }

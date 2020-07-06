@@ -13,5 +13,5 @@ public interface IRepository {
     <T extends IData> T querySingleResult(String queryString, Class<T> entityClass, IParam... parameters);
     Object querySingleResult(String queryString, ResultTransformer resultTransformer, IParam... parameters);
     <T extends IEntity> T get(int id, Class<T> entityClass);
-    void Synchronize(IEntity entity);
+    void sync(IEntity entity);
 }

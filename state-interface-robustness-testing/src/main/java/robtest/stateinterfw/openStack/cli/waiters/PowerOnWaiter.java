@@ -18,6 +18,10 @@ public class PowerOnWaiter extends AbstractServerWaiter {
         super(testId, serverName);
     }
 
+    public PowerOnWaiter(int testId, String serverName, long timeout) {
+        super(testId, serverName, timeout);
+    }
+
     @Override
     protected boolean evaluate(ServerResult server, FlavorResult flavor, ImageResult image, NetworkResult network) {
         return Integer.parseInt(server.getPowerState()) == 1;

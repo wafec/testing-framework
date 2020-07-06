@@ -28,7 +28,22 @@ public class VolumeClient extends BaseClient {
     }
 
     public void volumeDelete(int testId, String name) {
-        this.request(null, String.format("/%d", testId),
-                Map.of("name", name), "delete");
+        this.request(null, String.format("/%d/volume?volume_name=%s", testId, name), null, "delete");
     }
+
+    public void volumeExtend(int testId, String name, int sizeGb) {
+        this.request(null, String.format("/%d/volume/extend", testId),
+                Map.of("name", name, "size", sizeGb), "post");
+    }
+
+    public void volumeAttach(int testId, String name, String serverName, String mountpoint) {
+        this.request(null, String.format("/%d/volume/attach", testId),
+                Map.of("name", name, "server", serverName, "mountpoint", mountpoint), "post");
+    }
+
+    public void volumeDetach(int testId, String name) {
+        this.request(null, String.format("/%d/volume/detach", testId),
+                Map.of("name", name), "post");
+    }
+        
 }
